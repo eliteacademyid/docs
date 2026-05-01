@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PartyRock to Real App — Print Guide</title>
+  <style>
+    @media print {
+      .no-print { display: none; }
+      .page-break { page-break-before: always; }
+      pre, code { white-space: pre-wrap; word-break: break-word; }
+    }
+    body { font-family: Georgia, serif; max-width: 750px; margin: 0 auto; padding: 40px 32px; color: #111; line-height: 1.7; font-size: 14px; }
+    h1 { font-size: 26px; border-bottom: 3px solid #111; padding-bottom: 10px; margin-bottom: 16px; }
+    h2 { font-size: 19px; margin-top: 36px; background: #111; color: #fff; padding: 7px 12px; border-radius: 4px; }
+    h2.sandbox { background: #b35900; }
+    h2.step9 { background: #1a4a00; }
+    h3 { font-size: 14px; margin-top: 20px; color: #333; border-left: 4px solid #c8f135; padding-left: 8px; }
+    p { margin-bottom: 10px; }
+    ol, ul { padding-left: 20px; margin-bottom: 10px; }
+    li { margin-bottom: 5px; }
+    code { background: #f0f0f0; border: 1px solid #ddd; border-radius: 3px; padding: 1px 4px; font-size: 12px; font-family: monospace; }
+    pre { background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; padding: 10px; font-size: 11px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 12px; }
+    th { background: #111; color: #fff; padding: 7px 9px; text-align: left; }
+    td { padding: 7px 9px; border-bottom: 1px solid #ddd; }
+    .ss { border: 1px dashed #999; border-radius: 4px; padding: 8px 12px; margin: 10px 0; font-size: 12px; color: #555; background: #fafafa; }
+    .ss::before { content: "📸 Screenshot: "; font-weight: bold; color: #333; }
+    .tip { border-left: 4px solid #4CAF50; padding: 8px 12px; margin: 10px 0; background: #f9fff9; font-size: 12px; }
+    .tip::before { content: "💡 Tip: "; font-weight: bold; }
+    .warn { border-left: 4px solid #FF9800; padding: 8px 12px; margin: 10px 0; background: #fffdf5; font-size: 12px; }
+    .warn::before { content: "⚠️ Important: "; font-weight: bold; }
+    .sandbox-note { border-left: 4px solid #b35900; padding: 8px 12px; margin: 10px 0; background: #fff8f0; font-size: 12px; }
+    .sandbox-note::before { content: "🧪 Sandbox: "; font-weight: bold; color: #b35900; }
+    .rec { border-left: 4px solid #1a4a00; padding: 8px 12px; margin: 10px 0; background: #f0fff0; font-size: 12px; }
+    .rec::before { content: "✅ Recommended: "; font-weight: bold; color: #1a4a00; }
+    .checklist { list-style: none; padding: 0; border: 1px solid #ddd; border-radius: 4px; padding: 10px; }
+    .checklist li { padding: 4px 0; border-bottom: 1px solid #eee; }
+    .checklist li::before { content: "☐  "; font-size: 15px; }
+    .cover { text-align: center; padding: 60px 0; }
+    .cover h1 { font-size: 32px; border: none; }
+    .cover .sub { font-size: 16px; color: #555; margin-top: 10px; }
+    .cover .meta { margin-top: 32px; font-size: 12px; color: #888; }
+    .print-btn { position: fixed; bottom: 20px; right: 20px; background: #111; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+    .path-box { border: 2px solid #111; border-radius: 5px; padding: 10px 14px; margin: 10px 0; font-size: 12px; }
+    .path-box.sandbox { border-color: #b35900; background: #fff8f0; }
+    .toc td { padding: 4px 8px; border-bottom: 1px solid #eee; font-size: 13px; }
+    .toc .time { color: #888; font-size: 11px; }
+  </style>
+</head>
+<body>
+<button class="print-btn no-print" onclick="window.print()">🖨️ Print / Save as PDF</button>
+
+<!-- COVER -->
+<div class="cover">
+  <h1>From PartyRock to Real App</h1>
+  <div class="sub">A Step-by-Step Guide for Non-Technical Users</div>
+  <div style="margin-top:24px;font-size:40px">🥗 → 🌐</div>
+  <div class="meta">
+    Turn any AWS PartyRock AI app into a published website<br>
+    using real AWS services — no coding required<br><br>
+    Works with personal AWS accounts AND AWS lab/sandbox environments<br><br>
+    Estimated time: ~2–3 hours complete | ~2 hours quick path (Steps 0–8)
+  </div>
+</div>
+<div class="page-break"></div>
+
+<!-- OVERVIEW -->
+<h1>Overview</h1>
+<p>You built a cool AI app on AWS PartyRock. Now you want to share it as a real website that anyone can visit — not just people with a PartyRock account.</p>
+
+<h3>Choose Your Path</h3>
+<div class="path-box"><strong>Path A — Personal AWS Account</strong><br>Create your own AWS account. Full control, permanent deployment, near-zero cost on free tier. Requires a credit card.</div>
+<div class="path-box sandbox"><strong>🧪 Path B — AWS Lab / Sandbox Environment</strong><br>Using AWS Skill Builder, Vocareum, AWS Academy, or an event sandbox? No account creation needed — credentials are provided. App works during the lab session only.</div>
+
+<h3>Architecture</h3>
+<pre>User's Browser
+      │  HTTPS
+      ▼
+CloudFront (CDN + HTTPS)  →  S3 Bucket (index.html)
+                                    │  API calls with x-api-key header
+                                    ▼
+                          API Gateway (REST, throttled)
+                                    │
+                          Lambda  →  Bedrock (Claude)
+Supporting: DynamoDB (chat history) · CloudWatch (alarms + logs) · IAM (scoped)</pre>
+
+<h3>Realistic Time Estimates</h3>
+<table class="toc">
+  <tr><th>#</th><th>Step</th><th>Time</th><th>Path</th></tr>
+  <tr><td>0</td><td>App Planner — generate your Kiro prompt</td><td class="time">15 min</td><td>All</td></tr>
+  <tr><td>1</td><td>Read your PartyRock app widgets</td><td class="time">10 min</td><td>All</td></tr>
+  <tr><td>2</td><td>Set up your AWS account</td><td class="time">20 min</td><td>A only</td></tr>
+  <tr><td>2b</td><td>Sandbox environment guide</td><td class="time">20 min</td><td>B only</td></tr>
+  <tr><td>3</td><td>Enable Bedrock, tighten IAM, CloudWatch dashboard</td><td class="time">25 min</td><td>All</td></tr>
+  <tr><td>4</td><td>Create a GitHub account and repository</td><td class="time">10 min</td><td>All</td></tr>
+  <tr><td>5</td><td>Upload code + security + UX improvements</td><td class="time">25 min</td><td>All</td></tr>
+  <tr><td>6</td><td>Add credentials + API key to GitHub</td><td class="time">15 min</td><td>A: 4 secrets / B: 5 secrets</td></tr>
+  <tr><td>7</td><td>Deploy + API key + alarms + staging</td><td class="time">25 min</td><td>All</td></tr>
+  <tr><td>8</td><td>Visit, test, and monitor your live app</td><td class="time">20 min</td><td>All</td></tr>
+  <tr><td>9</td><td>Make it production-ready (HTTPS, WAF, etc.)</td><td class="time">20–45 min</td><td>CloudFront recommended</td></tr>
+  <tr><td>10</td><td>Update your app after it's live</td><td class="time">5 min</td><td>All</td></tr>
+  <tr><td>11</td><td>Delete your app (cleanup)</td><td class="time">5 min</td><td>Optional</td></tr>
+</table>
+
+<h3>Realistic Cost Estimate</h3>
+<table>
+  <tr><th>Usage level</th><th>Monthly cost</th></tr>
+  <tr><td>Personal app, &lt;100 requests/day</td><td>~$0 (free tier)</td></tr>
+  <tr><td>Small audience, ~1,000 requests/day</td><td>~$1–3/month</td></tr>
+  <tr><td>Medium audience, ~10,000 requests/day</td><td>~$10–20/month</td></tr>
+</table>
+<p>Main cost driver: Bedrock (Claude) ~$0.003 per request. Always set a billing alarm (Step 8.7).</p>
+<div class="page-break"></div>
+
+<!-- STEP 0 -->
+<h2>Step 0 — App Planner: Generate Your Kiro Prompt (15 min)</h2>
+<p>Before touching any AWS service, use the App Planner on the tutorial website to fill in your PartyRock app details. Both outputs update live as you type — no AI call needed.</p>
+<ol>
+  <li>Go to the tutorial website → click <strong>✨ App Planner</strong> in the top navigation</li>
+  <li>Fill in: App Name, Target Users, App Description (2–4 sentences), App Flow (numbered steps)</li>
+  <li>Click <strong>+ Add Widget</strong> for each widget — open each widget's ✏️ edit panel in PartyRock and copy the details</li>
+  <li>Add any Extra Notes (dark theme, reset button, etc.)</li>
+</ol>
+<table>
+  <tr><th>Tab</th><th>What to do with it</th></tr>
+  <tr><td>📋 Kiro Chat Prompt</td><td>Copy → paste into Kiro chat + drag your PartyRock screenshots → send</td></tr>
+  <tr><td>📄 Kiro Spec Plan</td><td>Copy → Kiro left sidebar → Specs → New Spec → paste</td></tr>
+</table>
+<div class="tip">Kiro generates all your app files from the prompt. Once you have the files, continue with Steps 2–8 to deploy.</div>
+<ul class="checklist"><li>App Planner filled in completely</li><li>Kiro Chat Prompt copied and sent to Kiro</li><li>Kiro has generated your app files</li></ul>
+<div class="page-break"></div>
+
+<!-- STEP 1 -->
+<h2>Step 1 — Read Your PartyRock Widgets (10 min)</h2>
+<p>Open each widget's ✏️ edit panel in PartyRock and write down the exact settings.</p>
+<ol>
+  <li>Go to partyrock.aws → sign in → open your app → click <strong>Edit</strong> (top right)</li>
+  <li>Click the ✏️ pencil icon on each widget to see its settings</li>
+  <li>Screenshot each panel — capture all tabs (Prompt, Instructions, Advanced, AI model)</li>
+</ol>
+<table>
+  <tr><th>Edit panel title</th><th>What it does</th><th>Key fields to copy</th></tr>
+  <tr><td>Edit Text Input</td><td>User types text</td><td>Hint text, pre-fill value</td></tr>
+  <tr><td>Edit Slider</td><td>Number or label range</td><td>Ordinal/Numeric, range, default</td></tr>
+  <tr><td>Edit Dropdown</td><td>Pick from a list</td><td>Options, pre-selected, hint text</td></tr>
+  <tr><td>Edit Static Text</td><td>Fixed display text</td><td>Content (markdown supported)</td></tr>
+  <tr><td>Edit AI Output</td><td>AI generates text</td><td>Prompt, references, model, Temperature, Top P</td></tr>
+  <tr><td>Edit Image Output</td><td>AI generates image</td><td>Image prompt, model, aspect ratio, negative prompt</td></tr>
+  <tr><td>Edit Chat Box</td><td>AI conversation</td><td>Role prompt, opening message, model</td></tr>
+  <tr><td>Edit File Upload</td><td>User uploads file</td><td>Instructions, accepted file types</td></tr>
+</table>
+<ul class="checklist"><li>All widgets listed with their edit panel type and name</li><li>Prompt/content copied for each AI widget</li><li>Screenshots of each widget's edit panel saved</li></ul>
+<div class="page-break"></div>
+
+<!-- STEP 2 PATH A -->
+<h2>Step 2 — Set Up Your AWS Account (20 min) — Path A</h2>
+<div class="sandbox-note">Using a lab sandbox? Skip this step and go to Step 2b.</div>
+<div class="warn">You need a credit card to sign up. Everything stays within the AWS Free Tier — charges are near $0 for a personal app.</div>
+
+<h3>Create an AWS Account</h3>
+<ol>
+  <li>Go to aws.amazon.com → click <strong>Create an AWS Account</strong></li>
+  <li>Enter email, choose account name, verify email, create password</li>
+  <li>Add payment info, verify phone, select <strong>Basic support — Free</strong></li>
+</ol>
+
+<h3>Create IAM User (github-deployer)</h3>
+<ol>
+  <li>Sign in to console.aws.amazon.com → search <strong>IAM</strong> → Users → Create user</li>
+  <li>Username: <code>github-deployer</code> → Attach policies directly → check these 6:</li>
+</ol>
+<ul><li><code>AWSCloudFormationFullAccess</code></li><li><code>AWSLambda_FullAccess</code></li><li><code>IAMFullAccess</code></li><li><code>AmazonAPIGatewayAdministrator</code></li><li><code>AmazonS3FullAccess</code></li><li><code>AmazonBedrockFullAccess</code></li></ul>
+
+<h3>Create Access Key</h3>
+<ol>
+  <li>Click github-deployer → Security credentials tab → Access keys → Create access key</li>
+  <li>Select <strong>Application running outside AWS</strong> → Create</li>
+  <li>Save both values — Secret Access Key is only shown ONCE</li>
+</ol>
+<div class="warn">The Secret Access Key is only shown ONCE. Save it now before closing the page.</div>
+<table><tr><th>Value</th><th>GitHub secret name</th></tr><tr><td>Access Key ID (starts with AKIA)</td><td>AWS_ACCESS_KEY_ID</td></tr><tr><td>Secret Access Key</td><td>AWS_SECRET_ACCESS_KEY</td></tr></table>
+
+<h3>Create S3 Bucket + Lifecycle Rule</h3>
+<ol>
+  <li>S3 → Create bucket → Name: <code>yourname-sam-deploy-2024</code> → Region: us-east-1 → Create</li>
+  <li>Click the bucket → Management tab → Create lifecycle rule → Name: <code>expire-old-artifacts</code></li>
+  <li>Apply to all objects → Expire current versions → 30 days → Create rule</li>
+</ol>
+<ul class="checklist"><li>AWS account created and verified</li><li>IAM user github-deployer with all 6 policies</li><li>Access Key ID saved</li><li>Secret Access Key saved</li><li>S3 bucket created, lifecycle rule added</li></ul>
+<div class="page-break"></div>
+
+<!-- STEP 2B -->
+<h2 class="sandbox">Step 2b — Sandbox Environment Setup (20 min) — Path B</h2>
+<div class="sandbox-note">This step replaces Step 2 for users in AWS Skill Builder, Vocareum, AWS Academy, Workshop Studio, or event sandboxes.</div>
+
+<h3>Get Your Sandbox Credentials</h3>
+<p>In your lab panel, click <strong>AWS Details</strong> or <strong>Account Details</strong>. Copy all three values:</p>
+<table><tr><th>Value</th><th>Format</th><th>GitHub secret name</th></tr><tr><td>Access Key ID</td><td>Starts with <code>ASIA</code></td><td>AWS_ACCESS_KEY_ID</td></tr><tr><td>Secret Access Key</td><td>Long random string</td><td>AWS_SECRET_ACCESS_KEY</td></tr><tr><td>Session Token</td><td>Very long string — copy ALL of it</td><td>AWS_SESSION_TOKEN</td></tr></table>
+<div class="warn">Session tokens expire when your lab session ends. Your app will stop working after expiry. For a permanent app, use a personal AWS account.</div>
+
+<h3>Find LabRole ARN + Create S3 Bucket</h3>
+<ol>
+  <li>AWS Console → IAM → Roles → find <strong>LabRole</strong> → copy its ARN: <code>arn:aws:iam::123456789012:role/LabRole</code></li>
+  <li>S3 → Create bucket → Name: <code>lab-sam-deploy-[initials]-[4 digits]</code> → same region as lab</li>
+</ol>
+
+<h3>Use the Pre-Generated Sandbox Template</h3>
+<ol>
+  <li>Open Kiro, share your <code>infra/template.yaml</code></li>
+  <li>Ask: <em>"Generate a template-sandbox.yaml that uses LabRole instead of creating an IAM role. Use YOUR_ACCOUNT_ID as a placeholder."</em></li>
+  <li>Replace <code>YOUR_ACCOUNT_ID</code> with your actual 12-digit account ID (shown in top-right of AWS Console)</li>
+  <li>Upload <code>template-sandbox.yaml</code> to your GitHub repo in the <code>infra/</code> folder</li>
+  <li>Update <code>deploy.yml</code> to use <code>template-sandbox.yaml</code> and remove <code>CAPABILITY_NAMED_IAM</code></li>
+</ol>
+
+<h3>Add Session Token to deploy.yml</h3>
+<pre>- name: Configure AWS credentials
+  uses: aws-actions/configure-aws-credentials@v4
+  with:
+    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}   # ← add this
+    aws-region: ${{ vars.AWS_REGION }}                    # ← use variable</pre>
+<ul class="checklist"><li>Credentials (Key ID + Secret + Session Token) copied</li><li>LabRole ARN copied</li><li>S3 bucket created</li><li>template-sandbox.yaml generated, ACCOUNT_ID replaced</li><li>deploy.yml updated with session token and region variable</li></ul>
+<div class="page-break"></div>
+
+<!-- STEP 3 -->
+<h2>Step 3 — Enable Bedrock + Tighten IAM + CloudWatch (25 min)</h2>
+
+<h3>Enable Bedrock Model Access</h3>
+<ol>
+  <li>AWS Console → search <strong>Bedrock</strong> → confirm region is <strong>us-east-1</strong> (top right)</li>
+  <li>Left sidebar → <strong>Model access</strong> → <strong>Manage model access</strong></li>
+  <li>Under Anthropic, check <strong>Claude 3 Sonnet</strong> → Save changes</li>
+  <li>Wait for status to show <strong>Access granted</strong> ✅</li>
+</ol>
+<div class="sandbox-note">If Claude is not available in your lab, look for Amazon Titan Text Express (<code>amazon.titan-text-express-v1</code>) — usually pre-enabled. Update the model ID in your Lambda functions.</div>
+
+<h3>Tighten IAM Role to Specific Model Only</h3>
+<ol>
+  <li>IAM → Roles → search your app name → click the Lambda execution role</li>
+  <li>Permissions tab → find the Bedrock policy → Edit</li>
+  <li>Replace the policy statement with:</li>
+</ol>
+<pre>{ "Effect": "Allow", "Action": "bedrock:InvokeModel",
+  "Resource": "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0" }</pre>
+<div class="tip">This scopes your Lambda to only call one specific model instead of any model in your account.</div>
+
+<h3>Create a CloudWatch Dashboard</h3>
+<ol>
+  <li>AWS Console → <strong>CloudWatch</strong> → Dashboards → Create dashboard → Name: <code>my-app-overview</code></li>
+  <li>Add widget → Line → Lambda → By Function Name → check <strong>Errors</strong> for each function → Create widget</li>
+  <li>Add another widget → same steps but select <strong>Invocations</strong></li>
+  <li>Save dashboard</li>
+</ol>
+<ul class="checklist"><li>Claude 3 Sonnet shows "Access granted"</li><li>IAM role updated to specific model ARN only</li><li>CloudWatch dashboard created with Errors and Invocations widgets</li></ul>
+
+<!-- STEP 4 -->
+<h2>Step 4 — Set Up GitHub (10 min)</h2>
+<div class="tip">Coming up in Step 6: you will add your AWS credentials, an API_KEY secret, and an AWS_REGION variable to GitHub. Keep your saved values handy.</div>
+<ol>
+  <li>Go to github.com → Sign up (free account)</li>
+  <li>Click + icon → New repository → Name: <code>my-partyrock-app</code> → Visibility: <strong>Public</strong></li>
+  <li>Check "Add a README file" → Create repository</li>
+</ol>
+<ul class="checklist"><li>GitHub account created</li><li>Public repository created</li></ul>
+<div class="page-break"></div>
+
+<!-- STEP 5 -->
+<h2>Step 5 — Upload Code + Security + UX (25 min)</h2>
+<div class="warn">GitHub's web interface does not support dragging an entire folder. Upload the <strong>files inside each folder</strong> using "Create new file" to set the path.</div>
+
+<h3>Upload Files</h3>
+<ol>
+  <li><strong>Frontend:</strong> Add file → Upload files → drag <code>index.html</code> from your frontend folder → commit</li>
+  <li><strong>Lambda files:</strong> Add file → Create new file → type path <code>backend/lambda/your_function.py</code> → paste contents → commit. Repeat for each .py file.</li>
+  <li><strong>Template:</strong> Add file → Create new file → <code>infra/template.yaml</code> → paste contents → commit</li>
+  <li><strong>Workflow:</strong> Add file → Create new file → <code>.github/workflows/deploy.yml</code> → paste contents → commit</li>
+</ol>
+<div class="ss">The filename input shows "backend/lambda/calorie_scanner.py" typed in. GitHub creates the folder structure automatically as you type the slashes.</div>
+
+<h3>Add Input Protection (ask Kiro)</h3>
+<p>Open Kiro, share your Lambda .py files, ask: <em>"Add input validation: reject inputs longer than 2000 characters with a 400 error, and add basic prompt injection detection."</em> Upload the updated files.</p>
+
+<h3>Add requirements.txt</h3>
+<p>Add file → Create new file → <code>backend/lambda/requirements.txt</code> → leave body empty → commit.</p>
+
+<h3>Add Favicon + Page Title</h3>
+<p>Edit <code>frontend/index.html</code> → add inside <code>&lt;head&gt;</code>:</p>
+<pre>&lt;title&gt;My App Name&lt;/title&gt;
+&lt;link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;🤖&lt;/text&gt;&lt;/svg&gt;"&gt;</pre>
+
+<h3>Add Markdown Rendering</h3>
+<p>Add just before <code>&lt;/head&gt;</code>: <code>&lt;script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"&gt;&lt;/script&gt;</code></p>
+<p>Then change AI output lines from <code>textContent = response</code> to <code>innerHTML = marked.parse(response)</code></p>
+<p>Or ask Kiro: <em>"Update my index.html to render AI responses as markdown using marked.js"</em></p>
+
+<h3>Add Character Counters</h3>
+<p>Ask Kiro: <em>"Add a character counter below each text input field showing current/max (e.g. '47 / 2000'). Turn red within 50 characters of the limit."</em></p>
+
+<ul class="checklist"><li>All files uploaded to GitHub</li><li>Lambda functions updated with input protection</li><li>requirements.txt added</li><li>Favicon and page title added</li><li>marked.js added for markdown rendering</li><li>Character counters added</li></ul>
+<div class="page-break"></div>
+
+<!-- STEP 6 -->
+<h2>Step 6 — Add Credentials + API Key to GitHub (15 min)</h2>
+<p>GitHub repo → Settings → Secrets and variables → Actions</p>
+
+<h3>Path A — Personal Account (4 secrets + 1 variable)</h3>
+<table><tr><th>Name</th><th>Type</th><th>Value</th></tr><tr><td>AWS_ACCESS_KEY_ID</td><td>Secret</td><td>Access Key ID from Step 2 (starts with AKIA)</td></tr><tr><td>AWS_SECRET_ACCESS_KEY</td><td>Secret</td><td>Secret Access Key from Step 2</td></tr><tr><td>SAM_DEPLOY_BUCKET</td><td>Secret</td><td>S3 bucket name from Step 2</td></tr><tr><td>API_KEY</td><td>Secret</td><td>A strong random string you make up — write it down!</td></tr><tr><td>AWS_REGION</td><td>Variable (Variables tab)</td><td>us-east-1</td></tr></table>
+
+<h3>Path B — Lab Sandbox (5 secrets + 1 variable)</h3>
+<table><tr><th>Name</th><th>Type</th><th>Value</th></tr><tr><td>AWS_ACCESS_KEY_ID</td><td>Secret</td><td>From lab panel (starts with ASIA)</td></tr><tr><td>AWS_SECRET_ACCESS_KEY</td><td>Secret</td><td>From lab panel</td></tr><tr><td>AWS_SESSION_TOKEN</td><td>Secret</td><td>From lab panel — full long string</td></tr><tr><td>SAM_DEPLOY_BUCKET</td><td>Secret</td><td>S3 bucket name from Step 2b</td></tr><tr><td>API_KEY</td><td>Secret</td><td>A strong random string — write it down!</td></tr><tr><td>AWS_REGION</td><td>Variable</td><td>Your lab's region</td></tr></table>
+<div class="warn">The API_KEY value you set here must exactly match what you enter in API Gateway in Step 7.5. Write it down now.</div>
+<ul class="checklist"><li>Path A: 4 secrets + AWS_REGION variable added</li><li>Path B: 5 secrets + AWS_REGION variable added</li><li>API_KEY value written down for Step 7.5</li></ul>
+<div class="page-break"></div>
+
+<!-- STEP 7 -->
+<h2>Step 7 — Deploy + Protect + Monitor (25 min)</h2>
+
+<h3>Trigger the Deployment</h3>
+<ol>
+  <li>GitHub repo → Actions tab → click your workflow name → Run workflow → green Run workflow button</li>
+  <li>Refresh — watch each step get a green ✅ checkmark (~3–5 minutes)</li>
+</ol>
+
+<h3>Troubleshooting</h3>
+<table><tr><th>Error</th><th>Fix</th></tr><tr><td>Credentials could not be loaded</td><td>Check secrets — no spaces in values</td></tr><tr><td>Bucket does not exist</td><td>Check SAM_DEPLOY_BUCKET matches exactly</td></tr><tr><td>Access denied</td><td>Path A: confirm all 6 IAM policies attached</td></tr><tr><td>Model not found</td><td>Confirm Bedrock access granted in Step 3</td></tr><tr><td>ExpiredTokenException</td><td>Path B: lab session expired — update 3 credential secrets</td></tr><tr><td>AccessDenied: iam:CreateRole</td><td>Path B: use template-sandbox.yaml with LabRole</td></tr></table>
+
+<h3>Set Up API Key Protection (Step 7.5)</h3>
+<ol>
+  <li>AWS Console → API Gateway → click your API → Usage Plans → Create usage plan</li>
+  <li>Name: <code>my-app-plan</code> · Rate: <code>10</code> req/s · Burst: <code>20</code> → Next</li>
+  <li>Add API Stage → select your API → stage: prod → Next</li>
+  <li>Create API Key and add to Usage Plan → Name: <code>my-app-key</code> → Auto Generate → Save</li>
+  <li>Click the key → Show → copy the value → update GitHub <code>API_KEY</code> secret to match</li>
+  <li>API Gateway → your API → each POST method → Method Request → API Key Required: true</li>
+  <li>Actions → Deploy API → prod stage → Deploy</li>
+</ol>
+<ol start="8">
+  <li>Lambda → each function → Configuration → Concurrency → Reserve concurrency: <code>5</code> → Save</li>
+</ol>
+
+<h3>Set Up CloudWatch Alarms (Step 7.6)</h3>
+<ol>
+  <li>CloudWatch → Alarms → Create alarm → Lambda → By Function Name → Errors → threshold &gt; 5</li>
+  <li>Create new SNS topic → enter your email → confirm the subscription email AWS sends you</li>
+  <li>Name: <code>my-app-lambda-errors</code> → Create alarm</li>
+  <li>Repeat for API Gateway → By Stage → 5XXError → name: <code>my-app-api-errors</code></li>
+</ol>
+<ul class="checklist"><li>Deployment successful — all steps green</li><li>API Gateway usage plan created (rate: 10, burst: 20)</li><li>API key created, value matches GitHub API_KEY secret</li><li>API key required on all POST methods</li><li>Lambda reserved concurrency set to 5 per function</li><li>CloudWatch alarms created (Lambda errors + API 5xx)</li><li>Email subscription confirmed</li></ul>
+<div class="page-break"></div>
+
+<!-- STEP 8 -->
+<h2>Step 8 — Visit, Test, and Monitor (20 min)</h2>
+
+<h3>Find Your Live URL</h3>
+<ol>
+  <li>GitHub → Actions → your deployment run → deploy job → Print URLs step → expand</li>
+  <li>Copy the <strong>Frontend URL</strong> (starts with http:// — add HTTPS in Step 9)</li>
+</ol>
+
+<h3>Test Your App</h3>
+<ol>
+  <li>Fill in inputs → click Run All → wait 5–10 seconds → AI outputs fill with responses</li>
+  <li>Test copy buttons (require HTTPS — add CloudFront in Step 9 if they don't work)</li>
+  <li>Test reset button</li>
+  <li>Open on your phone — check keyboard doesn't cover inputs</li>
+</ol>
+<div class="tip">First request may take 10–15 seconds (Lambda cold start). Subsequent requests are faster.</div>
+
+<h3>Check CloudWatch Logs</h3>
+<ol>
+  <li>CloudWatch → Log groups → find <code>/aws/lambda/your-function-name</code></li>
+  <li>Click the most recent log stream → look for ERROR lines</li>
+  <li>Copy any error line and paste into Kiro to diagnose</li>
+</ol>
+
+<h3>Set a Billing Alarm</h3>
+<ol>
+  <li>AWS Console → click your account name (top right) → Billing and Cost Management</li>
+  <li>Budgets → Create budget → Use a template → Zero spend budget → enter email → Create</li>
+</ol>
+
+<h3>What You Just Built</h3>
+<table><tr><th></th><th>PartyRock</th><th>Your App</th></tr><tr><td>Requires login</td><td>Yes</td><td>No</td></tr><tr><td>Custom design</td><td>No</td><td>Yes</td></tr><tr><td>You own it</td><td>No</td><td>Yes</td></tr><tr><td>HTTPS</td><td>Yes</td><td>Yes (after Step 9)</td></tr><tr><td>API key protection</td><td>N/A</td><td>Yes (Step 7.5)</td></tr><tr><td>Cost controls</td><td>N/A</td><td>Yes (throttling + alarms)</td></tr><tr><td>Cost</td><td>Free (credits)</td><td>~$0 (free tier)</td></tr></table>
+<ul class="checklist"><li>Live URL found and app loads</li><li>Run All tested end to end</li><li>Tested on mobile</li><li>CloudWatch logs checked</li><li>Billing alarm set</li></ul>
+<div class="page-break"></div>
+
+<!-- STEP 9 -->
+<h2 class="step9">Step 9 — Make It Production-Ready (20–45 min)</h2>
+
+<h3>9.1 Add HTTPS with CloudFront</h3>
+<div class="rec">Recommended for everyone — gives you HTTPS for free and makes copy buttons work.</div>
+<ol>
+  <li>AWS Console → CloudFront → Create a CloudFront distribution</li>
+  <li>Origin domain: select your frontend S3 bucket (the <code>.s3-website-us-east-1.amazonaws.com</code> endpoint)</li>
+  <li>Viewer protocol policy: <strong>Redirect HTTP to HTTPS</strong></li>
+  <li>Leave all other settings as default → Create distribution</li>
+  <li>Wait 5–10 minutes for status to change to <strong>Enabled</strong></li>
+  <li>Copy the Distribution domain name (e.g. <code>d1234abcd.cloudfront.net</code>) — your new HTTPS URL</li>
+</ol>
+<p>Then lock down S3 to CloudFront only: ask Kiro to generate an S3 bucket policy that only allows access from your CloudFront distribution ARN.</p>
+
+<h3>9.2 Add a Custom Domain (Optional)</h3>
+<ol>
+  <li>Certificate Manager (must be in us-east-1) → Request a certificate → enter domain → DNS validation → Create records in Route 53</li>
+  <li>CloudFront → your distribution → Edit → add domain as Alternate domain name → select certificate → Save</li>
+  <li>Route 53 → Hosted zones → your domain → Create record → type A → Alias → CloudFront distribution</li>
+</ol>
+
+<h3>9.3 Add AWS WAF Rate Limiting (Optional, ~$5/month)</h3>
+<ol>
+  <li>WAF &amp; Shield → Create web ACL → Regional → us-east-1 → Name: <code>my-app-waf</code></li>
+  <li>Add managed rule: AWSManagedRulesCommonRuleSet</li>
+  <li>Add own rule: Rate-based → 100 per 5 min → Block</li>
+  <li>Attach to API Gateway: API Gateway → your API → Stages → prod → WAF tab → select ACL</li>
+</ol>
+
+<h3>9.4 DynamoDB Chat Persistence (Chatbot Apps Only)</h3>
+<ol>
+  <li>DynamoDB → Create table → Name: <code>my-app-chat-sessions</code> → Partition key: <code>session_id</code> (String)</li>
+  <li>Ask Kiro to update your chatbot Lambda to store/retrieve conversation history with 24h TTL</li>
+  <li>IAM → Lambda role → Add permissions → AmazonDynamoDBFullAccess</li>
+  <li>Ask Kiro to update frontend to generate session_id and add a Clear Chat button</li>
+</ol>
+
+<h3>9.5 Large File Uploads via Presigned URL (File Upload Apps Only)</h3>
+<p><strong>Default behaviour:</strong> The generated app reads files in the browser using FileReader, converts to base64, and sends directly in the Lambda request body. This works for files up to ~15MB (Lambda Function URLs support 20MB payloads; base64 adds ~33% overhead). Most photos, PDFs, DOCX, and CSV files fall well within this limit.</p>
+<p><strong>Only needed for files larger than ~15MB:</strong> Ask Kiro: <em>"Add a presigned URL upload endpoint. Lambda generates a presigned S3 PUT URL, frontend uses it for files larger than 15MB. Store uploads in a new S3 bucket called my-app-uploads."</em></p>
+
+<ul class="checklist"><li>CloudFront distribution created, HTTPS URL working</li><li>S3 bucket policy updated to allow CloudFront only</li><li>(Optional) Custom domain connected</li><li>(Optional) WAF attached to API Gateway</li><li>(Optional) DynamoDB chat sessions table created</li></ul>
+<div class="page-break"></div>
+
+<!-- STEP 10 -->
+<h2>Step 10 — Update Your App After It's Live (5 min)</h2>
+<p>Every time you save a change to GitHub, your app redeploys automatically in 3–5 minutes.</p>
+
+<h3>Update a Prompt</h3>
+<ol>
+  <li>Open Kiro → share the Lambda file → describe the change → Kiro edits it</li>
+  <li>GitHub → navigate to the file → pencil icon → select all → paste updated content → Commit changes</li>
+</ol>
+
+<h3>Update the Frontend</h3>
+<ol>
+  <li>Open Kiro → share <code>frontend/index.html</code> → describe the change → Kiro edits it</li>
+  <li>GitHub → <code>frontend/index.html</code> → pencil icon → select all → paste → Commit changes</li>
+</ol>
+
+<h3>Roll Back a Broken Change</h3>
+<ol>
+  <li>GitHub → click the file → History (clock icon) → click the commit before your broken change</li>
+  <li>View the old version → copy content → go back to current file → edit → paste → Commit</li>
+</ol>
+<div class="tip">If the deployment itself failed, CloudFormation automatically rolls back. Check CloudFormation → your stack → Status column for ROLLBACK_COMPLETE.</div>
+<div class="tip">After updating CloudFront-served files, force a browser refresh with Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac).</div>
+
+<!-- STEP 11 -->
+<h2>Step 11 — Delete Your App (Cleanup)</h2>
+<div class="warn">Deleting your app is permanent. Your GitHub repository and code are NOT affected.</div>
+<ol>
+  <li><strong>CloudFormation:</strong> Find your stack → check box → Delete → confirm. If it fails with "bucket not empty", empty the S3 bucket first (see step 3).</li>
+  <li><strong>SAM artifacts bucket:</strong> S3 → find <code>yourname-sam-deploy-2024</code> → Empty → Delete</li>
+  <li><strong>CloudWatch log groups:</strong> CloudWatch → Log groups → select <code>/aws/lambda/</code> groups → Actions → Delete</li>
+  <li><strong>CloudFront:</strong> CloudFront → select distribution → <strong>Disable first</strong> (wait 5–10 min) → then Delete</li>
+  <li><strong>DynamoDB table</strong> (if applicable): DynamoDB → Tables → select → Delete</li>
+  <li><strong>IAM user</strong> (optional): IAM → Users → github-deployer → Delete</li>
+</ol>
+<div class="warn">CloudFront distributions MUST be disabled before they can be deleted. Trying to delete without disabling first will fail.</div>
+<p>To redeploy later: GitHub → Actions → your workflow → Run workflow. Your app redeploys from scratch in 3–5 minutes.</p>
+
+<!-- FAQ -->
+<div class="page-break"></div>
+<h1>FAQ — Quick Reference</h1>
+<table>
+  <tr><th>Question</th><th>Answer</th></tr>
+  <tr><td>Do I need to code?</td><td>No. Kiro generates all code. GitHub web UI handles uploads.</td></tr>
+  <tr><td>How much does it cost?</td><td>&lt;100 req/day: ~$0. 1,000 req/day: ~$1–3/month. Main cost: Bedrock ~$0.003/request.</td></tr>
+  <tr><td>First request is slow (10–15s)</td><td>Normal — Lambda cold start. Subsequent requests are fast.</td></tr>
+  <tr><td>Copy button doesn't work</td><td>Requires HTTPS. Add CloudFront (Step 9.1) first.</td></tr>
+  <tr><td>AI output shows **bold** symbols</td><td>Add marked.js (Step 5.8) for markdown rendering.</td></tr>
+  <tr><td>Deployment says "No changes to deploy"</td><td>Fine — stack is already up to date.</td></tr>
+  <tr><td>I lost my Secret Access Key</td><td>IAM → github-deployer → Security credentials → delete old key → create new one → update GitHub secrets.</td></tr>
+  <tr><td>Lab session expired, app stopped</td><td>Start new lab session → copy new credentials → update 3 GitHub secrets → redeploy.</td></tr>
+  <tr><td>Lab doesn't have Claude</td><td>Use Amazon Titan Text Express: <code>amazon.titan-text-express-v1</code>. Update model ID in Lambda functions.</td></tr>
+  <tr><td>Someone is spamming my app</td><td>API Gateway → Usage Plans → disable the API key immediately. Then add WAF (Step 9.3).</td></tr>
+  <tr><td>Unexpected AWS bill</td><td>Billing → Cost Explorer to find which service. Most common: forgotten EC2 instance or NAT Gateway.</td></tr>
+  <tr><td>Can I use React instead of plain HTML?</td><td>Yes — ask Kiro to convert and add a build step to the GitHub Actions workflow.</td></tr>
+</table>
+
+</body>
+</html>

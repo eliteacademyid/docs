@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AWS AI Documentation Platform</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #e0e0e0; line-height: 1.7; }
+    
+    /* Navigation */
+    nav { background: #1a1a1a; border-bottom: 1px solid #2a2a2a; padding: 16px 24px; position: sticky; top: 0; z-index: 100; }
+    nav .container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 32px; }
+    nav .logo { color: #c8f135; font-weight: 700; font-size: 18px; text-decoration: none; }
+    nav .links { display: flex; gap: 24px; }
+    nav a { color: #aaa; text-decoration: none; transition: color 0.2s; }
+    nav a:hover { color: #c8f135; }
+    
+    /* Hero */
+    .hero { background: linear-gradient(135deg, #1a2208 0%, #0f0f0f 60%); padding: 120px 24px; text-align: center; }
+    .hero h1 { font-size: 52px; font-weight: 800; color: #fff; margin-bottom: 24px; }
+    .hero h1 span { color: #c8f135; }
+    .hero p { font-size: 20px; color: #aaa; max-width: 700px; margin: 0 auto 40px; }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn { padding: 14px 32px; border-radius: 8px; font-size: 16px; font-weight: 600; text-decoration: none; display: inline-block; }
+    .btn-primary { background: #c8f135; color: #0f0f0f; }
+    .btn-secondary { background: transparent; color: #c8f135; border: 2px solid #c8f135; }
+    
+    /* Sections */
+    .container { max-width: 1200px; margin: 0 auto; padding: 80px 24px; }
+    h2 { font-size: 36px; font-weight: 700; color: #fff; margin-bottom: 48px; text-align: center; }
+    
+    /* Cards */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 32px; text-align: center; transition: transform 0.2s, border-color 0.2s; text-decoration: none; display: block; }
+    .card:hover { transform: translateY(-4px); border-color: #c8f135; }
+    .card-icon { font-size: 48px; margin-bottom: 16px; }
+    .card h3 { font-size: 20px; color: #fff; margin-bottom: 12px; }
+    .card p { color: #aaa; font-size: 14px; line-height: 1.6; }
+    
+    /* Footer */
+    footer { background: #1a1a1a; border-top: 1px solid #2a2a2a; padding: 32px 24px; text-align: center; color: #666; }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="container">
+      <a href="/" class="logo">📚 Docs</a>
+      <div class="links">
+        <a href="/tutorials/">Tutorials</a>
+        <a href="/tools/">Tools</a>
+        <a href="/guides/">Guides</a>
+        <a href="/resources/">Resources</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Build <span>AI Apps</span> on AWS</h1>
+    <p>Comprehensive tutorials, interactive tools, and documentation for deploying AI applications with Amazon Bedrock</p>
+    <div class="hero-btns">
+      <a href="/tutorials/partyrock-to-aws/" class="btn btn-primary">Start Tutorial</a>
+      <a href="/tools/" class="btn btn-secondary">Explore Tools</a>
+    </div>
+  </section>
+
+  <!-- Quick Links -->
+  <section class="container">
+    <h2>What Would You Like to Do?</h2>
+    <div class="card-grid">
+      <a href="/tutorials/" class="card">
+        <div class="card-icon">📖</div>
+        <h3>Tutorials</h3>
+        <p>Step-by-step guides to build and deploy AI applications on AWS</p>
+      </a>
+      
+      <a href="/tools/" class="card">
+        <div class="card-icon">🛠️</div>
+        <h3>Tools</h3>
+        <p>Interactive utilities to accelerate your development workflow</p>
+      </a>
+      
+      <a href="/guides/" class="card">
+        <div class="card-icon">📚</div>
+        <h3>Guides</h3>
+        <p>In-depth documentation for AWS services and best practices</p>
+      </a>
+      
+      <a href="/resources/" class="card">
+        <div class="card-icon">📦</div>
+        <h3>Resources</h3>
+        <p>Templates, code samples, and downloadable resources</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Featured Tutorial -->
+  <section class="container" style="background: #1a1a1a; border-radius: 16px; padding: 48px;">
+    <h2 style="margin-bottom: 24px;">Featured Tutorial</h2>
+    <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+      <div style="font-size: 64px; margin-bottom: 24px;">🎉</div>
+      <h3 style="font-size: 28px; color: #c8f135; margin-bottom: 16px;">PartyRock to AWS</h3>
+      <p style="color: #aaa; font-size: 16px; margin-bottom: 32px;">Convert your PartyRock AI app into a production-ready web application deployed on AWS. Complete guide for non-technical users — no coding required.</p>
+      <a href="/tutorials/partyrock-to-aws/" class="btn btn-primary">Start Building →</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 AWS AI Documentation Platform. All rights reserved.</p>
+  </footer>
+</body>
+</html>

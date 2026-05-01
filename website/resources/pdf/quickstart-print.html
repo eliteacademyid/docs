@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>PartyRock + Kiro + Bedrock — Quick Start</title>
+<style>
+@media print{.no-print{display:none}.pb{page-break-before:always}pre,code{white-space:pre-wrap;word-break:break-word}}
+body{font-family:Georgia,serif;max-width:720px;margin:0 auto;padding:36px 28px;color:#111;line-height:1.7;font-size:13px}
+h1{font-size:23px;border-bottom:3px solid #111;padding-bottom:8px;margin-bottom:14px}
+h2{font-size:16px;margin-top:30px;background:#111;color:#fff;padding:6px 11px;border-radius:4px}
+h3{font-size:13px;margin-top:16px;color:#333;border-left:4px solid #c8f135;padding-left:7px}
+p{margin-bottom:9px}ol,ul{padding-left:18px;margin-bottom:9px}li{margin-bottom:4px}
+code{background:#f0f0f0;border:1px solid #ddd;border-radius:3px;padding:1px 4px;font-size:11px;font-family:monospace}
+pre{background:#f5f5f5;border:1px solid #ddd;border-radius:4px;padding:9px;font-size:11px;white-space:pre-wrap;word-break:break-word}
+table{width:100%;border-collapse:collapse;margin:9px 0;font-size:12px}
+th{background:#111;color:#fff;padding:6px 8px;text-align:left}td{padding:6px 8px;border-bottom:1px solid #ddd}
+.ss{border:1px dashed #999;border-radius:3px;padding:7px 10px;margin:8px 0;font-size:11px;color:#555;background:#fafafa}
+.ss::before{content:"📸 Screenshot: ";font-weight:bold;color:#333}
+.tip{border-left:4px solid #4CAF50;padding:7px 10px;margin:8px 0;background:#f9fff9;font-size:12px}
+.tip::before{content:"💡 Tip: ";font-weight:bold}
+.warn{border-left:4px solid #FF9800;padding:7px 10px;margin:8px 0;background:#fffdf5;font-size:12px}
+.warn::before{content:"⚠️ Important: ";font-weight:bold}
+.checklist{list-style:none;padding:9px;border:1px solid #ddd;border-radius:3px;margin:8px 0}
+.checklist li{padding:3px 0;border-bottom:1px solid #eee}.checklist li:last-child{border-bottom:none}
+.checklist li::before{content:"☐  ";font-size:14px}
+.cover{text-align:center;padding:48px 0}
+.cover h1{font-size:26px;border:none}
+.cover .sub{font-size:14px;color:#555;margin-top:8px}
+.cover .meta{margin-top:24px;font-size:12px;color:#888;line-height:2.2}
+.tool-row{display:flex;gap:0;margin:18px 0;border:2px solid #111;border-radius:6px;overflow:hidden}
+.tc{flex:1;padding:14px 10px;text-align:center}
+.tc.pr{background:#f5eeff;border-right:2px solid #111}
+.tc.ki{background:#efffef;border-right:2px solid #111}
+.tc.br{background:#fff5ee}
+.tc .icon{font-size:22px;margin-bottom:5px}
+.tc .name{font-weight:bold;font-size:13px;margin-bottom:3px}
+.tc.pr .name{color:#6a0dad}.tc.ki .name{color:#1a4a00}.tc.br .name{color:#b35900}
+.tc .role{font-size:11px;color:#555;font-style:italic}
+.badge{display:inline-block;border-radius:3px;padding:1px 7px;font-size:10px;font-weight:bold;margin-left:5px;vertical-align:middle}
+.badge.pr{background:#6a0dad;color:#fff}.badge.ki{background:#1a4a00;color:#fff}.badge.br{background:#b35900;color:#fff}
+.flow{display:flex;align-items:center;gap:6px;margin:6px 0;font-size:12px}
+.fb{border-radius:4px;padding:3px 10px;font-size:11px;font-weight:bold}
+.fb.pr{background:#f5eeff;border:1px solid #6a0dad;color:#6a0dad}
+.fb.ki{background:#efffef;border:1px solid #1a4a00;color:#1a4a00}
+.fb.br{background:#fff5ee;border:1px solid #b35900;color:#b35900}
+.print-btn{position:fixed;bottom:20px;right:20px;background:#111;color:#fff;border:none;padding:10px 16px;border-radius:5px;cursor:pointer;font-size:12px}
+</style>
+</head>
+<body>
+<button class="print-btn no-print" onclick="window.print()">🖨️ Print / Save as PDF</button>
+
+<!-- COVER -->
+<div class="cover">
+  <h1>Introduction to Amazon Bedrock</h1>
+  <div class="sub">Build and Publish a Real AI App — No Coding Required</div>
+  <div class="tool-row" style="max-width:480px;margin:20px auto 0">
+    <div class="tc pr"><div class="icon">🎉</div><div class="name">PartyRock</div><div class="role">App Prototyping</div></div>
+    <div class="tc ki"><div class="icon">🤖</div><div class="name">Kiro</div><div class="role">Agentic AI Dev Tool</div></div>
+    <div class="tc br"><div class="icon">🌐</div><div class="name">Bedrock + AWS</div><div class="role">Published Working App</div></div>
+  </div>
+  <div class="meta">
+    <strong>Learning objective:</strong> Understand what Amazon Bedrock is and deploy a real app that calls it<br>
+    <strong>Prerequisites:</strong> AWS account ✓ &nbsp;·&nbsp; GitHub account ✓<br>
+    Kiro setup is Step 0 — free credits included, no payment required<br><br>
+    <strong>Estimated time: ~2 hours</strong>
+  </div>
+</div>
+<div class="pb"></div>
+
+<!-- HOW THE THREE TOOLS WORK TOGETHER -->
+<h1>How PartyRock, Kiro, and Bedrock Work Together</h1>
+<p>These three tools form a complete pipeline — from idea to published app. Each one has a distinct role.</p>
+
+<div class="tool-row">
+  <div class="tc pr"><div class="icon">🎉</div><div class="name">PartyRock</div><div class="role">App Prototyping</div></div>
+  <div class="tc ki"><div class="icon">🤖</div><div class="name">Kiro</div><div class="role">Agentic AI Dev Tool</div></div>
+  <div class="tc br"><div class="icon">🌐</div><div class="name">Bedrock + AWS</div><div class="role">Published Working App</div></div>
+</div>
+
+<h3>PartyRock — App Prototyping</h3>
+<p>PartyRock is AWS's no-code AI playground. You describe an app, drag widgets onto a canvas, write prompts, and in minutes you have a working AI prototype — text generators, image generators, chatbots, file analyzers. All powered by Amazon Bedrock behind the scenes.</p>
+<p><strong>What it's great for:</strong> Testing ideas fast. Figuring out exactly what prompts and widgets your app needs — without writing a single line of code.</p>
+<p><strong>What it can't do:</strong> Let anyone use your app without a PartyRock account. Give you a custom URL. Let you control the design. Scale beyond the playground.</p>
+
+<h3>Kiro — Agentic AI Development Tool</h3>
+<p>Kiro is an AI-powered IDE that acts as your development partner. You describe what you want to build — in plain English — and Kiro reads your PartyRock prototype, understands every widget and prompt, and writes all the real production code: Lambda functions, API Gateway config, SAM infrastructure templates, GitHub Actions deployment workflows, and a complete frontend.</p>
+<p><strong>What makes it agentic:</strong> Kiro doesn't just autocomplete. It plans, reasons, and executes multi-step tasks. You give it your PartyRock widget map and screenshots, and it produces a complete, deployable application. You never write a line of code.</p>
+
+<h3>Amazon Bedrock + AWS Services — Published Working App</h3>
+<p>Amazon Bedrock is the AI engine that PartyRock uses under the hood. When you "slice" your PartyRock app, your Lambda functions call Bedrock directly — the same Claude models, the same quality, but now running in infrastructure you own and control.</p>
+<table>
+  <tr><th>Service</th><th>Role in your published app</th></tr>
+  <tr><td>Amazon Bedrock</td><td>Runs Claude AI — same model as PartyRock, now yours</td></tr>
+  <tr><td>AWS Lambda</td><td>Serverless functions — one per AI widget, written by Kiro</td></tr>
+  <tr><td>API Gateway</td><td>REST API connecting your website to Lambda</td></tr>
+  <tr><td>Amazon S3</td><td>Hosts your website files</td></tr>
+  <tr><td>GitHub Actions</td><td>Deploys everything automatically on every push</td></tr>
+  <tr><td>IAM</td><td>Secure permissions — Lambda can only call your specific model</td></tr>
+</table>
+
+<h3>The Complete Flow</h3>
+<div class="flow"><span class="fb pr">PartyRock</span><span>→ prototype your app idea, no code needed</span></div>
+<div class="flow"><span class="fb ki">Kiro</span><span>→ reads your prototype, writes all the production code</span></div>
+<div class="flow"><span class="fb br">Bedrock + AWS</span><span>→ runs your published app, owned by you</span></div>
+<div class="pb"></div>
+
+<!-- LEARNING OBJECTIVES COVERAGE -->
+<h1>Learning Objectives — What This Guide Covers</h1>
+<p>This guide is designed to address three core learning objectives for Amazon Bedrock:</p>
+
+<h3>Objective 1 — Components of a Generative AI Application + FM Customization Options</h3>
+<table>
+  <tr><th>Component</th><th>What it does</th><th>Where you see it</th></tr>
+  <tr><td>Foundation Model (FM)</td><td>The AI brain — Claude Sonnet 4.5 via Bedrock</td><td>Step 4 — you enable it; Step 2 — Kiro calls it</td></tr>
+  <tr><td>Prompt</td><td>The instruction sent to the FM</td><td>Step 1 — copied from PartyRock; Step 2 — inside Lambda</td></tr>
+  <tr><td>Inference parameters</td><td>Temperature, Top P, max_tokens — control the response</td><td>Step 1 — PartyRock Advanced tab; Step 2 — in the API call</td></tr>
+  <tr><td>Orchestration layer</td><td>Lambda — receives input, builds prompt, calls Bedrock</td><td>Step 2 — Kiro generates this</td></tr>
+  <tr><td>API layer</td><td>API Gateway — exposes Lambda to the web</td><td>Step 7 — SAM creates this</td></tr>
+  <tr><td>Frontend</td><td>The user interface — mirrors PartyRock layout</td><td>Step 2 — Kiro generates index.html</td></tr>
+  <tr><td>Hosting</td><td>S3 static website — serves the frontend</td><td>Step 7 — SAM creates this</td></tr>
+</table>
+
+<p><strong>FM Customization Options</strong> — Bedrock offers four ways to customize a foundation model:</p>
+<table>
+  <tr><th>Option</th><th>What it is</th><th>Used in this guide?</th></tr>
+  <tr><td>Prompt engineering</td><td>Craft the prompt to guide the FM's response — no training needed</td><td>✅ Yes — your PartyRock prompts are prompt engineering</td></tr>
+  <tr><td>Retrieval Augmented Generation (RAG)</td><td>Connect the FM to your own documents via Bedrock Knowledge Bases</td><td>❌ Not in quickstart — see "What's Next"</td></tr>
+  <tr><td>Fine-tuning</td><td>Train the FM on your own data to specialize its behavior</td><td>❌ Not in quickstart — advanced use case</td></tr>
+  <tr><td>Continued pre-training</td><td>Further train the FM on domain-specific unlabeled data</td><td>❌ Not in quickstart — advanced use case</td></tr>
+</table>
+
+<h3>Objective 2 — Bedrock Foundation Models, Inference Parameters, and Key APIs</h3>
+<p>See the "What Is Amazon Bedrock?" section on the next page for the full glossary and API reference. Key APIs used in this guide:</p>
+<table>
+  <tr><th>Bedrock API</th><th>Used for</th><th>Where</th></tr>
+  <tr><td><code>InvokeModelWithResponseStream</code></td><td>Streaming text generation — tokens arrive as they are generated</td><td>All text Lambda functions</td></tr>
+  <tr><td><code>InvokeModel</code> (multimodal)</td><td>Image + text analysis — sends base64 image with a text prompt</td><td>Image Calorie Scanner Lambda</td></tr>
+</table>
+
+<h3>Objective 3 — Architecture Patterns for Generative AI Applications</h3>
+<p>This guide implements the <strong>Serverless Inference</strong> pattern. Three other common patterns are shown for reference:</p>
+<table>
+  <tr><th>Pattern</th><th>Description</th><th>This guide</th></tr>
+  <tr><td><strong>Serverless Inference</strong></td><td>User → API Gateway → Lambda → Bedrock. Simple, scalable, pay-per-use. Best for request/response AI features.</td><td>✅ Implemented</td></tr>
+  <tr><td><strong>RAG (Retrieval Augmented Generation)</strong></td><td>User query → retrieve relevant docs from vector store → inject into prompt → Bedrock. Best for Q&amp;A over your own data.</td><td>See "What's Next"</td></tr>
+  <tr><td><strong>Agentic</strong></td><td>Bedrock Agent decides which tools to call (search, database, API) to complete a multi-step task. Best for autonomous workflows.</td><td>See "What's Next"</td></tr>
+  <tr><td><strong>Prompt Chaining</strong></td><td>Output of one Bedrock call becomes input to the next. Best for multi-step reasoning or content pipelines.</td><td>PartyRock widget references do this</td></tr>
+</table>
+<div class="pb"></div>
+
+<!-- WHAT IS BEDROCK -->
+<h1>What Is Amazon Bedrock? <span style="font-size:13px;font-weight:400;color:#555">(Read this first)</span></h1>
+
+<h3>Foundation Models</h3>
+<p>Amazon Bedrock is a fully managed AWS service that gives you access to <strong>foundation models</strong> — large AI models trained on massive amounts of data that can understand and generate text, images, and more.</p>
+<p>Think of a foundation model like a very capable brain you can rent. You send it a question or instruction. It sends back a response. You pay for what you use. You don't manage any servers.</p>
+<table>
+  <tr><th>Provider</th><th>Models available via Bedrock</th></tr>
+  <tr><td>Anthropic</td><td>Claude Sonnet 4.5 (used in this guide), Claude 3 Haiku, Claude 3 Sonnet</td></tr>
+  <tr><td>Amazon</td><td>Titan Text, Nova Canvas (images)</td></tr>
+  <tr><td>Meta</td><td>Llama 3</td></tr>
+  <tr><td>Stability AI</td><td>Stable Diffusion XL (images)</td></tr>
+</table>
+
+<h3>The Bedrock API — What It Actually Looks Like</h3>
+<p>Here is the core of what Bedrock does. Your code sends a request like this:</p>
+<pre>POST /model/anthropic.claude-3-sonnet.../invoke
+
+{
+  "messages": [
+    { "role": "user", "content": "What are the calories in a chicken salad?" }
+  ],
+  "max_tokens": 1024,
+  "temperature": 0.7
+}</pre>
+<p>Bedrock routes it to Claude and returns:</p>
+<pre>{
+  "content": [
+    { "text": "A typical chicken salad contains approximately 350–450 calories..." }
+  ]
+}</pre>
+<p>That's it. That's Amazon Bedrock. An API that connects your code to powerful AI models.</p>
+
+<h3>Key Concepts Glossary</h3>
+<table>
+  <tr><th>Term</th><th>Plain English</th></tr>
+  <tr><td><strong>Foundation Model</strong></td><td>A large pre-trained AI model (Claude, Llama, Titan). You don't train it — you call it via API.</td></tr>
+  <tr><td><strong>Inference</strong></td><td>The act of running a model to get a response. Every time a user clicks Run All, Bedrock performs inference.</td></tr>
+  <tr><td><strong>Token</strong></td><td>The unit Bedrock charges by. Roughly 4 characters = 1 token. A typical AI response = 200–500 tokens ≈ $0.001–0.003.</td></tr>
+  <tr><td><strong>Temperature</strong></td><td>Controls creativity vs. consistency. 0 = always the same answer. 1 = more varied. Maps to the Temperature slider in PartyRock's Advanced tab.</td></tr>
+  <tr><td><strong>Top P</strong></td><td>Controls word choice diversity. Lower = more focused. Higher = more variety. Maps to the Top P slider in PartyRock's Advanced tab.</td></tr>
+  <tr><td><strong>Model ID</strong></td><td>The unique identifier for a specific model version, e.g. <code>us.anthropic.claude-sonnet-4-5-20250929-v1:0</code>. The <code>us.</code> prefix indicates a cross-region inference profile.</td></tr>
+</table>
+
+<h3>PartyRock Is Bedrock With a UI</h3>
+<p>This is the key insight for this guide. When you use PartyRock and fill in a widget that generates text, PartyRock is secretly making a Bedrock API call for you:</p>
+<table>
+  <tr><th>PartyRock setting</th><th>Bedrock API parameter</th></tr>
+  <tr><td>Prompt text in the widget</td><td><code>"content"</code> field in the request body</td></tr>
+  <tr><td>Model selected in AI model tab</td><td>Model ID in the API endpoint URL</td></tr>
+  <tr><td>Temperature slider value</td><td><code>"temperature"</code> in the request body</td></tr>
+  <tr><td>Top P slider value</td><td><code>"top_p"</code> in the request body</td></tr>
+  <tr><td>[Widget Name] reference in prompt</td><td>Runtime string injection before the API call</td></tr>
+</table>
+<p>When we "slice" your PartyRock app, we replace PartyRock's hidden API calls with real Lambda functions that make those same calls — but now in infrastructure you own and control.</p>
+
+<!-- VISUAL: PartyRock → Bedrock side-by-side -->
+<div style="display:flex;gap:0;margin:14px 0;border:2px solid #111;border-radius:6px;overflow:hidden;font-size:11px">
+  <div style="flex:1;padding:12px 14px;background:#f5eeff;border-right:2px solid #111">
+    <div style="font-weight:bold;color:#6a0dad;margin-bottom:8px;font-size:12px">🎉 PartyRock widget setting</div>
+    <div style="margin-bottom:6px;padding:5px 8px;background:#fff;border-radius:3px;border:1px solid #d0b0f0">Prompt text in the widget</div>
+    <div style="margin-bottom:6px;padding:5px 8px;background:#fff;border-radius:3px;border:1px solid #d0b0f0">Model selected (AI model tab)</div>
+    <div style="margin-bottom:6px;padding:5px 8px;background:#fff;border-radius:3px;border:1px solid #d0b0f0">Temperature slider value</div>
+    <div style="margin-bottom:6px;padding:5px 8px;background:#fff;border-radius:3px;border:1px solid #d0b0f0">Top P slider value</div>
+    <div style="padding:5px 8px;background:#fff;border-radius:3px;border:1px solid #d0b0f0">[Widget Name] in prompt</div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:center;padding:0 10px;background:#f0f0f0;font-size:16px;color:#555">→</div>
+  <div style="flex:1;padding:12px 14px;background:#fff5ee;border-left:2px solid #111">
+    <div style="font-weight:bold;color:#b35900;margin-bottom:8px;font-size:12px">🌐 Bedrock API parameter</div>
+    <div style="margin-bottom:6px;padding:5px 8px;background:#fff;border-radius:3px;border:1px solid #f0c080;font-family:monospace">"content" field in request body</div>
+    <div style="margin-bottom:6px;padding:5px 8px;background:#fff;border-radius:3px;border:1px solid #f0c080;font-family:monospace">modelId in the API endpoint URL</div>
+    <div style="margin-bottom:6px;padding:5px 8px;background:#fff;border-radius:3px;border:1px solid #f0c080;font-family:monospace">"temperature" in request body</div>
+    <div style="margin-bottom:6px;padding:5px 8px;background:#fff;border-radius:3px;border:1px solid #f0c080;font-family:monospace">"top_p" in request body</div>
+    <div style="padding:5px 8px;background:#fff;border-radius:3px;border:1px solid #f0c080;font-family:monospace">Runtime string injection</div>
+  </div>
+</div>
+<div class="pb"></div>
+
+<!-- PREREQUISITES + STEPS -->
+<h1>Prerequisites &amp; Steps at a Glance</h1>
+<p>You only need two accounts. Everything else is set up in this guide.</p>
+<table>
+  <tr><th>Account</th><th>Sign up at</th><th>Cost</th></tr>
+  <tr><td><strong>AWS account</strong></td><td>aws.amazon.com</td><td>Free (credit card required for verification)</td></tr>
+  <tr><td><strong>GitHub account</strong></td><td>github.com</td><td>Free</td></tr>
+  <tr><td><strong>Kiro</strong></td><td>kiro.dev</td><td>Free credits included — no payment required to complete this guide</td></tr>
+</table>
+<div class="warn"><strong>Using an AWS lab or sandbox?</strong> (AWS Skill Builder, AWS Academy, Vocareum, Workshop Studio) — you don't need to create an AWS account. Your credentials are provided by the lab. Steps 3 and 6 are slightly different for sandbox users. See the full tutorial's sandbox guide (Step 02b) for the differences before continuing.</div>
+
+<table>
+  <tr><th>#</th><th>Step</th><th>Tool</th><th>Time</th></tr>
+  <tr><td>0</td><td>Set up Kiro</td><td><span class="badge ki">Kiro</span></td><td>10 min</td></tr>
+  <tr><td>1</td><td>Read your PartyRock widgets</td><td><span class="badge pr">PartyRock</span></td><td>10 min</td></tr>
+  <tr><td>2</td><td>App Planner + generate code with Kiro</td><td><span class="badge ki">Kiro</span></td><td>15 min</td></tr>
+  <tr><td>3</td><td>Set up AWS (IAM user, access key, S3 bucket)</td><td><span class="badge br">AWS</span></td><td>15 min</td></tr>
+  <tr><td>4</td><td>Enable Bedrock AI models</td><td><span class="badge br">Bedrock</span></td><td>5 min</td></tr>
+  <tr><td>5</td><td>Create GitHub repository + upload code</td><td><span class="badge br">GitHub</span></td><td>20 min</td></tr>
+  <tr><td>6</td><td>Add AWS credentials to GitHub</td><td><span class="badge br">AWS</span></td><td>10 min</td></tr>
+  <tr><td>7</td><td>Run the deployment</td><td><span class="badge br">AWS</span></td><td>5 min</td></tr>
+  <tr><td>8</td><td>Visit your live app</td><td><span class="badge br">AWS</span></td><td>5 min</td></tr>
+  <tr><td></td><td><strong>Total</strong></td><td></td><td><strong>~1.5–2 hours</strong></td></tr>
+</table>
+<div class="pb"></div>
+
+<!-- STEP 0: KIRO -->
+<h2>Step 0 — Set Up Kiro <span style="font-weight:400;font-size:12px">(10 min)</span> <span class="badge ki">Kiro</span></h2>
+<p>Kiro is the agentic AI development tool that writes all your app code. You describe your PartyRock app to Kiro, and it generates a complete, deployable AWS application — no coding required.</p>
+
+<h3>0.1 Install Kiro</h3>
+<ol>
+  <li>Go to <strong>kiro.dev</strong> and download Kiro for your operating system</li>
+  <li>Run the installer and follow the setup prompts</li>
+  <li>Open Kiro — file explorer on the left, editor in the center, chat panel on the right</li>
+</ol>
+<div class="ss">Kiro opens showing a file explorer on the left, a code editor in the center, and a chat panel on the right. The chat panel is where you describe what you want to build.</div>
+
+<h3>0.2 Sign In to Kiro</h3>
+<ol>
+  <li>Click <strong>Sign in</strong> in the top right corner of Kiro</li>
+  <li>Sign in with your AWS Builder ID, Google, or GitHub account</li>
+</ol>
+<div class="tip">Kiro includes free credits to get started — no payment required. You can generate your entire app and deploy it within the free tier. Sign up at kiro.dev to see current free credit details.</div>
+
+<h3>0.3 Open a Workspace Folder</h3>
+<ol>
+  <li>In Kiro, click <strong>File → Open Folder</strong></li>
+  <li>Create a new empty folder on your computer (e.g. <code>my-partyrock-app</code>)</li>
+  <li>Select that folder — this is where Kiro will generate all your app files</li>
+</ol>
+
+<ul class="checklist">
+  <li>Kiro installed and opened</li>
+  <li>Signed in to Kiro</li>
+  <li>Empty workspace folder opened in Kiro</li>
+</ul>
+
+<!-- STEP 1: READ WIDGETS -->
+<h2>Step 1 — Read Your PartyRock Widgets <span style="font-weight:400;font-size:12px">(10 min)</span> <span class="badge pr">PartyRock</span></h2>
+<p>PartyRock is where your app prototype lives. Before Kiro can build the real version, you need to capture exactly what your prototype does — every widget, every prompt, every setting.</p>
+
+<h3>1.1 Open Your App in Edit Mode</h3>
+<ol>
+  <li>Go to <strong>partyrock.aws</strong> and sign in</li>
+  <li>Click on your app → click <strong>Edit</strong> in the top right</li>
+  <li>Click the ✏️ pencil icon on each widget to open its settings panel</li>
+</ol>
+<div class="ss">Top right of the PartyRock screen shows "Edit" button. Each widget has a small pencil icon in its top right corner.</div>
+
+<h3>1.2 What to Copy from Each Widget</h3>
+<table>
+  <tr><th>Edit panel title</th><th>Key fields to copy</th></tr>
+  <tr><td>Edit Text Input</td><td>Widget name, hint text, pre-fill value</td></tr>
+  <tr><td>Edit Slider</td><td>Widget name, Ordinal/Numeric, range, default value</td></tr>
+  <tr><td>Edit Dropdown</td><td>Widget name, options list, pre-selected option</td></tr>
+  <tr><td>Edit Static Text</td><td>Widget name, content text</td></tr>
+  <tr><td>Edit AI Output</td><td>Widget name, prompt text, widget references, model, Temperature, Top P</td></tr>
+  <tr><td>Edit Image Output</td><td>Widget name, image prompt, references, model, aspect ratio (Advanced tab)</td></tr>
+  <tr><td>Edit Chat Box</td><td>Widget name, role prompt (Prompt tab), opening message (Instructions tab), model (Advanced tab)</td></tr>
+  <tr><td>Edit File Upload</td><td>Widget name, instructions, accepted file types</td></tr>
+</table>
+
+<h3>1.3 Take Screenshots</h3>
+<p>Screenshot each widget's edit panel — capture all tabs. You will drag these into Kiro chat so Kiro can see the exact layout and settings.</p>
+<div class="tip">Mac: Cmd + Shift + 4 &nbsp;·&nbsp; Windows: Windows + Shift + S</div>
+
+<ul class="checklist">
+  <li>All widgets listed with their type and name</li>
+  <li>Prompt/content copied for each AI widget</li>
+  <li>Screenshots of each widget's edit panel saved</li>
+</ul>
+<div class="pb"></div>
+
+<!-- STEP 2: APP PLANNER + KIRO VIBE PROMPT -->
+<h2>Step 2 — App Planner + Vibe Prompt → Kiro Generates Everything <span style="font-weight:400;font-size:12px">(15 min)</span> <span class="badge ki">Kiro</span></h2>
+
+<h3>Why the Vibe Prompt — not the Spec Plan</h3>
+<p>Kiro has two modes for generating code:</p>
+<table>
+  <tr><th>Mode</th><th>How it works</th><th>Best for</th></tr>
+  <tr><td><strong>Vibe Prompt</strong> ✅</td><td>One message → Kiro generates everything autonomously in one shot</td><td>Fixed, well-defined problems like this one</td></tr>
+  <tr><td>Spec Plan</td><td>Kiro breaks work into tasks, asks for your approval at each step</td><td>Complex, novel apps where you want to review each decision</td></tr>
+</table>
+<p>The quickstart uses the <strong>Vibe Prompt</strong>. The stack is fixed — Lambda + Bedrock + S3 + GitHub Actions — and the output is predictable. One paste, Kiro runs, everything is generated. No back-and-forth needed.</p>
+
+<h3>2.1 Fill In the App Planner</h3>
+<ol>
+  <li>Go to the tutorial website → click <strong>✨ App Planner</strong> in the top navigation</li>
+  <li>Fill in: App Name, Who it's for, What it does (2–4 sentences), How a user uses it (numbered steps)</li>
+  <li>Click <strong>+ Add Widget</strong> for each widget — copy the details from your widget map (Step 1)</li>
+  <li>Add any Extra Notes (dark theme, reset button, etc.)</li>
+</ol>
+<div class="tip">The preview on the right updates live as you type. Use the <strong>Kiro Chat Prompt</strong> tab — this is the vibe prompt. Ignore the Spec Plan tab for this quickstart.</div>
+
+<h3>2.2 Send the Vibe Prompt to Kiro</h3>
+<ol>
+  <li>Click <strong>Copy</strong> on the <strong>Kiro Chat Prompt</strong> tab</li>
+  <li>Switch to Kiro → click in the chat panel → paste the prompt</li>
+  <li>Drag your PartyRock widget screenshots into the same chat message</li>
+  <li>Send — Kiro reads your prototype and generates your complete AWS application autonomously</li>
+</ol>
+<div class="ss">Kiro's chat panel shows the prompt and screenshots. After sending, Kiro starts generating files — you can watch them appear in the file explorer on the left. No approval steps needed.</div>
+
+<h3>What Kiro Generates</h3>
+<table>
+  <tr><th>File / Folder</th><th>What it is</th></tr>
+  <tr><td><code>frontend/index.html</code></td><td>Your website — mirrors the PartyRock layout exactly</td></tr>
+  <tr><td><code>backend/lambda/*.py</code></td><td>One Python function per AI widget — each calls Bedrock with CORS headers</td></tr>
+  <tr><td><code>infra/template.yaml</code></td><td>SAM template — creates all AWS resources automatically</td></tr>
+  <tr><td><code>.github/workflows/deploy.yml</code></td><td>GitHub Actions workflow — deploys on every push</td></tr>
+</table>
+
+<h3>Look Inside the Lambda — The Actual Bedrock API Call</h3>
+<p>Before moving on, open one of the Lambda .py files Kiro generated (in the file explorer on the left, under <code>backend/lambda/</code>). Find the <code>bedrock.invoke_model_with_response_stream()</code> call. It looks like this:</p>
+<pre>response = bedrock.invoke_model_with_response_stream(
+    modelId="us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+    body=json.dumps({
+        "anthropic_version": "bedrock-2023-05-31",
+        "max_tokens": 1024,
+        "messages": [{"role": "user", "content": prompt}]
+    })
+)</pre>
+<p><strong>Why streaming?</strong> The standard <code>invoke_model()</code> waits for the full response before returning. <code>invoke_model_with_response_stream()</code> returns tokens as they are generated — so users see the AI "thinking" in real time instead of waiting for a blank screen.</p>
+<p>Connect this back to what you saw in PartyRock:</p>
+<table>
+  <tr><th>Code line</th><th>Where it came from</th></tr>
+  <tr><td><code>modelId="us.anthropic.claude-sonnet-4-5..."</code></td><td>The model you selected in PartyRock's AI model tab. The <code>us.</code> prefix is required for the cross-region inference profile.</td></tr>
+  <tr><td><code>"content": prompt</code></td><td>Your PartyRock prompt, with widget values injected at runtime</td></tr>
+  <tr><td><code>"max_tokens": 1024</code></td><td>Limits response length — roughly 750 words maximum</td></tr>
+  <tr><td><code>"temperature"</code> (if present)</td><td>The Temperature slider value from PartyRock's Advanced tab</td></tr>
+</table>
+<div class="tip">This is Amazon Bedrock. One streaming API call. Your prompt goes in. Claude's response comes out token by token. Everything else in this guide is infrastructure to make that call accessible to anyone on the internet.</div>
+
+<ul class="checklist">
+  <li>App Planner filled in completely</li>
+  <li>Vibe Prompt (Kiro Chat Prompt tab) copied and sent to Kiro with screenshots</li>
+  <li>Kiro has generated all app files in your workspace folder</li>
+</ul>
+<div class="pb"></div>
+
+<!-- STEP 3: AWS SETUP -->
+
+<!-- STEP 3: AWS SETUP -->
+<h2>Step 3 — Set Up AWS <span style="font-weight:400;font-size:12px">(15 min)</span> <span class="badge br">AWS</span></h2>
+
+<h3>3.1 Create an IAM User</h3>
+<ol>
+  <li>Sign in to <strong>console.aws.amazon.com</strong></li>
+  <li>Search for <strong>IAM</strong> → left sidebar: <strong>Users</strong> → <strong>Create user</strong></li>
+  <li>Username: <code>github-deployer</code> → Next</li>
+  <li>Select <strong>Attach policies directly</strong> → check these 6 policies:</li>
+</ol>
+<ul>
+  <li><code>AWSCloudFormationFullAccess</code></li>
+  <li><code>AWSLambda_FullAccess</code></li>
+  <li><code>IAMFullAccess</code></li>
+  <li><code>AmazonAPIGatewayAdministrator</code></li>
+  <li><code>AmazonS3FullAccess</code></li>
+  <li><code>AmazonBedrockFullAccess</code> ← this allows Lambda to call the Bedrock API</li>
+</ul>
+<ol start="5"><li>Next → <strong>Create user</strong></li></ol>
+
+<h3>3.2 Create an Access Key</h3>
+<ol>
+  <li>Click on <strong>github-deployer</strong> → <strong>Security credentials</strong> tab</li>
+  <li>Access keys → <strong>Create access key</strong> → Application running outside AWS → Create</li>
+  <li>Copy and save both values — Secret Access Key is only shown ONCE</li>
+</ol>
+<div class="warn">The Secret Access Key is only shown once. Save it now before closing this page.</div>
+<table>
+  <tr><th>Value</th><th>GitHub secret name</th></tr>
+  <tr><td>Access Key ID (starts with AKIA)</td><td>AWS_ACCESS_KEY_ID</td></tr>
+  <tr><td>Secret Access Key</td><td>AWS_SECRET_ACCESS_KEY</td></tr>
+</table>
+
+<h3>3.3 Create an S3 Bucket for Deployment Artifacts</h3>
+<ol>
+  <li>Search for <strong>S3</strong> → <strong>Create bucket</strong></li>
+  <li>Name: <code>yourname-sam-deploy-2024</code> (globally unique)</li>
+  <li>Region: <strong>US East (N. Virginia) us-east-1</strong></li>
+  <li>Leave all other settings as default → <strong>Create bucket</strong> → save the name</li>
+  <li>Click the bucket → <strong>Management</strong> tab → <strong>Create lifecycle rule</strong></li>
+  <li>Rule name: <code>expire-old-artifacts</code> · Apply to all objects → check <strong>Expire current versions of objects</strong> → Days: <code>30</code> → <strong>Create rule</strong></li>
+</ol>
+<div class="tip">The lifecycle rule automatically deletes deployment artifacts older than 30 days, keeping your storage costs near zero.</div>
+
+<ul class="checklist">
+  <li>IAM user github-deployer created with all 6 policies</li>
+  <li>Access Key ID saved</li>
+  <li>Secret Access Key saved</li>
+  <li>S3 bucket created, name saved</li>
+  <li>S3 lifecycle rule created (30 days)</li>
+</ul>
+
+<!-- STEP 4: BEDROCK -->
+<h2>Step 4 — Enable Bedrock AI Models <span style="font-weight:400;font-size:12px">(5 min)</span> <span class="badge br">Bedrock</span></h2>
+<p>Amazon Bedrock is the AI engine that PartyRock uses under the hood. Now you enable it in your own AWS account so your Lambda functions can call it directly.</p>
+<ol>
+  <li>Search for <strong>Bedrock</strong> → confirm region is <strong>US East (N. Virginia) us-east-1</strong></li>
+  <li>Left sidebar → <strong>Model access</strong> → <strong>Manage model access</strong></li>
+  <li>Under <strong>Anthropic</strong>, check <strong>Claude Sonnet 4</strong> (Claude Sonnet 4.5) → Save changes</li>
+  <li>Refresh until status shows <strong>Access granted ✅</strong></li>
+</ol>
+<div class="tip">This is the same Claude model your PartyRock app uses. The model ID is <code>us.anthropic.claude-sonnet-4-5-20250929-v1:0</code> — a cross-region inference profile. The <code>us.</code> prefix is required and is already included in the code Kiro generates.</div>
+<div class="tip"><strong>Why do you have to request access?</strong> Bedrock requires explicit opt-in for each foundation model. This ensures you've acknowledged the model's usage policies and gives AWS visibility into which models are being used. Once granted, any Lambda function with AmazonBedrockFullAccess can call this model.</div>
+<div class="warn">Model access can take up to 5–10 minutes to activate. If the status still shows "Requested" after a few minutes, refresh the page and wait. Do not proceed to Step 5 until it shows "Access granted".</div>
+
+<ul class="checklist">
+  <li>In us-east-1 region</li>
+  <li>Claude Sonnet 4 (Claude Sonnet 4.5) shows "Access granted"</li>
+</ul>
+<div class="pb"></div>
+
+<!-- STEP 5: GITHUB -->
+<h2>Step 5 — GitHub Repository + Upload Code <span style="font-weight:400;font-size:12px">(20 min)</span></h2>
+
+<h3>5.1 Create a Repository</h3>
+<ol>
+  <li>Sign in to github.com → click <strong>+</strong> icon → <strong>New repository</strong></li>
+  <li>Name: <code>my-partyrock-app</code> · Visibility: <strong>Public</strong></li>
+  <li>Check <strong>Add a README file</strong> → <strong>Create repository</strong></li>
+</ol>
+
+<h3>5.2 Upload the Files Kiro Generated</h3>
+<div class="warn">GitHub's web interface does not support dragging an entire folder. Upload files individually using "Create new file" to set the path.</div>
+
+<div class="tip">The deploy.yml Kiro generates includes <code>--capabilities CAPABILITY_NAMED_IAM</code> in the SAM deploy command. This is required because the template creates an IAM role. Do not remove this flag.</div>
+
+<p><strong>Frontend:</strong> Add file → Upload files → drag <code>index.html</code> from your frontend folder → commit: <code>Add frontend</code></p>
+
+<p><strong>Lambda functions:</strong> Add file → Create new file → type path: <code>backend/lambda/your_function.py</code> (replace <code>your_function.py</code> with the actual filename from your Kiro workspace, e.g. <code>calorie_scanner.py</code>) → in Kiro, click the file in the left file explorer to open it → select all → copy → paste into GitHub → commit. Repeat for each .py file.</p>
+<div class="ss">The filename input shows "backend/lambda/calorie_scanner.py". GitHub creates the folder structure automatically as you type the slashes.</div>
+
+<p><strong>Infrastructure:</strong> Add file → Create new file → <code>infra/template.yaml</code> → paste contents → commit</p>
+
+<p><strong>Workflow:</strong> Add file → Create new file → <code>.github/workflows/deploy.yml</code> → paste contents → commit</p>
+
+<p><strong>requirements.txt:</strong> Add file → Create new file → <code>backend/lambda/requirements.txt</code> → leave body empty → commit</p>
+
+<ul class="checklist">
+  <li>frontend/index.html uploaded</li>
+  <li>backend/lambda/ — all .py files uploaded</li>
+  <li>backend/lambda/requirements.txt uploaded (empty)</li>
+  <li>infra/template.yaml uploaded</li>
+  <li>.github/workflows/deploy.yml uploaded</li>
+</ul>
+
+<!-- STEP 6: SECRETS -->
+<h2>Step 6 — Add AWS Credentials to GitHub <span style="font-weight:400;font-size:12px">(10 min)</span> <span class="badge br">AWS</span></h2>
+<p>GitHub repo → Settings → Secrets and variables → Actions</p>
+
+<h3>Add 3 Secrets</h3>
+<p>Click <strong>New repository secret</strong> for each:</p>
+<table>
+  <tr><th>Secret Name (type exactly)</th><th>Value</th></tr>
+  <tr><td><code>AWS_ACCESS_KEY_ID</code></td><td>Your Access Key ID from Step 3</td></tr>
+  <tr><td><code>AWS_SECRET_ACCESS_KEY</code></td><td>Your Secret Access Key from Step 3</td></tr>
+  <tr><td><code>SAM_DEPLOY_BUCKET</code></td><td>Your S3 bucket name from Step 3</td></tr>
+</table>
+
+<h3>Add 1 Variable</h3>
+<p>Click the <strong>Variables</strong> tab → <strong>New repository variable</strong>:</p>
+<table>
+  <tr><th>Variable Name</th><th>Value</th></tr>
+  <tr><td><code>AWS_REGION</code></td><td><code>us-east-1</code></td></tr>
+</table>
+
+<ul class="checklist">
+  <li>3 secrets added (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, SAM_DEPLOY_BUCKET)</li>
+  <li>AWS_REGION variable added</li>
+</ul>
+<div class="pb"></div>
+
+<!-- STEP 7: DEPLOY -->
+<h2>Step 7 — Run the Deployment <span style="font-weight:400;font-size:12px">(5 min trigger + 3–5 min to complete)</span> <span class="badge br">AWS</span></h2>
+<ol>
+  <li>GitHub repo → <strong>Actions</strong> tab → click your workflow name</li>
+  <li>Click <strong>Run workflow</strong> → green <strong>Run workflow</strong> button</li>
+  <li>Refresh → click the new row → click the <strong>deploy</strong> job</li>
+  <li>Watch each step get a green ✅ checkmark</li>
+</ol>
+<div class="ss">The job detail page shows steps checking off: ✅ Checkout → ✅ Configure AWS credentials → ✅ Setup SAM CLI → 🔄 SAM Build → ⬜ SAM Deploy → ⬜ Upload frontend → ⬜ Print URLs</div>
+
+<h3>If Something Goes Wrong</h3>
+<table>
+  <tr><th>Error</th><th>Fix</th></tr>
+  <tr><td>Credentials could not be loaded</td><td>Check secrets — no spaces in the values</td></tr>
+  <tr><td>Bucket does not exist</td><td>Check SAM_DEPLOY_BUCKET matches your S3 bucket name exactly</td></tr>
+  <tr><td>Access denied</td><td>Confirm all 6 IAM policies are attached to github-deployer</td></tr>
+  <tr><td>Model not found</td><td>Go back to Step 4 and confirm Bedrock access is granted</td></tr>
+</table>
+
+<ul class="checklist">
+  <li>All deployment steps show green ✅ checkmarks</li>
+</ul>
+
+<!-- STEP 8: LIVE -->
+<h2>Step 8 — Visit Your Live App + The Full Request Flow <span style="font-weight:400;font-size:12px">(5 min)</span></h2>
+<ol>
+  <li>Actions → your deployment run → deploy job → <strong>Print URLs</strong> step → expand</li>
+  <li>Copy the <strong>Frontend URL</strong></li>
+  <li>Paste into a new browser tab → your app loads</li>
+  <li>Fill in the inputs → click <strong>Run All</strong> → wait 5–10 seconds → AI responses appear</li>
+</ol>
+<div class="tip">The first request may take 10–15 seconds (Lambda cold start). Subsequent requests are faster.</div>
+
+<h3>What Happens When You Click Run All</h3>
+<p>Here is the complete request flow — every step from your click to the AI response:</p>
+<table>
+  <tr><th>#</th><th>Step</th><th>What happens</th></tr>
+  <tr><td>1</td><td>Browser</td><td>Sends a POST request to API Gateway with your input values in the body</td></tr>
+  <tr><td>2</td><td>API Gateway</td><td>Receives the request and triggers your Lambda function</td></tr>
+  <tr><td>3</td><td>Lambda</td><td>Runs your Python code — builds the prompt by injecting input values, calls <code>bedrock.invoke_model_with_response_stream()</code></td></tr>
+  <tr><td>4</td><td>Amazon Bedrock</td><td>Receives the API call, routes it to Claude Sonnet 4.5</td></tr>
+  <tr><td>5</td><td>Claude (inference)</td><td>Processes your prompt and generates a response — this is the AI step</td></tr>
+  <tr><td>6</td><td>Bedrock → Lambda</td><td>Returns the response JSON to Lambda</td></tr>
+  <tr><td>7</td><td>Lambda → API Gateway</td><td>Extracts the text, returns it with CORS headers</td></tr>
+  <tr><td>8</td><td>Browser</td><td>Displays the response in the output panel</td></tr>
+</table>
+<p>Steps 4–6 — the Bedrock inference — is where the AI actually runs. Everything else is routing infrastructure.</p>
+
+<!-- VISUAL: Request flow diagram -->
+<div style="margin:14px 0;font-size:11px">
+  <div style="display:flex;align-items:stretch;gap:0">
+    <div style="flex:1;text-align:center;padding:8px 4px;background:#e8f0fe;border:1px solid #aac4f0;border-radius:4px 0 0 4px">
+      <div style="font-size:16px">🖥️</div>
+      <div style="font-weight:bold;margin-top:3px">Browser</div>
+      <div style="color:#555;font-size:10px;margin-top:2px">POST request</div>
+    </div>
+    <div style="display:flex;align-items:center;padding:0 4px;color:#555;font-size:14px">→</div>
+    <div style="flex:1;text-align:center;padding:8px 4px;background:#e8f0fe;border:1px solid #aac4f0">
+      <div style="font-size:16px">🚪</div>
+      <div style="font-weight:bold;margin-top:3px">API Gateway</div>
+      <div style="color:#555;font-size:10px;margin-top:2px">routes request</div>
+    </div>
+    <div style="display:flex;align-items:center;padding:0 4px;color:#555;font-size:14px">→</div>
+    <div style="flex:1;text-align:center;padding:8px 4px;background:#efffef;border:1px solid #90c090">
+      <div style="font-size:16px">⚙️</div>
+      <div style="font-weight:bold;margin-top:3px">Lambda</div>
+      <div style="color:#555;font-size:10px;margin-top:2px">builds prompt</div>
+    </div>
+    <div style="display:flex;align-items:center;padding:0 4px;color:#555;font-size:14px">→</div>
+    <div style="flex:1;text-align:center;padding:8px 4px;background:#fff5ee;border:1px solid #f0c080">
+      <div style="font-size:16px">🌐</div>
+      <div style="font-weight:bold;margin-top:3px">Bedrock</div>
+      <div style="color:#555;font-size:10px;margin-top:2px">calls Claude</div>
+    </div>
+    <div style="display:flex;align-items:center;padding:0 4px;color:#555;font-size:14px">→</div>
+    <div style="flex:1;text-align:center;padding:8px 4px;background:#fff0f0;border:1px solid #f0a0a0">
+      <div style="font-size:16px">🤖</div>
+      <div style="font-weight:bold;margin-top:3px">Claude</div>
+      <div style="color:#b00;font-size:10px;margin-top:2px;font-weight:bold">← inference</div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:6px;color:#555;font-size:10px">
+    ← response flows back through the same chain → displayed in your browser (~2–5 seconds total)
+  </div>
+</div>
+
+<ul class="checklist">
+  <li>Frontend URL found and app loads</li>
+  <li>Run All tested — AI responses appear</li>
+  <li>URL shared or saved</li>
+</ul>
+<div class="pb"></div>
+
+<!-- CONCEPT CHECKPOINTS -->
+<h1>Concept Checkpoints — What You Learned About Bedrock</h1>
+
+<h3>Checkpoint 1 — PartyRock Settings → Bedrock Parameters</h3>
+<table>
+  <tr><th>What you saw in PartyRock</th><th>What it maps to in Bedrock</th></tr>
+  <tr><td>AI Output widget prompt text</td><td><code>"content"</code> in the API request body</td></tr>
+  <tr><td>Model selected in AI model tab</td><td>Model ID in the API endpoint URL</td></tr>
+  <tr><td>Temperature slider (0–1)</td><td><code>"temperature"</code> parameter — controls creativity</td></tr>
+  <tr><td>Top P slider (0–1)</td><td><code>"top_p"</code> parameter — controls word diversity</td></tr>
+  <tr><td>[Widget Name] in prompt</td><td>Runtime string injection before the API call</td></tr>
+</table>
+
+<h3>Checkpoint 2 — Bedrock Concepts in Your App</h3>
+<table>
+  <tr><th>Concept</th><th>Where you saw it</th></tr>
+  <tr><td>Foundation model</td><td>Claude Sonnet 4.5 — accessed via Bedrock cross-region inference profile, no installation needed</td></tr>
+  <tr><td>Inference</td><td>Every Run All click triggers Bedrock inference in your Lambda</td></tr>
+  <tr><td>Tokens</td><td>Each request uses ~500–800 tokens ≈ $0.001–0.003 per click</td></tr>
+  <tr><td>API-based access</td><td>No GPU, no server, no model installation — just <code>invoke_model_with_response_stream()</code></td></tr>
+  <tr><td>Model access control</td><td>You explicitly enabled Claude in Bedrock Model access (Step 4)</td></tr>
+  <tr><td>IAM permissions</td><td>AmazonBedrockFullAccess on the Lambda role allows the API call</td></tr>
+</table>
+
+<h3>Try It Yourself — Change Temperature</h3>
+<ol>
+  <li>Open one of your Lambda .py files in Kiro</li>
+  <li>Find the <code>invoke_model_with_response_stream()</code> call</li>
+  <li>Add <code>"temperature": 0.9</code> to the request body (inside the JSON)</li>
+  <li>Upload the updated file to GitHub → it redeploys automatically</li>
+  <li>Run your app again — notice how the responses are more varied</li>
+</ol>
+<div class="tip">That's temperature in action. That's Bedrock. You just modified a real foundation model parameter.</div>
+
+<!-- SUMMARY -->
+<h1>🎉 You Did It!</h1>
+<p>Your PartyRock prototype is now a real, published web application running on AWS — built by Kiro, powered by Bedrock.</p>
+
+<!-- VISUAL: Three-tool diagram with checkmarks (outro) -->
+<div style="display:flex;gap:0;margin:14px 0;border:2px solid #111;border-radius:6px;overflow:hidden">
+  <div style="flex:1;padding:14px 10px;text-align:center;background:#f5eeff;border-right:2px solid #111">
+    <div style="font-size:22px;margin-bottom:5px">🎉</div>
+    <div style="font-weight:bold;font-size:13px;color:#6a0dad;margin-bottom:3px">PartyRock</div>
+    <div style="font-size:11px;color:#555;font-style:italic">App Prototyping</div>
+    <div style="margin-top:8px;font-size:18px">✅</div>
+  </div>
+  <div style="flex:1;padding:14px 10px;text-align:center;background:#efffef;border-right:2px solid #111">
+    <div style="font-size:22px;margin-bottom:5px">🤖</div>
+    <div style="font-weight:bold;font-size:13px;color:#1a4a00;margin-bottom:3px">Kiro</div>
+    <div style="font-size:11px;color:#555;font-style:italic">Wrote all the code</div>
+    <div style="margin-top:8px;font-size:18px">✅</div>
+  </div>
+  <div style="flex:1;padding:14px 10px;text-align:center;background:#fff5ee">
+    <div style="font-size:22px;margin-bottom:5px">🌐</div>
+    <div style="font-weight:bold;font-size:13px;color:#b35900;margin-bottom:3px">Bedrock + AWS</div>
+    <div style="font-size:11px;color:#555;font-style:italic">Published working app</div>
+    <div style="margin-top:8px;font-size:18px">✅</div>
+  </div>
+</div>
+
+<table>
+  <tr><th></th><th>PartyRock prototype</th><th>Your published app</th></tr>
+  <tr><td>Requires PartyRock login</td><td>Yes</td><td>No</td></tr>
+  <tr><td>Custom look and feel</td><td>No</td><td>Yes (Kiro designed it)</td></tr>
+  <tr><td>You own the infrastructure</td><td>No</td><td>Yes</td></tr>
+  <tr><td>Share with anyone</td><td>Limited</td><td>Yes</td></tr>
+  <tr><td>AI model</td><td>Bedrock (hidden)</td><td>Bedrock (yours, direct API)</td></tr>
+  <tr><td>Cost</td><td>Free (PartyRock credits)</td><td>~$0 (AWS free tier) + Kiro free credits</td></tr>
+</table>
+
+<h3>What's Next in Amazon Bedrock</h3>
+<p>You've used the core Bedrock capability — <code>invoke_model_with_response_stream()</code>. Here's what else Bedrock offers:</p>
+<table>
+  <tr><th>Feature</th><th>What it does</th></tr>
+  <tr><td>Bedrock Agents</td><td>Give Claude tools to use — web search, database queries, API calls. Claude decides when to use them.</td></tr>
+  <tr><td>Knowledge Bases</td><td>Connect Claude to your own documents. Ask questions about your data (RAG — Retrieval Augmented Generation).</td></tr>
+  <tr><td>Guardrails</td><td>Add content filters and safety controls to your app. Block harmful topics, PII, etc.</td></tr>
+  <tr><td>Bedrock Flows</td><td>Chain multiple AI steps together visually — no code needed.</td></tr>
+  <tr><td>Model Evaluation</td><td>Compare responses from different models to find the best one for your use case.</td></tr>
+</table>
+<p>All of these build on the same foundation you just used — the Bedrock API.</p>
+
+<h3>Next Steps for Your App</h3>
+<ul>
+  <li><strong>Update your app:</strong> Edit a file in Kiro → upload to GitHub → auto-redeploys in 3–5 min</li>
+  <li><strong>Add HTTPS:</strong> Set up CloudFront in front of S3 (full tutorial Step 9)</li>
+  <li><strong>Add API key protection:</strong> API Gateway usage plan + API key (full tutorial Step 7.5)</li>
+  <li><strong>Add monitoring:</strong> CloudWatch alarms for errors (full tutorial Step 7.6)</li>
+  <li><strong>Delete your app:</strong> CloudFormation → find your stack → Delete</li>
+</ul>
+
+<h3>Quick Troubleshooting</h3>
+<table>
+  <tr><th>Problem</th><th>Fix</th></tr>
+  <tr><td>App loads but Run All returns an error</td><td>CloudWatch → Log groups → /aws/lambda/your-function → look for ERROR lines. Copy and paste into Kiro.</td></tr>
+  <tr><td>First request is very slow (10–15s)</td><td>Normal — Lambda cold start. Wait, then retry.</td></tr>
+  <tr><td>AI output shows **bold** symbols</td><td>Ask Kiro: "add markdown rendering with marked.js to my index.html"</td></tr>
+  <tr><td>Need to update a prompt</td><td>Open Kiro → share the Lambda file → describe the change → upload updated file to GitHub</td></tr>
+  <tr><td>Bedrock returns empty response</td><td>Claude declined due to content filters. Rephrase your prompt to be more specific.</td></tr>
+</table>
+
+<div class="pb"></div>
+
+</body>
+</html>

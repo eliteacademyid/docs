@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tools - Docs Platform</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #e0e0e0; line-height: 1.7; }
+    nav { background: #1a1a1a; border-bottom: 1px solid #2a2a2a; padding: 16px 24px; }
+    nav a { color: #c8f135; text-decoration: none; margin-right: 24px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 48px 24px; }
+    h1 { font-size: 42px; margin-bottom: 16px; color: #fff; }
+    .subtitle { color: #aaa; font-size: 18px; margin-bottom: 48px; }
+    .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .tool-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 24px; transition: transform 0.2s; }
+    .tool-card:hover { transform: translateY(-4px); border-color: #c8f135; }
+    .tool-card h3 { color: #c8f135; margin-bottom: 12px; }
+    .tool-card p { color: #aaa; font-size: 14px; margin-bottom: 16px; }
+    .tool-card a { color: #c8f135; text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/tutorials/">Tutorials</a>
+    <a href="/tools/">Tools</a>
+    <a href="/guides/">Guides</a>
+    <a href="/resources/">Resources</a>
+  </nav>
+
+  <div class="container">
+    <h1>🛠️ Tools</h1>
+    <p class="subtitle">Interactive utilities to accelerate your AWS development</p>
+
+    <div class="tool-grid">
+      <div class="tool-card">
+        <h3>App Planner</h3>
+        <p>Generate ready-to-paste Kiro prompts from your PartyRock app details. Automatically creates chat prompts and spec plans.</p>
+        <a href="/tools/app-planner/">Launch Tool →</a>
+      </div>
+
+      <div class="tool-card">
+        <h3>More Tools Coming Soon</h3>
+        <p>We're building more tools including cost calculators, IAM policy generators, and CloudFormation validators.</p>
+        <a href="/">Back to Home →</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
