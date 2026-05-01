@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elite Academy Docs</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #e0e0e0; line-height: 1.7; }
+    nav { background: #1a1a1a; border-bottom: 1px solid #2a2a2a; padding: 0 24px; position: sticky; top: 0; z-index: 100; }
+    nav .inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; height: 60px; gap: 32px; }
+    nav .logo { color: #c8f135; font-weight: 700; font-size: 18px; text-decoration: none; }
+    nav .links a { color: #aaa; text-decoration: none; padding: 8px 14px; border-radius: 6px; font-size: 14px; }
+    nav .links a:hover { color: #fff; background: #2a2a2a; }
+    .hero { background: linear-gradient(135deg, #1a2208 0%, #0f0f0f 70%); padding: 100px 24px; text-align: center; border-bottom: 1px solid #2a2a2a; }
+    .hero .inner { max-width: 800px; margin: 0 auto; }
+    .hero h1 { font-size: clamp(32px, 5vw, 56px); font-weight: 800; color: #fff; margin-bottom: 20px; line-height: 1.2; }
+    .hero h1 span { color: #c8f135; }
+    .hero p { font-size: 18px; color: #aaa; max-width: 600px; margin: 0 auto 40px; }
+    .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn { padding: 13px 30px; border-radius: 8px; font-size: 15px; font-weight: 600; text-decoration: none; display: inline-block; }
+    .btn-primary { background: #c8f135; color: #0f0f0f; }
+    .btn-outline { background: transparent; color: #c8f135; border: 2px solid #c8f135; }
+    .section { padding: 80px 24px; }
+    .section .inner { max-width: 1200px; margin: 0 auto; }
+    .section h2 { font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+    .section-sub { color: #aaa; font-size: 16px; margin-bottom: 48px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 28px; text-decoration: none; display: block; transition: transform 0.2s, border-color 0.2s; }
+    .card:hover { transform: translateY(-3px); border-color: #c8f135; }
+    .card-icon { font-size: 36px; margin-bottom: 16px; }
+    .card h3 { font-size: 18px; color: #fff; margin-bottom: 8px; }
+    .card p { color: #888; font-size: 14px; line-height: 1.6; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .tag { background: #1a2208; color: #c8f135; border: 1px solid #4a6a10; border-radius: 20px; padding: 3px 10px; font-size: 12px; }
+    .featured { background: #111; border-top: 1px solid #2a2a2a; border-bottom: 1px solid #2a2a2a; }
+    .featured-card { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 32px; max-width: 760px; text-decoration: none; transition: border-color 0.2s; }
+    .featured-card:hover { border-color: #c8f135; }
+    footer { background: #1a1a1a; border-top: 1px solid #2a2a2a; padding: 32px 24px; text-align: center; color: #555; font-size: 14px; }
+    footer a { color: #888; text-decoration: none; margin: 0 8px; }
+    footer a:hover { color: #c8f135; }
+    @media (max-width: 600px) { nav .links { display: none; } .hero { padding: 60px 24px; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="inner">
+      <a href="/" class="logo">📚 Elite Academy Docs</a>
+      <div class="links">
+        <a href="/tutorials/">Tutorials</a>
+        <a href="/tools/">Tools</a>
+        <a href="/guides/">Guides</a>
+        <a href="/resources/">Resources</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="inner">
+      <h1>Learn. Build. <span>Deploy.</span></h1>
+      <p>Practical tutorials, interactive tools, and guides to help you build and ship real applications in the cloud.</p>
+      <div class="hero-btns">
+        <a href="/tutorials/" class="btn btn-primary">Browse Tutorials</a>
+        <a href="/tools/" class="btn btn-outline">Explore Tools</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="inner">
+      <h2>What's Here</h2>
+      <p class="section-sub">Everything you need to go from idea to production</p>
+      <div class="card-grid">
+        <a href="/tutorials/" class="card">
+          <div class="card-icon">📖</div>
+          <h3>Tutorials</h3>
+          <p>Step-by-step guides that take you from zero to a working, deployed application.</p>
+          <div class="tags"><span class="tag">Beginner</span><span class="tag">Hands-on</span><span class="tag">Cloud</span></div>
+        </a>
+        <a href="/tools/" class="card">
+          <div class="card-icon">🛠️</div>
+          <h3>Tools</h3>
+          <p>Interactive utilities that generate code, configs, and prompts so you can move faster.</p>
+          <div class="tags"><span class="tag">Generators</span><span class="tag">Calculators</span></div>
+        </a>
+        <a href="/guides/" class="card">
+          <div class="card-icon">📚</div>
+          <h3>Guides</h3>
+          <p>In-depth reference documentation for services, concepts, and best practices.</p>
+          <div class="tags"><span class="tag">Reference</span><span class="tag">Best Practices</span></div>
+        </a>
+        <a href="/resources/" class="card">
+          <div class="card-icon">📦</div>
+          <h3>Resources</h3>
+          <p>Templates, code samples, cheat sheets, and downloadable PDFs.</p>
+          <div class="tags"><span class="tag">Templates</span><span class="tag">Downloads</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section featured">
+    <div class="inner">
+      <h2>Featured Tutorial</h2>
+      <p class="section-sub">Most popular right now</p>
+      <a href="/tutorials/partyrock-to-aws/tutorial.html" class="featured-card">
+        <div style="font-size:56px;flex-shrink:0;">🚀</div>
+        <div style="flex:1;min-width:200px;">
+          <h3 style="font-size:22px;color:#fff;margin-bottom:10px;">From No-Code to Production App</h3>
+          <p style="color:#aaa;margin-bottom:20px;">Take a no-code prototype and turn it into a real deployed web application with a proper backend, CI/CD pipeline, and cloud infrastructure. No prior experience needed.</p>
+          <div class="tags" style="margin-bottom:20px;">
+            <span class="tag">Beginner</span><span class="tag">Full Stack</span><span class="tag">CI/CD</span><span class="tag">~2 hours</span>
+          </div>
+          <span class="btn btn-primary">Start Tutorial →</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Elite Academy Docs &nbsp;·&nbsp;
+      <a href="/tutorials/">Tutorials</a>
+      <a href="/tools/">Tools</a>
+      <a href="/guides/">Guides</a>
+      <a href="/resources/">Resources</a>
+    </p>
+  </footer>
+</body>
+</html>
