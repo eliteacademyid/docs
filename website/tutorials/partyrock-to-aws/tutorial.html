@@ -1,0 +1,2262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PartyRock → Real App Tutorial</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #e0e0e0; line-height: 1.7; }
+    a { color: #c8f135; }
+    @media print {
+      body { background: #fff; color: #111; font-size: 12px; }
+      nav, .progress-bar-wrap, .hero-btns, .nav-btns, .how-to-use,
+      .add-widget-btn, .copy-big-btn, .copy-btn, .btn, #widgetsContainer,
+      .page-cols > div:last-child { display: none !important; }
+      .page { display: block !important; max-width: 100%; padding: 0; }
+      .page:not(.active) { display: none !important; }
+      h2 { color: #111; font-size: 18px; }
+      h3 { color: #333; }
+      .tip, .warning { border-left: 3px solid #333; background: #f5f5f5; color: #333; }
+      .tip::before { content: "Tip: "; }
+      .warning::before { content: "Important: "; }
+      .screenshot { border: 1px dashed #999; background: #f9f9f9; color: #555; }
+      .screenshot::before { content: "Screenshot: "; }
+      table { border-collapse: collapse; width: 100%; }
+      th { background: #333; color: #fff; }
+      td, th { border: 1px solid #ccc; padding: 6px 8px; }
+      code { background: #f0f0f0; border: 1px solid #ddd; }
+      pre { background: #f5f5f5; border: 1px solid #ddd; white-space: pre-wrap; }
+      .checklist li::before { content: "☐  "; }
+      a { color: #333; text-decoration: underline; }
+    }
+
+    /* NAV */
+    nav { background: #1a1a1a; border-bottom: 1px solid #2a2a2a; padding: 0 24px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; gap: 0; overflow-x: auto; }
+    nav a { color: #aaa; text-decoration: none; padding: 16px 14px; font-size: 13px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s; }
+    nav a:hover, nav a.active { color: #c8f135; border-bottom-color: #c8f135; }
+    nav .logo { color: #c8f135; font-weight: 700; font-size: 15px; margin-right: 16px; border-bottom: none !important; }
+
+    /* HERO */
+    .hero { background: linear-gradient(135deg, #1a2208 0%, #0f0f0f 60%); padding: 80px 24px; text-align: center; border-bottom: 1px solid #2a2a2a; }
+    .hero h1 { font-size: clamp(28px, 5vw, 52px); font-weight: 800; color: #fff; margin-bottom: 16px; }
+    .hero h1 span { color: #c8f135; }
+    .hero p { font-size: 18px; color: #aaa; max-width: 600px; margin: 0 auto 32px; }
+    .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn { padding: 12px 28px; border-radius: 8px; font-size: 15px; font-weight: 600; text-decoration: none; cursor: pointer; border: none; }
+    .btn-primary { background: #c8f135; color: #0f0f0f; }
+    .btn-outline { background: transparent; color: #c8f135; border: 1px solid #c8f135; }
+
+    /* LAYOUT */
+    .page { display: none; max-width: 800px; margin: 0 auto; padding: 48px 24px 80px; }
+    .page.active { display: block; }
+
+    /* STEPS */
+    h2 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    h3 { font-size: 18px; font-weight: 600; color: #c8f135; margin: 32px 0 12px; }
+    p { color: #ccc; margin-bottom: 16px; }
+    ul, ol { padding-left: 24px; color: #ccc; margin-bottom: 16px; }
+    li { margin-bottom: 8px; }
+
+    .step-badge { display: inline-block; background: #c8f135; color: #0f0f0f; border-radius: 50%; width: 32px; height: 32px; line-height: 32px; text-align: center; font-weight: 800; font-size: 14px; margin-right: 10px; }
+    .step-header { display: flex; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #2a2a2a; }
+    .step-header h2 { margin: 0; }
+    .time-badge { margin-left: auto; background: #1a2208; color: #c8f135; border: 1px solid #4a6a10; border-radius: 20px; padding: 4px 12px; font-size: 12px; white-space: nowrap; }
+
+    /* SCREENSHOT BOX */
+    .screenshot { background: #111; border: 1px dashed #444; border-radius: 8px; padding: 16px; margin: 16px 0; font-size: 13px; color: #888; }
+    .screenshot::before { content: "📸 Screenshot: "; color: #c8f135; font-weight: 600; }
+
+    /* WARNING / TIP / IMPORTANT */
+    .tip { background: #1a2208; border-left: 3px solid #c8f135; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0; font-size: 14px; color: #ccc; }
+    .tip::before { content: "💡 Tip: "; color: #c8f135; font-weight: 600; }
+    .warning { background: #2a1a08; border-left: 3px solid #f5a623; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0; font-size: 14px; color: #ccc; }
+    .warning::before { content: "⚠️ Important: "; color: #f5a623; font-weight: 600; }
+
+    /* CODE */
+    code { background: #1a1a1a; border: 1px solid #333; border-radius: 4px; padding: 2px 6px; font-size: 13px; color: #c8f135; font-family: monospace; }
+    pre { background: #111; border: 1px solid #2a2a2a; border-radius: 8px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    pre code { background: none; border: none; padding: 0; color: #e0e0e0; }
+
+    /* TABLE */
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    th { background: #1a2208; color: #c8f135; padding: 10px 12px; text-align: left; }
+    td { padding: 10px 12px; border-bottom: 1px solid #2a2a2a; color: #ccc; }
+    tr:hover td { background: #1a1a1a; }
+
+    /* CHECKLIST */
+    .checklist { list-style: none; padding: 0; background: #1a1a1a; border-radius: 8px; padding: 16px; margin: 16px 0; }
+    .checklist li { padding: 6px 0; border-bottom: 1px solid #2a2a2a; display: flex; align-items: center; gap: 10px; }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li::before { content: "☐"; color: #c8f135; font-size: 16px; }
+
+    /* NAV BUTTONS */
+    .nav-btns { display: flex; justify-content: space-between; margin-top: 48px; padding-top: 24px; border-top: 1px solid #2a2a2a; }
+
+    /* OVERVIEW CARDS */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 24px 0; }
+    .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px; }
+    .card .icon { font-size: 24px; margin-bottom: 8px; }
+    .card h4 { font-size: 14px; color: #fff; margin-bottom: 4px; }
+    .card p { font-size: 12px; color: #888; margin: 0; }
+
+    .steps-list { list-style: none; padding: 0; }
+    .steps-list li { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid #2a2a2a; cursor: pointer; border-radius: 8px; transition: background 0.2s; }
+    .steps-list li:hover { background: #1a1a1a; }
+    .steps-list li .num { background: #c8f135; color: #0f0f0f; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+    .steps-list li .info { flex: 1; }
+    .steps-list li .info strong { display: block; color: #fff; font-size: 14px; }
+    .steps-list li .info span { font-size: 12px; color: #888; }
+    .steps-list li .arrow { color: #555; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo" onclick="showPage('home')">🥗 PartyRock → AWS</a>
+  <a href="#" onclick="showPage('home')" id="nav-home" class="active">Overview</a>
+  <a href="#" onclick="showPage('step1')" id="nav-step1">1. Read Widgets</a>
+  <a href="#" onclick="showPage('step2')" id="nav-step2">2. AWS Account</a>
+  <a href="#" onclick="showPage('step3')" id="nav-step3">3. Bedrock</a>
+  <a href="#" onclick="showPage('step4')" id="nav-step4">4. GitHub</a>
+  <a href="#" onclick="showPage('step5')" id="nav-step5">5. Upload Code</a>
+  <a href="#" onclick="showPage('step6')" id="nav-step6">6. Secrets</a>
+  <a href="#" onclick="showPage('step7')" id="nav-step7">7. Deploy</a>
+  <a href="#" onclick="showPage('step8')" id="nav-step8">8. Test</a>
+  <a href="#" onclick="showPage('step9')" id="nav-step9">9. HTTPS</a>
+  <a href="#" onclick="showPage('step10')" id="nav-step10">10. Update</a>
+  <a href="#" onclick="showPage('faq')" id="nav-faq">❓ FAQ</a>
+  <a href="#" onclick="showPage('sandbox')" id="nav-sandbox" style="color:#f5a623;font-weight:700">🧪 Sandbox</a>
+  <a href="#" onclick="showPage('planner')" id="nav-planner" style="color:#c8f135;font-weight:700">✨ Planner</a>
+</nav>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar-wrap" id="progressBar" style="display:none">
+  <span class="progress-label" id="progressLabel">Step 1 of 10</span>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:10%"></div>
+  </div>
+  <span class="progress-label" id="progressPct">10%</span>
+</div>
+<div id="page-home" class="page active">
+  <div class="hero">
+    <h1>Turn Your <span>PartyRock</span> App<br>Into a Real Website</h1>
+    <p>A step-by-step guide for non-technical users. No coding required. Your app live on the internet in about 1 hour.</p>
+    <div class="hero-btns">
+      <a href="#" class="btn btn-primary" onclick="showPage('step1')">Start Tutorial →</a>
+      <a href="https://partyrock.aws" target="_blank" class="btn btn-outline">Open PartyRock</a>
+    </div>
+  </div>
+
+  <div class="page active" style="display:block">
+    <h3>Choose Your Path</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
+      <div style="background:#1a1a1a;border:2px solid #c8f135;border-radius:12px;padding:20px;cursor:pointer" onclick="showPage('step1')">
+        <div style="font-size:28px;margin-bottom:8px">🌐</div>
+        <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:6px">Personal AWS Account</div>
+        <div style="color:#aaa;font-size:13px;margin-bottom:12px">Create your own AWS account. Full control, near-zero cost on free tier.</div>
+        <div style="background:#c8f135;color:#0f0f0f;border-radius:6px;padding:6px 14px;font-size:13px;font-weight:700;display:inline-block">Start Steps 1–8 →</div>
+      </div>
+      <div style="background:#1a1a1a;border:2px solid #f5a623;border-radius:12px;padding:20px;cursor:pointer" onclick="showPage('sandbox')">
+        <div style="font-size:28px;margin-bottom:8px">🧪</div>
+        <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:6px">AWS Lab / Sandbox Environment</div>
+        <div style="color:#aaa;font-size:13px;margin-bottom:12px">Using AWS Skill Builder, Vocareum, AWS Academy, or an event sandbox? Start here — no account creation needed.</div>
+        <div style="background:#f5a623;color:#0f0f0f;border-radius:6px;padding:6px 14px;font-size:13px;font-weight:700;display:inline-block">Sandbox Guide →</div>
+      </div>
+    </div>
+
+    <h3>What You Will Build</h3>
+    <div class="cards">
+      <div class="card"><div class="icon">🌐</div><h4>Real Website</h4><p>S3 + CloudFront with HTTPS, accessible to anyone</p></div>
+      <div class="card"><div class="icon">🤖</div><h4>AI Backend</h4><p>Lambda + Bedrock with input protection and retry logic</p></div>
+      <div class="card"><div class="icon">🔒</div><h4>Secured</h4><p>API key auth, scoped IAM, WAF rate limiting</p></div>
+      <div class="card"><div class="icon">📊</div><h4>Monitored</h4><p>CloudWatch alarms, billing alerts, logs</p></div>
+      <div class="card"><div class="icon">🚀</div><h4>Auto Deploy</h4><p>GitHub Actions — push code, it deploys itself</p></div>
+      <div class="card" style="border-color:#4a6a10;background:#1a2208;cursor:pointer" onclick="showPage('planner')"><div class="icon">✨</div><h4>App Planner</h4><p>Fill in your app details → get Kiro chat prompt + spec plan instantly</p></div>
+    </div>
+
+    <h3>The Steps</h3>
+    <ul class="steps-list">
+      <li onclick="showPage('planner')"><div class="num" style="background:#4a6a10;font-size:11px">✨</div><div class="info"><strong>App Planner — Generate Your Kiro Prompt</strong><span>15 min — Do this first before anything else</span></div><div class="arrow">›</div></li>
+      <li onclick="showPage('step1')"><div class="num">1</div><div class="info"><strong>Read Your PartyRock Widgets</strong><span>10 min — Map out your app's structure</span></div><div class="arrow">›</div></li>
+      <li onclick="showPage('step2')"><div class="num">2</div><div class="info"><strong>Set Up Your AWS Account</strong><span>20 min — Account, IAM, S3 lifecycle, throttling plan</span></div><div class="arrow">›</div></li>
+      <li onclick="showPage('step3')"><div class="num">3</div><div class="info"><strong>Enable Bedrock + Tighten IAM + CloudWatch</strong><span>25 min — AI access, scoped permissions, monitoring</span></div><div class="arrow">›</div></li>
+      <li onclick="showPage('step4')"><div class="num">4</div><div class="info"><strong>Set Up GitHub</strong><span>10 min — Create account and repository</span></div><div class="arrow">›</div></li>
+      <li onclick="showPage('step5')"><div class="num">5</div><div class="info"><strong>Upload Code + Security + UX</strong><span>25 min — Files, input protection, favicon, markdown</span></div><div class="arrow">›</div></li>
+      <li onclick="showPage('step6')"><div class="num">6</div><div class="info"><strong>Add Credentials + API Key to GitHub</strong><span>15 min — Secrets, region variable, API key</span></div><div class="arrow">›</div></li>
+      <li onclick="showPage('step7')"><div class="num">7</div><div class="info"><strong>Deploy + Protect + Monitor</strong><span>25 min — Deploy, API key, alarms, optional staging</span></div><div class="arrow">›</div></li>
+      <li onclick="showPage('step8')"><div class="num">8</div><div class="info"><strong>Visit, Test, and Monitor Your Live App</strong><span>20 min — Test all features, logs, billing alarm</span></div><div class="arrow">›</div></li>
+      <li onclick="showPage('step9')"><div class="num">9</div><div class="info"><strong>Make It Production-Ready</strong><span>20–45 min — HTTPS (recommended), custom domain, WAF</span></div><div class="arrow">›</div></li>
+      <li onclick="showPage('step10')"><div class="num">10</div><div class="info"><strong>Update Your App After It's Live</strong><span>5 min — How to make changes and redeploy</span></div><div class="arrow">›</div></li>
+    </ul>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px">
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:16px;cursor:pointer" onclick="showPage('faq')">
+        <div style="font-size:24px;margin-bottom:6px">❓</div>
+        <div style="color:#fff;font-weight:700;font-size:14px;margin-bottom:4px">FAQ</div>
+        <div style="color:#888;font-size:12px">Common questions and answers</div>
+      </div>
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:16px;cursor:pointer" onclick="showPage('sandbox')">
+        <div style="font-size:24px;margin-bottom:6px">🧪</div>
+        <div style="color:#f5a623;font-weight:700;font-size:14px;margin-bottom:4px">Lab Sandbox Guide</div>
+        <div style="color:#888;font-size:12px">AWS Skill Builder, Vocareum, Academy</div>
+      </div>
+    </div>
+
+    <div style="background:#1a2208;border:1px solid #4a6a10;border-radius:12px;padding:20px;margin-top:24px;display:flex;align-items:center;gap:16px;cursor:pointer" onclick="showPage('planner')">
+      <div style="font-size:36px">✨</div>
+      <div>
+        <div style="color:#c8f135;font-weight:700;font-size:15px;margin-bottom:4px">Start Here — App Planner</div>
+        <div style="color:#aaa;font-size:13px">Fill in your PartyRock app details and get a ready-to-paste Kiro prompt + spec plan generated automatically.</div>
+      </div>
+      <div style="color:#c8f135;font-size:22px;margin-left:auto">›</div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 1 -->
+<div id="page-step1" class="page">
+  <div class="step-header">
+    <span class="step-badge">1</span>
+    <h2>Read Your PartyRock Widgets</h2>
+    <span class="time-badge">⏱ 10 min</span>
+  </div>
+
+  <p>Before we build anything, we need to understand what your PartyRock app does. Every app is made of "widgets." We need to write down each one.</p>
+
+  <h3>Open Your App in Edit Mode</h3>
+  <ol>
+    <li>Go to <a href="https://partyrock.aws" target="_blank">partyrock.aws</a> and sign in</li>
+    <li>Click on your app to open it</li>
+    <li>Click the <strong>Edit</strong> button in the top right corner</li>
+  </ol>
+  <div class="screenshot">Top right of the screen shows buttons: "Remix", "Edit", "Share". Click the pencil icon labeled Edit.</div>
+
+  <h3>The 5 Widget Types</h3>
+  <table>
+    <tr><th>Widget Type</th><th>What it looks like</th><th>What it does</th></tr>
+    <tr><td>User Input</td><td>Empty text box</td><td>User types something here</td></tr>
+    <tr><td>Text Generation ✨</td><td>Green box with sparkle icon</td><td>AI generates text</td></tr>
+    <tr><td>Image Generation 🖼️</td><td>Green box with image icon</td><td>AI generates an image</td></tr>
+    <tr><td>Chatbot 💬</td><td>Chat bubble interface</td><td>Back-and-forth conversation</td></tr>
+    <tr><td>Document 📄</td><td>File upload area</td><td>User uploads a file</td></tr>
+  </table>
+
+  <h3>Fill In This Widget Map</h3>
+  <p>For each widget, click the ✏️ edit icon and note down:</p>
+  <pre><code>Widget #1
+  Type:       [ User Input / Text Generation / Image / Chatbot / Document ]
+  Title:      ________________________________
+  Prompt:     ________________________________
+  References: ________________________________ (other widgets it uses)</code></pre>
+
+  <div class="tip">On Mac press Cmd + Shift + 4 to take a screenshot. On Windows press Windows + Shift + S. Screenshot each widget's settings panel.</div>
+
+  <h3>✅ Checkpoint</h3>
+  <ul class="checklist">
+    <li>List of all widgets written down</li>
+    <li>Prompt text for each AI widget noted</li>
+    <li>Screenshots of each widget's settings saved</li>
+  </ul>
+
+  <div class="nav-btns">
+    <a href="#" class="btn btn-outline" onclick="showPage('home')">← Overview</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('step2')">Next: AWS Account →</a>
+  </div>
+</div>
+
+<!-- STEP 2 -->
+<div id="page-step2" class="page">
+  <div class="step-header">
+    <span class="step-badge">2</span>
+    <h2>Set Up Your AWS Account</h2>
+    <span class="time-badge">⏱ 15 min</span>
+  </div>
+
+  <div class="warning">You need a credit card to sign up. Everything in this tutorial stays within the AWS Free Tier — charges are near $0 for a personal app.</div>
+
+  <h3>Create an AWS Account</h3>
+  <ol>
+    <li>Go to <a href="https://aws.amazon.com" target="_blank">aws.amazon.com</a></li>
+    <li>Click the orange <strong>"Create an AWS Account"</strong> button (top right)</li>
+    <li>Enter your email and choose an account name (e.g. "my-ai-apps")</li>
+    <li>Verify your email, create a password, add payment info, verify phone</li>
+    <li>Select <strong>Basic support — Free</strong> and complete sign up</li>
+  </ol>
+  <div class="screenshot">Orange "Create an AWS Account" button in the top right of the aws.amazon.com homepage.</div>
+
+  <h3>Create an IAM User</h3>
+  <p>We create a limited user called <code>github-deployer</code> that GitHub will use to deploy your app.</p>
+  <ol>
+    <li>Sign in at <a href="https://console.aws.amazon.com" target="_blank">console.aws.amazon.com</a></li>
+    <li>Search for <strong>IAM</strong> in the top search bar and click it</li>
+    <li>Click <strong>Users</strong> in the left sidebar → <strong>Create user</strong></li>
+    <li>Username: <code>github-deployer</code> → click Next</li>
+    <li>Select <strong>Attach policies directly</strong></li>
+    <li>Search for and check each of these 6 policies:</li>
+  </ol>
+  <ul>
+    <li><code>AWSCloudFormationFullAccess</code></li>
+    <li><code>AWSLambda_FullAccess</code></li>
+    <li><code>IAMFullAccess</code></li>
+    <li><code>AmazonAPIGatewayAdministrator</code></li>
+    <li><code>AmazonS3FullAccess</code></li>
+    <li><code>AmazonBedrockFullAccess</code></li>
+  </ul>
+  <div class="screenshot">Each policy appears as a row with a checkbox on the left. Check the box next to each policy name listed above.</div>
+
+  <h3>Create an Access Key</h3>
+  <ol>
+    <li>Click on the <strong>github-deployer</strong> user</li>
+    <li>Click the <strong>Security credentials</strong> tab</li>
+    <li>Scroll to <strong>Access keys</strong> → <strong>Create access key</strong></li>
+    <li>Select <strong>Application running outside AWS</strong> → Next → Create</li>
+    <li>Copy and save both values somewhere safe:</li>
+  </ol>
+  <div class="warning">The Secret Access Key is only shown ONCE. Save it now before closing this page.</div>
+  <table>
+    <tr><th>Value</th><th>Looks like</th></tr>
+    <tr><td>Access Key ID</td><td><code>AKIAIOSFODNN7EXAMPLE</code></td></tr>
+    <tr><td>Secret Access Key</td><td><code>wJalrXUtnFEMI/K7MDENG/bPxRfiCY...</code></td></tr>
+  </table>
+
+  <h3>Create an S3 Bucket for Deployments</h3>
+  <ol>
+    <li>Search for <strong>S3</strong> in the AWS Console and click it</li>
+    <li>Click <strong>Create bucket</strong></li>
+    <li>Bucket name: <code>yourname-sam-deploy-2024</code> (must be globally unique)</li>
+    <li>Region: <strong>US East (N. Virginia) us-east-1</strong></li>
+    <li>Leave all other settings as default → <strong>Create bucket</strong></li>
+    <li>Save the bucket name — you'll need it later</li>
+  </ol>
+
+  <h3>✅ Checkpoint</h3>
+  <ul class="checklist">
+    <li>AWS account created and verified</li>
+    <li>IAM user github-deployer created with all 6 policies</li>
+    <li>Access Key ID saved</li>
+    <li>Secret Access Key saved</li>
+    <li>S3 bucket created, name saved</li>
+  </ul>
+
+  <div class="nav-btns">
+    <a href="#" class="btn btn-outline" onclick="showPage('step1')">← Previous</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('step3')">Next: Enable Bedrock →</a>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div id="page-step3" class="page">
+  <div class="step-header">
+    <span class="step-badge">3</span>
+    <h2>Enable Bedrock AI Models</h2>
+    <span class="time-badge">⏱ 5 min</span>
+  </div>
+
+  <p>Amazon Bedrock is the AI service that powers your app. By default, AI models are not enabled — you have to turn them on. It's free to request.</p>
+
+  <h3>Open Amazon Bedrock</h3>
+  <ol>
+    <li>In the AWS Console search bar, type <strong>Bedrock</strong> and click it</li>
+    <li>Check the region in the top right — it must say <strong>N. Virginia (us-east-1)</strong></li>
+  </ol>
+  <div class="screenshot">Top right of the console shows a region name. Click it and select "US East (N. Virginia)".</div>
+
+  <h3>Request Model Access</h3>
+  <ol>
+    <li>In the left sidebar, click <strong>Model access</strong></li>
+    <li>Click <strong>Manage model access</strong> (top right of the table)</li>
+    <li>Find the <strong>Anthropic</strong> section</li>
+    <li>Check the box next to <strong>Claude Sonnet 4</strong> (Claude Sonnet 4.5)</li>
+    <li>Scroll down and click <strong>Save changes</strong></li>
+  </ol>
+  <div class="screenshot">A list of model providers. Under "Anthropic" you see checkboxes for different Claude models. Check "Claude Sonnet 4" or "Claude Sonnet 4.5".</div>
+
+  <h3>Wait for Approval</h3>
+  <p>Refresh the Model access page every few minutes. When the status shows a green checkmark and says <strong>Access granted</strong>, you're ready.</p>
+  <div class="screenshot">The model row shows a green checkmark icon in the "Access status" column next to Claude Sonnet 4.5.</div>
+
+  <h3>✅ Checkpoint</h3>
+  <ul class="checklist">
+    <li>Opened Amazon Bedrock in us-east-1 region</li>
+    <li>Claude Sonnet 4 (Claude Sonnet 4.5) shows "Access granted" status</li>
+  </ul>
+
+  <div class="nav-btns">
+    <a href="#" class="btn btn-outline" onclick="showPage('step2')">← Previous</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('step4')">Next: GitHub →</a>
+  </div>
+</div>
+
+<!-- STEP 4 -->
+<div id="page-step4" class="page">
+  <div class="step-header">
+    <span class="step-badge">4</span>
+    <h2>Set Up GitHub</h2>
+    <span class="time-badge">⏱ 10 min</span>
+  </div>
+
+  <p>GitHub is where your code lives. Every time you save code there, it automatically deploys to AWS. No technical knowledge needed to use it for this tutorial.</p>
+
+  <h3>Create a GitHub Account</h3>
+  <ol>
+    <li>Go to <a href="https://github.com" target="_blank">github.com</a> and click <strong>Sign up</strong></li>
+    <li>Enter your email, create a password, choose a username</li>
+    <li>Verify your email address</li>
+    <li>Select the <strong>Free</strong> plan</li>
+  </ol>
+
+  <h3>Create a New Repository</h3>
+  <ol>
+    <li>Click the <strong>+</strong> icon in the top right corner</li>
+    <li>Click <strong>New repository</strong></li>
+  </ol>
+  <div class="screenshot">Top right of GitHub shows a "+" icon. Clicking it shows a dropdown with "New repository" as the first option.</div>
+  <ol start="3">
+    <li>Repository name: <code>my-partyrock-app</code></li>
+    <li>Visibility: select <strong>Public</strong></li>
+    <li>Check <strong>Add a README file</strong></li>
+    <li>Click <strong>Create repository</strong></li>
+  </ol>
+
+  <h3>✅ Checkpoint</h3>
+  <ul class="checklist">
+    <li>GitHub account created</li>
+    <li>New public repository created</li>
+    <li>Repository page visible with Code, Actions, Settings tabs</li>
+  </ul>
+
+  <div class="nav-btns">
+    <a href="#" class="btn btn-outline" onclick="showPage('step3')">← Previous</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('step5')">Next: Upload Code →</a>
+  </div>
+</div>
+
+<!-- STEP 5 -->
+<div id="page-step5" class="page">
+  <div class="step-header">
+    <span class="step-badge">5</span>
+    <h2>Upload Your App Code to GitHub</h2>
+    <span class="time-badge">⏱ 10 min</span>
+  </div>
+
+  <p>Upload the files Kiro generated for you. No Git commands needed — just drag and drop in the browser.</p>
+
+  <div class="tip">If you haven't generated your app code yet, open Kiro, share your widget map from Step 1, and say: "Build me a working AWS app from these PartyRock widgets." Kiro generates all files automatically.</div>
+
+  <h3>Your File Structure</h3>
+  <pre><code>your-app/
+├── frontend/
+│   └── index.html
+├── backend/
+│   └── lambda/
+│       └── (your Python files)
+├── infra/
+│   └── template.yaml
+└── .github/
+    └── workflows/
+        └── deploy.yml</code></pre>
+
+  <h3>Upload Your Files</h3>
+  <div class="warning">GitHub's web interface does not support dragging an entire folder. You need to upload the <strong>files inside each folder</strong>, not the folder itself. Use "Create new file" to set the path.</div>
+
+  <h3>Upload the frontend files</h3>
+  <ol>
+    <li>Click <strong>Add file → Upload files</strong></li>
+    <li>On your computer, open the <code>frontend</code> folder and drag <code>index.html</code> into the upload area</li>
+    <li>Commit message: <code>Add frontend files</code> → <strong>Commit changes</strong></li>
+  </ol>
+
+  <h3>Upload the backend Lambda files</h3>
+  <ol>
+    <li>Click <strong>Add file → Create new file</strong></li>
+    <li>In the filename box, type the full path: <code>backend/lambda/your_function.py</code></li>
+    <li>Open the <code>.py</code> file on your computer, copy all contents, paste into the text area</li>
+    <li>Commit message: <code>Add Lambda function</code> → <strong>Commit new file</strong></li>
+    <li>Repeat for each Lambda <code>.py</code> file</li>
+  </ol>
+  <div class="screenshot">The filename input shows "backend/lambda/calorie_scanner.py" typed in. GitHub creates the folder structure automatically as you type the slashes.</div>
+
+  <h3>Upload the infrastructure template</h3>
+  <ol>
+    <li>Click <strong>Add file → Create new file</strong></li>
+    <li>Filename: <code>infra/template.yaml</code></li>
+    <li>Copy the contents of your <code>template.yaml</code> file and paste into the text area</li>
+    <li>Commit message: <code>Add infrastructure template</code> → <strong>Commit new file</strong></li>
+  </ol>
+
+  <h3>Upload the GitHub Actions workflow</h3>
+  <ol>
+    <li>Click <strong>Add file → Create new file</strong></li>
+    <li>In the filename box, type exactly: <code>.github/workflows/deploy.yml</code></li>
+    <li>Paste the contents of your <code>deploy.yml</code> file into the text area</li>
+    <li>Click <strong>Commit new file</strong></li>
+  </ol>
+  <div class="screenshot">The filename input shows ".github/workflows/deploy.yml" typed in. GitHub automatically creates the folder structure as you type the slashes.</div>
+
+  <h3>✅ Checkpoint</h3>
+  <ul class="checklist">
+    <li>frontend/index.html uploaded</li>
+    <li>backend/lambda/ files uploaded (one per Lambda function)</li>
+    <li>infra/template.yaml uploaded</li>
+    <li>.github/workflows/deploy.yml uploaded</li>
+    <li>All 4 folders visible in the repository</li>
+  </ul>
+
+  <div class="nav-btns">
+    <a href="#" class="btn btn-outline" onclick="showPage('step4')">← Previous</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('step6')">Next: Add Secrets →</a>
+  </div>
+</div>
+
+<!-- STEP 6 -->
+<div id="page-step6" class="page">
+  <div class="step-header">
+    <span class="step-badge">6</span>
+    <h2>Add AWS Credentials to GitHub</h2>
+    <span class="time-badge">⏱ 10 min</span>
+  </div>
+
+  <p>GitHub needs permission to deploy to your AWS account. We add "secrets" — private values that GitHub keeps hidden and uses automatically.</p>
+  <div class="tip">Secrets are encrypted and never visible to anyone after saving — not even to you. This is safe and the standard way to do this.</div>
+
+  <h3>Open Repository Secrets</h3>
+  <ol>
+    <li>In your GitHub repository, click the <strong>Settings</strong> tab</li>
+    <li>In the left sidebar, click <strong>Secrets and variables</strong></li>
+    <li>Click <strong>Actions</strong> in the submenu</li>
+  </ol>
+  <div class="screenshot">Left sidebar shows "Secrets and variables" which expands to show "Actions". Click Actions.</div>
+
+  <h3>Add the 3 Secrets</h3>
+  <p>Click <strong>New repository secret</strong> for each one:</p>
+  <table>
+    <tr><th>Secret Name (type exactly)</th><th>Value</th></tr>
+    <tr><td><code>AWS_ACCESS_KEY_ID</code></td><td>Your Access Key ID from Step 2</td></tr>
+    <tr><td><code>AWS_SECRET_ACCESS_KEY</code></td><td>Your Secret Access Key from Step 2</td></tr>
+    <tr><td><code>SAM_DEPLOY_BUCKET</code></td><td>Your S3 bucket name from Step 2</td></tr>
+  </table>
+  <div class="screenshot">After adding all 3, the "Repository secrets" section shows a list of 3 secrets with "Updated X minutes ago" next to each. The actual values are hidden — this is correct.</div>
+
+  <h3>✅ Checkpoint</h3>
+  <ul class="checklist">
+    <li>AWS_ACCESS_KEY_ID secret added</li>
+    <li>AWS_SECRET_ACCESS_KEY secret added</li>
+    <li>SAM_DEPLOY_BUCKET secret added</li>
+    <li>All 3 secrets visible in the repository secrets list</li>
+  </ul>
+
+  <div class="nav-btns">
+    <a href="#" class="btn btn-outline" onclick="showPage('step5')">← Previous</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('step7')">Next: Deploy →</a>
+  </div>
+</div>
+
+<!-- STEP 7 -->
+<div id="page-step7" class="page">
+  <div class="step-header">
+    <span class="step-badge">7</span>
+    <h2>Run the Deployment</h2>
+    <span class="time-badge">⏱ 5 min</span>
+  </div>
+
+  <p>Now we press the launch button. GitHub Actions will connect to AWS, create all the services, and give you a live URL. Takes about 3–5 minutes.</p>
+
+  <h3>Trigger the Deployment</h3>
+  <ol>
+    <li>In your GitHub repository, click the <strong>Actions</strong> tab</li>
+    <li>In the left sidebar, click your workflow name (e.g. "Deploy Health Tracker")</li>
+    <li>Click the <strong>Run workflow</strong> button on the right</li>
+    <li>Click the green <strong>Run workflow</strong> button in the popup</li>
+  </ol>
+  <div class="screenshot">Right side of the Actions page shows a "Run workflow" dropdown button. Click it, then click the green "Run workflow" button in the small popup.</div>
+
+  <h3>Watch It Run</h3>
+  <ol>
+    <li>Refresh the page — a new row appears with a yellow spinning circle</li>
+    <li>Click that row, then click the <strong>deploy</strong> job</li>
+    <li>Watch each step get a green ✅ checkmark</li>
+  </ol>
+  <div class="screenshot">The job detail page shows a list of steps. Each step shows a spinning circle while running, then turns into a green checkmark when done.</div>
+
+  <h3>What Each Step Does</h3>
+  <table>
+    <tr><th>Step</th><th>What is happening</th></tr>
+    <tr><td>Checkout</td><td>Downloads your code files</td></tr>
+    <tr><td>Configure AWS credentials</td><td>Connects to your AWS account</td></tr>
+    <tr><td>Setup SAM CLI</td><td>Installs the deployment tool</td></tr>
+    <tr><td>SAM Build</td><td>Packages your Lambda functions</td></tr>
+    <tr><td>SAM Deploy</td><td>Creates Lambda, API Gateway, S3 in AWS</td></tr>
+    <tr><td>Upload frontend</td><td>Puts your website on S3</td></tr>
+    <tr><td>Print URLs</td><td>Shows you the live links</td></tr>
+  </table>
+
+  <h3>If Something Goes Wrong</h3>
+  <table>
+    <tr><th>Error message</th><th>Fix</th></tr>
+    <tr><td>Credentials could not be loaded</td><td>Check your secrets in Step 6 — no spaces in the values</td></tr>
+    <tr><td>Bucket does not exist</td><td>Check SAM_DEPLOY_BUCKET matches your S3 bucket name exactly</td></tr>
+    <tr><td>Access denied</td><td>Make sure all 6 IAM policies are attached to github-deployer</td></tr>
+    <tr><td>Model not found</td><td>Go back to Step 3 and confirm Bedrock access is granted</td></tr>
+  </table>
+
+  <h3>✅ Checkpoint</h3>
+  <ul class="checklist">
+    <li>Deployment triggered from the Actions tab</li>
+    <li>All steps show green checkmarks</li>
+    <li>No red X errors</li>
+  </ul>
+
+  <div class="nav-btns">
+    <a href="#" class="btn btn-outline" onclick="showPage('step6')">← Previous</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('step8')">Next: Go Live →</a>
+  </div>
+</div>
+
+<!-- STEP 8 -->
+<div id="page-step8" class="page">
+  <div class="step-header">
+    <span class="step-badge">8</span>
+    <h2>Visit Your Live App</h2>
+    <span class="time-badge">⏱ 2 min</span>
+  </div>
+
+  <h3>Find Your Live URL</h3>
+  <ol>
+    <li>Go to the <strong>Actions</strong> tab in GitHub</li>
+    <li>Click your most recent successful deployment run</li>
+    <li>Click the <strong>deploy</strong> job</li>
+    <li>Scroll to the last step: <strong>Print URLs</strong> and expand it</li>
+    <li>Copy the <strong>Frontend URL</strong></li>
+  </ol>
+  <div class="screenshot">The "Print URLs" step shows two lines: "✅ API URL: https://..." and "✅ Frontend URL: http://...". Copy the Frontend URL.</div>
+
+  <h3>Open and Test Your App</h3>
+  <ol>
+    <li>Paste the Frontend URL into a new browser tab</li>
+    <li>Fill in the input fields</li>
+    <li>Click <strong>Run All</strong></li>
+    <li>Wait 5–10 seconds — the AI output areas fill with responses</li>
+  </ol>
+
+  <h3>Share It</h3>
+  <p>Your app URL works for anyone in the world — no AWS or PartyRock account needed. Just share the link.</p>
+  <div class="tip">Use <a href="https://bit.ly" target="_blank">bit.ly</a> to shorten the long URL into something easy to share.</div>
+
+  <h3>Before vs. After</h3>
+  <table>
+    <tr><th></th><th>PartyRock</th><th>Your App</th></tr>
+    <tr><td>Requires login</td><td>✅ Yes</td><td>❌ No</td></tr>
+    <tr><td>Custom design</td><td>❌ No</td><td>✅ Yes</td></tr>
+    <tr><td>You own it</td><td>❌ No</td><td>✅ Yes</td></tr>
+    <tr><td>Share with anyone</td><td>Limited</td><td>✅ Yes</td></tr>
+    <tr><td>Custom domain</td><td>❌ No</td><td>✅ Yes</td></tr>
+  </table>
+
+  <div style="background:#1a2208;border:1px solid #4a6a10;border-radius:12px;padding:24px;text-align:center;margin-top:32px;">
+    <div style="font-size:40px;margin-bottom:12px">🎉</div>
+    <h2 style="color:#c8f135;margin-bottom:8px">You Did It!</h2>
+    <p style="color:#aaa">Your PartyRock app is now a real, published web application running on AWS. Anyone in the world can use it.</p>
+  </div>
+
+  <div class="nav-btns">
+    <a href="#" class="btn btn-outline" onclick="showPage('step7')">← Previous</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('home')">Back to Overview</a>
+  </div>
+</div>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+    const page = document.getElementById('page-' + id);
+    if (page) { page.classList.add('active'); window.scrollTo(0,0); }
+    const nav = document.getElementById('nav-' + id);
+    if (nav) nav.classList.add('active');
+    // progress bar
+    const stepMap = { home:0, step1:1, step2:2, step3:3, step4:4, step5:5, step6:6, step7:7, step8:8, step9:9, step10:10 };
+    const bar = document.getElementById('progressBar');
+    const fill = document.getElementById('progressFill');
+    const label = document.getElementById('progressLabel');
+    const pct = document.getElementById('progressPct');
+    if (stepMap[id] !== undefined && stepMap[id] > 0) {
+      const step = stepMap[id];
+      const total = 10;
+      const percent = Math.round((step / total) * 100);
+      bar.style.display = 'flex';
+      fill.style.width = percent + '%';
+      label.textContent = 'Step ' + step + ' of ' + total;
+      pct.textContent = percent + '%';
+    } else {
+      bar.style.display = 'none';
+    }
+  }
+
+  function toggleFaq(el) {
+    const answer = el.nextElementSibling;
+    const icon = el.querySelector('span');
+    answer.classList.toggle('open');
+    icon.textContent = answer.classList.contains('open') ? '−' : '+';
+  }
+
+  // ── App Planner — live preview assembler (no LLM, pure text composition) ──
+  let widgetCount = 0;
+
+  function addWidget() {
+    widgetCount++;
+    const id = widgetCount;
+    const container = document.getElementById('widgetsContainer');
+    const div = document.createElement('div');
+    div.className = 'widget-entry';
+    div.id = 'widget-' + id;
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span style="color:#c8f135;font-weight:700;font-size:13px">Widget #${id}</span>
+        <button onclick="removeWidget(${id});rebuildPreview()" style="background:none;border:1px solid #444;color:#888;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:12px">✕ Remove</button>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Widget name <span class="req">*</span><span class="field-hint"> — copy from "Widget name" field in PartyRock</span></label>
+          <input type="text" class="w-title" placeholder="e.g. Food Description" oninput="rebuildPreview()" />
+        </div>
+        <div class="form-group">
+          <label>Widget Type <span class="req">*</span><span class="field-hint"> — shown at top of the edit panel</span></label>
+          <select class="w-type" onchange="toggleWidgetFields(${id},this.value);rebuildPreview()">
+            <option value="text-input">📝 Edit Text Input</option>
+            <option value="slider">🔢 Edit Slider</option>
+            <option value="dropdown">📋 Edit Dropdown</option>
+            <option value="static-text">ℹ️ Edit Static Text</option>
+            <option value="text-generation">✨ Edit AI Output</option>
+            <option value="image-generation">🖼️ Edit Image Output</option>
+            <option value="chatbot">💬 Edit Chat Box</option>
+            <option value="document">📄 Edit File Upload</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ── Edit Text Input ── (screenshot p12) -->
+      <div id="textinput-fields-${id}" style="display:block">
+        <div class="form-group">
+          <label>Helpful hint text <span class="field-hint">(optional) — shown as grey placeholder when input is empty</span></label>
+          <input type="text" class="w-placeholder" placeholder="e.g. Enter your email address" oninput="rebuildPreview()" />
+        </div>
+        <div class="form-group">
+          <label>Pre-fill the input with a value? <span class="field-hint">(optional) — appears automatically, users can change it</span></label>
+          <input type="text" class="w-prefill" placeholder="e.g. grilled chicken with rice" oninput="rebuildPreview()" />
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label" style="width:auto;display:inline-flex">
+            <input type="checkbox" class="w-optional" onchange="rebuildPreview()" />
+            Make this widget optional <span class="field-hint" style="margin-left:4px">— users won't have to fill it to run the app</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- ── Edit Slider ── (screenshot p10) -->
+      <div id="slider-fields-${id}" style="display:none">
+        <div class="form-group">
+          <label>What type of value should the slider represent? <span class="req">*</span></label>
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <label class="checkbox-label"><input type="radio" name="slider-type-${id}" class="w-slider-type" value="ordinal" onchange="toggleSliderSubtype(${id});rebuildPreview()" checked /> Ordinal (labels)</label>
+            <label class="checkbox-label"><input type="radio" name="slider-type-${id}" class="w-slider-type" value="numeric" onchange="toggleSliderSubtype(${id});rebuildPreview()" /> Numeric (numbers)</label>
+          </div>
+        </div>
+        <div id="slider-ordinal-${id}">
+          <div class="form-group">
+            <label>Tickmarks from left to right <span class="field-hint">— type each label, press Enter</span></label>
+            <input type="text" class="w-tickmarks" placeholder="e.g. Low, Medium, High" oninput="rebuildPreview()" />
+          </div>
+        </div>
+        <div id="slider-numeric-${id}" style="display:none">
+          <div class="form-row-3">
+            <div class="form-group">
+              <label>Minimum</label>
+              <input type="number" class="w-min" placeholder="e.g. 30" oninput="rebuildPreview()" />
+            </div>
+            <div class="form-group">
+              <label>Maximum</label>
+              <input type="number" class="w-max" placeholder="e.g. 300" oninput="rebuildPreview()" />
+            </div>
+            <div class="form-group">
+              <label>Default</label>
+              <input type="number" class="w-default" placeholder="e.g. 70" oninput="rebuildPreview()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Unit <span class="field-hint">(optional)</span></label>
+            <input type="text" class="w-unit" placeholder="e.g. kg, lbs, years" oninput="rebuildPreview()" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label" style="width:auto;display:inline-flex">
+            <input type="checkbox" class="w-optional" onchange="rebuildPreview()" />
+            Make this widget optional
+          </label>
+        </div>
+      </div>
+
+      <!-- ── Edit Dropdown ── (screenshot p11) -->
+      <div id="dropdown-fields-${id}" style="display:none">
+        <div class="form-group">
+          <label>What options should appear in the dropdown? <span class="req">*</span><span class="field-hint"> — one per line or comma separated</span></label>
+          <textarea class="w-options" rows="4" placeholder="e.g.&#10;Option 1&#10;Option 2&#10;Option 3" oninput="rebuildPreview()"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label" style="width:auto;display:inline-flex">
+            <input type="checkbox" class="w-optional" onchange="rebuildPreview()" />
+            Make this widget optional
+          </label>
+        </div>
+        <div class="form-group">
+          <label>Pre-selected option <span class="field-hint">(optional) — the option selected when users first see the dropdown</span></label>
+          <input type="text" class="w-default-opt" placeholder="e.g. Moderately Active" oninput="rebuildPreview()" />
+        </div>
+        <div class="form-group">
+          <label>Helpful hint text <span class="field-hint">(optional) — shown when nothing is selected</span></label>
+          <input type="text" class="w-dropdown-hint" placeholder="e.g. Select a country" oninput="rebuildPreview()" />
+        </div>
+      </div>
+
+      <!-- ── Edit Static Text ── (screenshot p1) -->
+      <div id="static-fields-${id}" style="display:none">
+        <div class="form-group">
+          <label>Content <span class="field-hint">— supports markdown (## headings, **bold**, bullet lists)</span></label>
+          <textarea class="w-static-content" rows="4" placeholder="e.g. ## Welcome&#10;&#10;Fill in your details below to get your personalized health report." oninput="rebuildPreview()"></textarea>
+        </div>
+      </div>
+
+      <!-- ── Edit AI Output ── (screenshots p7, p8) -->
+      <div id="textgen-fields-${id}" style="display:none">
+        <div class="field-section-label">Prompt tab</div>
+        <div class="form-group">
+          <label>What should AI generate? <span class="req">*</span><span class="field-hint"> — copy exactly from the Prompt tab in PartyRock. Use [Widget Name] to reference other widgets.</span></label>
+          <textarea class="w-prompt" rows="5" placeholder="e.g. Write a haiku based on this content:&#10;&#10;[Food Description]" oninput="rebuildPreview()"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Which widgets does this reference? <span class="field-hint">— the [Widget Name] tags used in the prompt above</span></label>
+          <input type="text" class="w-refs" placeholder="e.g. Food Description, Current Weight" oninput="rebuildPreview()" />
+        </div>
+        <div class="field-section-label">AI model tab</div>
+        <div class="form-group">
+          <label>Which AI model should generate the output? <span class="field-hint">— check the AI model tab in PartyRock</span></label>
+          <select class="w-model" onchange="rebuildPreview()">
+            <option value="claude-sonnet-4">Claude Sonnet 4.5 (latest default)</option>
+            <option value="claude-3-sonnet">Claude 3 Sonnet (legacy)</option>
+            <option value="claude-3-haiku">Claude 3 Haiku</option>
+            <option value="claude-instant">Claude Instant</option>
+            <option value="titan-text">Amazon Titan Text</option>
+            <option value="llama3">Meta Llama 3</option>
+          </select>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Temperature <span class="field-hint">(0 = Factual → 1 = Creative)</span></label>
+            <input type="number" class="w-temperature" min="0" max="1" step="0.1" placeholder="e.g. 0" oninput="rebuildPreview()" />
+          </div>
+          <div class="form-group">
+            <label>Top P <span class="field-hint">(0 = Factual → 1 = Creative)</span></label>
+            <input type="number" class="w-topp" min="0" max="1" step="0.1" placeholder="e.g. 1" oninput="rebuildPreview()" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <label class="checkbox-label"><input type="checkbox" class="w-web-search" onchange="rebuildPreview()" /> Search the internet for information</label>
+            <label class="checkbox-label"><input type="checkbox" class="w-deep-think" onchange="rebuildPreview()" /> Think deeply before responding</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Edit Image Output ── (screenshots p5, p6) -->
+      <div id="imagegen-fields-${id}" style="display:none">
+        <div class="field-section-label">Prompt tab</div>
+        <div class="form-group">
+          <label>Describe the image you want AI to create <span class="req">*</span><span class="field-hint"> — use [Widget Name] to reference other widgets</span></label>
+          <textarea class="w-img-prompt" rows="4" placeholder="e.g. An image of [Food Description]" oninput="rebuildPreview()"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Which widgets does this reference?</label>
+          <input type="text" class="w-refs" placeholder="e.g. Food Description, Hero Name" oninput="rebuildPreview()" />
+        </div>
+        <div class="field-section-label">Advanced tab</div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Which AI model should generate the image?</label>
+            <select class="w-img-model" onchange="rebuildPreview()">
+              <option value="nova-canvas">Amazon Nova Canvas (default)</option>
+              <option value="titan-image">Amazon Titan Image Generator</option>
+              <option value="sdxl">Stable Diffusion XL</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Aspect Ratio</label>
+            <select class="w-aspect" onchange="rebuildPreview()">
+              <option value="1:1">1:1 (square)</option>
+              <option value="16:9" selected>16:9 (landscape)</option>
+              <option value="9:16">9:16 (portrait)</option>
+              <option value="4:3">4:3</option>
+              <option value="3:4">3:4</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>What should NOT appear in the image? <span class="field-hint">(optional negative prompt)</span></label>
+          <input type="text" class="w-negative" placeholder="e.g. text, people, watermarks, blurry" oninput="rebuildPreview()" />
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>CFG Scale <span class="field-hint">(0 = Strict → 10 = Creative, default 10)</span></label>
+            <input type="number" class="w-cfg" min="0" max="10" placeholder="10" oninput="rebuildPreview()" />
+          </div>
+          <div class="form-group">
+            <label class="checkbox-label" style="width:auto;display:inline-flex;margin-top:22px">
+              <input type="checkbox" class="w-random-seed" onchange="rebuildPreview()" checked /> Use random seed for regenerating
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Edit Chat Box ── (screenshots p2, p3, p4) -->
+      <div id="chatbot-fields-${id}" style="display:none">
+        <div class="field-section-label">Prompt tab — "What role should the chatbot be?"</div>
+        <div class="form-group">
+          <label>Role / System prompt <span class="req">*</span><span class="field-hint"> — copy from the Prompt tab. Use [Widget Name] to reference other widgets.</span></label>
+          <textarea class="w-system-prompt" rows="4" placeholder="e.g. Pretend you are a character named [Food Description]. The user will now have a conversation with you." oninput="rebuildPreview()"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Which widgets does the role prompt reference?</label>
+          <input type="text" class="w-refs" placeholder="e.g. Food Description, Fitness Goal" oninput="rebuildPreview()" />
+        </div>
+        <div class="field-section-label">Instructions tab</div>
+        <div class="form-group">
+          <label>Instructions for users <span class="field-hint">(optional) — helpful hint text shown in the chat input box</span></label>
+          <input type="text" class="w-chat-hint" placeholder="e.g. Type your question here" oninput="rebuildPreview()" />
+        </div>
+        <div class="form-group">
+          <label>What should the chatbot say as opening message?</label>
+          <textarea class="w-chat-opener" rows="2" placeholder="e.g. I'm now ready to chat!" oninput="rebuildPreview()"></textarea>
+        </div>
+        <div class="field-section-label">Advanced tab</div>
+        <div class="form-group">
+          <label>Which AI model should power the chatbot?</label>
+          <select class="w-model" onchange="rebuildPreview()">
+            <option value="claude-sonnet-4">Claude Sonnet 4.5 (latest default)</option>
+            <option value="claude-3-sonnet">Claude 3 Sonnet (legacy)</option>
+            <option value="claude-3-haiku">Claude 3 Haiku</option>
+            <option value="claude-instant">Claude Instant</option>
+          </select>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Temperature <span class="field-hint">(0 = Consistent → 1 = Varied)</span></label>
+            <input type="number" class="w-temperature" min="0" max="1" step="0.1" placeholder="e.g. 0" oninput="rebuildPreview()" />
+          </div>
+          <div class="form-group">
+            <label>Top P <span class="field-hint">(0 = On-topic → 1 = Creative)</span></label>
+            <input type="number" class="w-topp" min="0" max="1" step="0.1" placeholder="e.g. 1" oninput="rebuildPreview()" />
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Edit File Upload ── (screenshot p9) -->
+      <div id="document-fields-${id}" style="display:none">
+        <div class="form-group">
+          <label>Add helpful instructions for users? <span class="field-hint">(optional) — guides users on what files to upload and in what format</span></label>
+          <input type="text" class="w-upload-desc" placeholder="e.g. Please upload your resume as PDF" oninput="rebuildPreview()" />
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label" style="width:auto;display:inline-flex">
+            <input type="checkbox" class="w-optional" onchange="rebuildPreview()" checked /> Make this widget optional
+          </label>
+        </div>
+        <div class="form-group">
+          <label>Accepted file types <span class="field-hint">— PartyRock supports text files (PDF, DOCX, PPTX, HTML, CSV, JSON) and images (JPG, PNG, WEBP)</span></label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+            <label class="checkbox-label"><input type="checkbox" class="w-ft-img" onchange="rebuildPreview()" checked /> Images (JPG, PNG, WEBP)</label>
+            <label class="checkbox-label"><input type="checkbox" class="w-ft-pdf" onchange="rebuildPreview()" /> PDF</label>
+            <label class="checkbox-label"><input type="checkbox" class="w-ft-docx" onchange="rebuildPreview()" /> DOCX</label>
+            <label class="checkbox-label"><input type="checkbox" class="w-ft-pptx" onchange="rebuildPreview()" /> PPTX</label>
+            <label class="checkbox-label"><input type="checkbox" class="w-ft-csv" onchange="rebuildPreview()" /> CSV</label>
+            <label class="checkbox-label"><input type="checkbox" class="w-ft-json" onchange="rebuildPreview()" /> JSON</label>
+            <label class="checkbox-label"><input type="checkbox" class="w-ft-html" onchange="rebuildPreview()" /> HTML</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Which AI widget uses this uploaded file?</label>
+          <input type="text" class="w-used-by" placeholder="e.g. Image Calorie Scanner, Resume Analyzer" oninput="rebuildPreview()" />
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+    rebuildPreview();
+  }
+
+  function toggleSliderSubtype(id) {
+    const isOrdinal = document.querySelector(`input[name="slider-type-${id}"][value="ordinal"]`).checked;
+    document.getElementById('slider-ordinal-' + id).style.display = isOrdinal ? 'block' : 'none';
+    document.getElementById('slider-numeric-' + id).style.display = isOrdinal ? 'none' : 'block';
+  }
+
+  function removeWidget(id) {
+    const el = document.getElementById('widget-' + id);
+    if (el) el.remove();
+  }
+
+  function toggleWidgetFields(id, type) {
+    // hide all conditional sections first
+    ['textinput','slider','dropdown','static','textgen','imagegen','chatbot','document'].forEach(t => {
+      const el = document.getElementById(t + '-fields-' + id);
+      if (el) el.style.display = 'none';
+    });
+    // show the relevant one
+    const map = {
+      'text-input':       'textinput',
+      'slider':           'slider',
+      'dropdown':         'dropdown',
+      'static-text':      'static',
+      'text-generation':  'textgen',
+      'image-generation': 'imagegen',
+      'chatbot':          'chatbot',
+      'document':         'document',
+    };
+    const target = document.getElementById((map[type] || 'textinput') + '-fields-' + id);
+    if (target) target.style.display = 'block';
+  }
+
+  // ── helpers ───────────────────────────────────────────────────────────────
+  function val(el, cls) {
+    const node = el.querySelector(cls);
+    return node ? node.value.trim() : '';
+  }
+  function checked(el, cls) {
+    const node = el.querySelector(cls);
+    return node ? node.checked : false;
+  }
+  function slug(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+  function snake(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,''); }
+
+  // ── collect all widget data from the DOM ──────────────────────────────────
+  function collectWidgets() {
+    const entries = document.querySelectorAll('.widget-entry');
+    const widgets = [];
+    entries.forEach((entry, i) => {
+      const title = val(entry, '.w-title') || `Widget ${i+1}`;
+      const type  = entry.querySelector('.w-type').value;
+      const w = { title, type, num: i+1 };
+      const isOptional = entry.querySelector('.w-optional') ? entry.querySelector('.w-optional').checked : false;
+      w.optional = isOptional;
+
+      if (type === 'text-input') {
+        w.placeholder = val(entry, '.w-placeholder');
+        w.prefill     = val(entry, '.w-prefill');
+      }
+      if (type === 'slider') {
+        const ordinalRadio = entry.querySelector('input[value="ordinal"]');
+        w.sliderType = ordinalRadio && ordinalRadio.checked ? 'ordinal' : 'numeric';
+        if (w.sliderType === 'ordinal') {
+          w.tickmarks = val(entry, '.w-tickmarks');
+        } else {
+          w.min     = val(entry, '.w-min')     || '0';
+          w.max     = val(entry, '.w-max')     || '100';
+          w.default = val(entry, '.w-default') || '50';
+          w.unit    = val(entry, '.w-unit');
+        }
+      }
+      if (type === 'dropdown') {
+        const raw = val(entry, '.w-options');
+        w.options      = raw.split(/[\n,]+/).map(s=>s.trim()).filter(Boolean);
+        w.defaultOpt   = val(entry, '.w-default-opt');
+        w.dropdownHint = val(entry, '.w-dropdown-hint');
+      }
+      if (type === 'static-text') {
+        w.content = val(entry, '.w-static-content');
+      }
+      if (type === 'text-generation') {
+        w.prompt      = val(entry, '.w-prompt');
+        w.refs        = val(entry, '.w-refs');
+        w.model       = entry.querySelector('.w-model') ? entry.querySelector('.w-model').value : 'claude-sonnet-4';
+        w.temperature = val(entry, '.w-temperature');
+        w.topP        = val(entry, '.w-topp');
+        w.webSearch   = entry.querySelector('.w-web-search') ? entry.querySelector('.w-web-search').checked : false;
+        w.deepThink   = entry.querySelector('.w-deep-think') ? entry.querySelector('.w-deep-think').checked : false;
+      }
+      if (type === 'image-generation') {
+        w.imgPrompt  = val(entry, '.w-img-prompt');
+        w.refs       = val(entry, '.w-refs');
+        w.imgModel   = entry.querySelector('.w-img-model') ? entry.querySelector('.w-img-model').value : 'nova-canvas';
+        w.aspect     = entry.querySelector('.w-aspect')    ? entry.querySelector('.w-aspect').value    : '16:9';
+        w.negative   = val(entry, '.w-negative');
+        w.cfg        = val(entry, '.w-cfg');
+        w.randomSeed = entry.querySelector('.w-random-seed') ? entry.querySelector('.w-random-seed').checked : true;
+      }
+      if (type === 'chatbot') {
+        w.systemPrompt = val(entry, '.w-system-prompt');
+        w.refs         = val(entry, '.w-refs');
+        w.chatHint     = val(entry, '.w-chat-hint');
+        w.opener       = val(entry, '.w-chat-opener');
+        w.model        = entry.querySelector('.w-model') ? entry.querySelector('.w-model').value : 'claude-sonnet-4';
+        w.temperature  = val(entry, '.w-temperature');
+        w.topP         = val(entry, '.w-topp');
+      }
+      if (type === 'document') {
+        w.uploadDesc = val(entry, '.w-upload-desc');
+        w.usedBy     = val(entry, '.w-used-by');
+        const types = [];
+        if (checked(entry,'.w-ft-img'))  types.push('Images (JPG, PNG, WEBP)');
+        if (checked(entry,'.w-ft-pdf'))  types.push('PDF');
+        if (checked(entry,'.w-ft-docx')) types.push('DOCX');
+        if (checked(entry,'.w-ft-pptx')) types.push('PPTX');
+        if (checked(entry,'.w-ft-csv'))  types.push('CSV');
+        if (checked(entry,'.w-ft-json')) types.push('JSON');
+        if (checked(entry,'.w-ft-html')) types.push('HTML');
+        w.fileTypes = types;
+      }
+      widgets.push(w);
+    });
+    return widgets;
+  }
+
+  const MODEL_IDS = {
+    'claude-sonnet-4':  'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+    'claude-3-sonnet':  'anthropic.claude-3-sonnet-20240229-v1:0',
+    'claude-3-haiku':   'anthropic.claude-3-haiku-20240307-v1:0',
+    'claude-instant':   'anthropic.claude-instant-v1',
+    'titan-text':       'amazon.titan-text-express-v1',
+    'llama3':           'meta.llama3-8b-instruct-v1:0',
+  };
+  const IMG_MODEL_IDS = {
+    'nova-canvas':  'amazon.nova-canvas-v1:0',
+    'titan-image':  'amazon.titan-image-generator-v1',
+    'sdxl':         'stability.stable-diffusion-xl-v1',
+  };
+  const TYPE_LABEL = {
+    'text-input':       'User Input (text box)',
+    'slider':           'User Input (slider)',
+    'dropdown':         'User Input (dropdown)',
+    'static-text':      'Static Text (display only)',
+    'text-generation':  'Text Generation — AI (Bedrock)',
+    'image-generation': 'Image Generation — AI (Bedrock)',
+    'chatbot':          'Chatbot — AI (Bedrock)',
+    'document':         'Document / Image Upload',
+  };
+
+  // ── build the vibe prompt text ────────────────────────────────────────────
+  function buildVibePrompt(appName, targetUser, appDesc, appFlow, widgets, extraNotes) {
+    const lines = [];
+    widgets.forEach((w, i) => {
+      let block = `Widget ${i+1}: ${w.title}\n  Type: ${TYPE_LABEL[w.type]}`;
+      if (w.optional) block += `\n  Optional: yes`;
+
+      if (w.type === 'text-input') {
+        if (w.placeholder) block += `\n  Hint text: "${w.placeholder}"`;
+        if (w.prefill)     block += `\n  Pre-filled value: "${w.prefill}"`;
+      }
+      if (w.type === 'slider') {
+        if (w.sliderType === 'ordinal') {
+          block += `\n  Slider type: Ordinal`;
+          if (w.tickmarks) block += `\n  Tickmarks: ${w.tickmarks}`;
+        } else {
+          block += `\n  Slider type: Numeric`;
+          block += `\n  Range: ${w.min} – ${w.max}${w.unit?' '+w.unit:''}`;
+          block += `\n  Default: ${w.default}`;
+        }
+      }
+      if (w.type === 'dropdown') {
+        if (w.options.length) block += `\n  Options: ${w.options.join(', ')}`;
+        if (w.defaultOpt)    block += `\n  Pre-selected: ${w.defaultOpt}`;
+        if (w.dropdownHint)  block += `\n  Hint text: "${w.dropdownHint}"`;
+      }
+      if (w.type === 'static-text' && w.content)
+        block += `\n  Content: "${w.content}"`;
+
+      if (w.type === 'text-generation') {
+        if (w.prompt) block += `\n  Prompt:\n    ${w.prompt.replace(/\n/g,'\n    ')}`;
+        if (w.refs)   block += `\n  References: ${w.refs}`;
+        block += `\n  Model: ${MODEL_IDS[w.model] || w.model}`;
+        if (w.temperature) block += `\n  Temperature: ${w.temperature}`;
+        if (w.topP)        block += `\n  Top P: ${w.topP}`;
+        if (w.webSearch)   block += `\n  Web search: enabled`;
+        if (w.deepThink)   block += `\n  Deep thinking: enabled`;
+      }
+      if (w.type === 'image-generation') {
+        if (w.imgPrompt) block += `\n  Image Prompt:\n    ${w.imgPrompt.replace(/\n/g,'\n    ')}`;
+        if (w.refs)      block += `\n  References: ${w.refs}`;
+        block += `\n  Model: ${IMG_MODEL_IDS[w.imgModel] || w.imgModel}`;
+        block += `\n  Aspect ratio: ${w.aspect}`;
+        if (w.negative)  block += `\n  Negative prompt: ${w.negative}`;
+        if (w.cfg)       block += `\n  CFG scale: ${w.cfg}`;
+        block += `\n  Random seed: ${w.randomSeed ? 'yes' : 'no'}`;
+      }
+      if (w.type === 'chatbot') {
+        if (w.systemPrompt) block += `\n  Role/System prompt:\n    ${w.systemPrompt.replace(/\n/g,'\n    ')}`;
+        if (w.refs)         block += `\n  References: ${w.refs}`;
+        if (w.chatHint)     block += `\n  Chat input hint: "${w.chatHint}"`;
+        if (w.opener)       block += `\n  Opening message: "${w.opener}"`;
+        block += `\n  Model: ${MODEL_IDS[w.model] || w.model}`;
+        if (w.temperature)  block += `\n  Temperature: ${w.temperature}`;
+        if (w.topP)         block += `\n  Top P: ${w.topP}`;
+      }
+      if (w.type === 'document') {
+        if (w.uploadDesc)       block += `\n  Instructions: "${w.uploadDesc}"`;
+        if (w.fileTypes.length) block += `\n  Accepted files: ${w.fileTypes.join(', ')}`;
+        if (w.usedBy)           block += `\n  Used by widget: "${w.usedBy}"`;
+        block += `\n  Optional: ${w.optional ? 'yes' : 'no'}`;
+      }
+      lines.push(block);
+    });
+
+    const notesSection = extraNotes
+      ? `\n========================================\nEXTRA NOTES / SPECIAL REQUIREMENTS\n========================================\n\n${extraNotes}\n`
+      : '';
+
+    // Derive widget-specific URL placeholders for streaming Lambdas
+    const textAiWidgets    = widgets.filter(w => w.type === 'text-generation');
+    const imageAiWidgets   = widgets.filter(w => w.type === 'image-generation');
+    const chatbotWidgets   = widgets.filter(w => w.type === 'chatbot');
+    const hasImage         = imageAiWidgets.length > 0;
+    const hasChatbot       = chatbotWidgets.length > 0;
+
+    const streamUrlEntries = [
+      ...textAiWidgets.map(w  => `      ${snake(w.title)}: '__URL_${snake(w.title).toUpperCase()}__',`),
+      ...chatbotWidgets.map(w => `      ${snake(w.title)}: '__URL_${snake(w.title).toUpperCase()}__',`),
+    ].join('\n');
+
+    const iamModelArns = [
+      `        arn:aws:bedrock:*::foundation-model/us.anthropic.claude-sonnet-4-5-20250929-v1:0`,
+      `        arn:aws:bedrock:*:\${AccountId}:inference-profile/us.anthropic.claude-sonnet-4-5-20250929-v1:0`,
+      hasImage ? `        arn:aws:bedrock:*::foundation-model/amazon.nova-canvas-v1:0` : null,
+    ].filter(Boolean).join('\n');
+
+    const samFunctions = [
+      ...textAiWidgets.map(w => `  ${w.title.replace(/\s+/g,'')}Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: ${slug(appName)}-${slug(w.title)}
+      CodeUri: ../backend/lambda/${snake(w.title)}/
+      Handler: run.sh
+      Runtime: python3.12
+      Timeout: 60
+      MemorySize: 256
+      Role: !GetAtt AppBedrockRole.Arn
+      Layers:
+        - arn:aws:lambda:\${AWS::Region}:753240598075:layer:LambdaAdapterLayerX86:27
+      Environment:
+        Variables:
+          AWS_LAMBDA_EXEC_WRAPPER: /opt/bootstrap
+          AWS_LWA_INVOKE_MODE: response_stream
+          PORT: "8080"
+      FunctionUrlConfig:
+        AuthType: NONE
+        InvokeMode: RESPONSE_STREAM`),
+      ...chatbotWidgets.map(w => `  ${w.title.replace(/\s+/g,'')}Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: ${slug(appName)}-${slug(w.title)}
+      CodeUri: ../backend/lambda/${snake(w.title)}/
+      Handler: run.sh
+      Runtime: python3.12
+      Timeout: 60
+      MemorySize: 256
+      Role: !GetAtt AppBedrockRole.Arn
+      Layers:
+        - arn:aws:lambda:\${AWS::Region}:753240598075:layer:LambdaAdapterLayerX86:27
+      Environment:
+        Variables:
+          AWS_LAMBDA_EXEC_WRAPPER: /opt/bootstrap
+          AWS_LWA_INVOKE_MODE: response_stream
+          PORT: "8080"
+      FunctionUrlConfig:
+        AuthType: NONE
+        InvokeMode: RESPONSE_STREAM`),
+      hasImage ? imageAiWidgets.map(w => `  ${w.title.replace(/\s+/g,'')}Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: ${slug(appName)}-${slug(w.title)}
+      CodeUri: ../backend/lambda/${snake(w.title)}/
+      Handler: app.handler
+      Runtime: python3.12
+      Timeout: 30
+      MemorySize: 256
+      Role: !GetAtt AppBedrockRole.Arn
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref AppApi
+            Path: /${slug(w.title)}
+            Method: POST`).join('\n') : null,
+    ].filter(Boolean).join('\n\n');
+
+    const cfOutputs = [
+      hasImage ? `  DiagramApiUrl:\n    Value: !Sub https://\${AppApi}.execute-api.\${AWS::Region}.amazonaws.com/prod` : null,
+      ...textAiWidgets.map(w  => `  ${w.title.replace(/\s+/g,'')}Url:\n    Value: !GetAtt ${w.title.replace(/\s+/g,'')}FunctionUrl.FunctionUrl`),
+      ...chatbotWidgets.map(w => `  ${w.title.replace(/\s+/g,'')}Url:\n    Value: !GetAtt ${w.title.replace(/\s+/g,'')}FunctionUrl.FunctionUrl`),
+      `  WebsiteUrl:\n    Value: !GetAtt FrontendBucket.WebsiteURL`,
+      `  BucketName:\n    Value: !Ref FrontendBucket`,
+    ].filter(Boolean).join('\n');
+
+    const sedInjects = [
+      hasImage ? `          DIAGRAM_URL=$(get_output DiagramApiUrl)\n          sed -i "s|__DIAGRAM_API_URL__|$DIAGRAM_URL|g" frontend/index.html` : null,
+      ...textAiWidgets.map(w  => `          URL=$(get_output ${w.title.replace(/\s+/g,'')}Url)\n          sed -i "s|__URL_${snake(w.title).toUpperCase()}__|$URL|g" frontend/index.html`),
+      ...chatbotWidgets.map(w => `          URL=$(get_output ${w.title.replace(/\s+/g,'')}Url)\n          sed -i "s|__URL_${snake(w.title).toUpperCase()}__|$URL|g" frontend/index.html`),
+    ].filter(Boolean).join('\n');
+
+    const bedrockModelsToEnable = [
+      `  - us.anthropic.claude-sonnet-4-5-20250929-v1:0  (Claude Sonnet 4.5 — cross-region inference profile)`,
+      hasImage ? `  - amazon.nova-canvas-v1:0  (Nova Canvas — for image generation)` : null,
+    ].filter(Boolean).join('\n');
+
+    return `I have a PartyRock AI app I want to slice into a real deployable AWS application.
+Please build me the full working app using AWS Lambda, API Gateway, Amazon Bedrock, S3, and GitHub Actions.
+
+========================================
+APP DETAILS
+========================================
+
+App Name: ${appName}
+Target Users: ${targetUser}
+
+App Description:
+${appDesc}
+
+App Flow (how a user uses it):
+${appFlow}
+
+========================================
+PARTYROCK WIDGETS (${widgets.length} total)
+========================================
+
+${lines.length ? lines.join('\n\n') : '[Add your widgets using the form]'}
+${notesSection}
+========================================
+WHAT TO BUILD
+========================================
+
+1. Frontend — single HTML/CSS/JS page hosted on S3
+   - Mirror the widget layout above exactly, in the same order
+   - One input control per User Input / Slider / Dropdown widget
+   - One AI output panel per Text Generation / Image / Chatbot widget
+   - Document widgets render as a drag-and-drop file upload zone
+   - When a file is selected: read with FileReader.readAsDataURL(), strip the
+     "data:<mime>;base64," prefix, store raw base64 string and MIME type
+   - Include file_data (base64 string) and file_mime (MIME type) in the POST
+     body of the AI widget the document is linked to (see widget map above)
+   - If the document widget is optional and no file is selected, omit file_data
+   - A "Run All" button that fires all AI calls simultaneously
+   - Loading spinner per output panel while waiting for response
+   - Error message per panel if the call fails
+   - Responsive — works on mobile and desktop
+   - All text output panels: fixed height 340px, overflow-y scroll, thin custom scrollbar
+   - Diagram/image and chat panels: auto height
+   - Real token-by-token streaming: fetch each streaming Lambda Function URL with
+     fetch() + response.body.getReader(), decode chunks with TextDecoder, buffer
+     incomplete lines, flush complete lines as markdown-rendered spans with fade-in
+     animation. Show a blinking cursor on the active line while streaming.
+   - Markdown rendering per line: ##/###/# headers, **bold**, *italic*, \`code\`,
+     bullet lists (- or *), numbered lists, --- hr. Each line appended as an
+     animated .md-line span.
+   - Chat: stream reply token-by-token into the bubble the same way. Accumulate
+     full reply text for conversation history.
+   - Inject URLs via placeholder tokens replaced by GitHub Actions sed:
+${streamUrlEntries ? `     const STREAM_URLS = {\n${streamUrlEntries}\n     };` : '     (no streaming widgets)'}
+${hasImage ? `     const DIAGRAM_API = '__DIAGRAM_API_URL__';` : ''}
+
+2. Backend — streaming Flask Lambda per text AI widget${hasImage ? ', buffered Lambda for image' : ''}
+   - Runtime: Python 3.12
+   - Text widgets (${[...textAiWidgets, ...chatbotWidgets].map(w=>w.title).join(', ')||'none'}):
+     - Each is a Flask app (app.py) with a run.sh startup script: #!/bin/bash\\npython app.py
+     - Flask route POST / streams Bedrock response using invoke_model_with_response_stream
+     - Use stream_with_context(generate()) where generate() yields raw text chunks
+     - Return Response(..., content_type="text/plain; charset=utf-8")
+     - CORS headers on every response: Access-Control-Allow-Origin: *,
+       Access-Control-Allow-Headers: Content-Type,
+       Access-Control-Allow-Methods: POST,OPTIONS
+     - Handle OPTIONS route returning 200 with CORS headers
+     - requirements.txt: flask>=3.0.0, boto3>=1.34.0
+     - File uploads: if the request body contains file_data and file_mime,
+       build a multimodal content block (image/* → image block, other → document block)
+       and prepend it to the messages list before calling Bedrock.
+       If file_data is absent, proceed with text-only prompt as normal.
+${hasChatbot ? `   - Chat Lambda:
+     - Same Flask streaming pattern
+     - Accepts: { topic, level, history: [{role, content}], message }
+     - Passes system prompt + full history + new user message to Bedrock` : ''}
+${hasImage ? `   - Image widget (${imageAiWidgets.map(w=>w.title).join(', ')}):
+     - Standard Lambda handler (app.handler), no Flask
+     - Calls amazon.nova-canvas-v1:0 via invoke_model, returns base64 JSON
+     - requirements.txt: boto3>=1.34.0` : ''}
+   - Bedrock model for all text: us.anthropic.claude-sonnet-4-5-20250929-v1:0
+     (cross-region inference profile — the us. prefix is required)
+${hasImage ? `   - Bedrock model for image: amazon.nova-canvas-v1:0` : ''}
+
+3. Infrastructure — AWS SAM template (infra/template.yaml)
+   - SAM transform: AWS::Serverless-2016-10-31
+   - No samconfig.toml (causes version key errors in CI)
+   - IAM Role (AppBedrockRole) with:
+     - AWSLambdaBasicExecutionRole managed policy
+     - bedrock:InvokeModel AND bedrock:InvokeModelWithResponseStream on:
+${iamModelArns}
+       (use * for region — the cross-region profile routes to us-east-2/us-west-2 too)
+${hasImage ? `   - AWS::Serverless::Api (AppApi) for image widget only (StageName: prod, CORS enabled)` : ''}
+   - For each text Lambda (${textAiWidgets.length + chatbotWidgets.length} total):
+     AWS::Serverless::Function with:
+       Handler: run.sh
+       Layers: arn:aws:lambda:\${AWS::Region}:753240598075:layer:LambdaAdapterLayerX86:27
+       Environment:
+         AWS_LAMBDA_EXEC_WRAPPER: /opt/bootstrap
+         AWS_LWA_INVOKE_MODE: response_stream
+         PORT: "8080"
+       FunctionUrlConfig:
+         AuthType: NONE
+         InvokeMode: RESPONSE_STREAM
+       (NO Cors block inside FunctionUrlConfig — causes AWS::EarlyValidation failure)
+       Timeout: 60, MemorySize: 256, Runtime: python3.12
+${hasImage ? `   - Image Lambda: standard handler, API Gateway event, Timeout: 30` : ''}
+   - S3 bucket for static website hosting with public read bucket policy
+   - Outputs:
+${cfOutputs}
+   - SAM auto-generates <FunctionLogicalId>Url resource for FunctionUrlConfig,
+     reference it as !GetAtt <FunctionLogicalId>Url.FunctionUrl in Outputs
+
+4. Deployment — GitHub Actions (.github/workflows/deploy.yml)
+   - Trigger: push to main + workflow_dispatch
+   - Steps: checkout → configure-aws-credentials → setup-python 3.12 →
+     setup-sam → sam build --template infra/template.yaml →
+     sam deploy (no --template flag needed after build) with flags:
+       --stack-name ${slug(appName)||'my-app'}
+       --s3-bucket \${{ secrets.SAM_DEPLOY_BUCKET }}
+       --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
+       --region us-east-1
+       --no-confirm-changeset
+       --no-fail-on-empty-changeset
+   - Read all outputs from CloudFormation describe-stacks using a helper function:
+       get_output() { aws cloudformation describe-stacks --stack-name ${slug(appName)||'my-app'} \\
+         --query "Stacks[0].Outputs[?OutputKey=='\$1'].OutputValue" --output text; }
+   - Use sed to inject each URL placeholder into frontend/index.html:
+${sedInjects || '     (no URL injection needed)'}
+   - aws s3 sync frontend/ to bucket with --cache-control no-cache
+   - Required secrets: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, SAM_DEPLOY_BUCKET
+
+5. Pre-deployment checklist (tell the user):
+   - Enable Bedrock model access for:
+${bedrockModelsToEnable}
+     in us-east-1 via AWS Console → Bedrock → Model Access
+     (first-time accounts must submit a use-case form)
+   - The us. inference profile routes across us-east-1/us-east-2/us-west-2,
+     so IAM must use * for region, not us-east-1 only
+
+========================================
+SCREENSHOTS ATTACHED
+========================================
+
+[Drag your PartyRock widget screenshots into this Kiro chat after pasting this text]`;
+  }
+
+  // ── Live preview: rebuilds on every keystroke ────────────────────────────
+  function rebuildPreview() {
+    const funcReqs = [];
+    widgets.forEach(w => {
+      if (w.type === 'text-input')
+        funcReqs.push(`- Text input field "${w.title}"${w.placeholder?' with placeholder: "'+w.placeholder+'"':''}`);
+      if (w.type === 'slider')
+        funcReqs.push(`- Slider "${w.title}" range ${w.min}–${w.max}${w.unit?' '+w.unit:''}, default ${w.default}, displays current value`);
+      if (w.type === 'dropdown')
+        funcReqs.push(`- Dropdown "${w.title}" with options: ${w.options.join(', ')}${w.defaultOpt?'; default: '+w.defaultOpt:''}`);
+      if (w.type === 'static-text')
+        funcReqs.push(`- Static text display: "${w.title}"`);
+      if (w.type === 'document')
+        funcReqs.push(`- File upload zone "${w.title}" accepting ${w.fileTypes.join(', ')||'images'}; converts to base64 for API`);
+      if (w.type === 'text-generation')
+        funcReqs.push(`- AI text output panel "${w.title}" — calls /api/${slug(w.title)}, shows loading spinner, displays response`);
+      if (w.type === 'image-generation')
+        funcReqs.push(`- AI image output panel "${w.title}" — calls /api/${slug(w.title)}, renders returned base64 image`);
+      if (w.type === 'chatbot')
+        funcReqs.push(`- Chatbot panel "${w.title}" — multi-turn conversation, sends history on each message, shows opener: "${w.opener||'Hello!'}"`);
+    });
+    funcReqs.push('- "Run All" button triggers all AI widget calls in parallel');
+    funcReqs.push('- Per-widget loading state and error display');
+    funcReqs.push('- Mobile-responsive layout');
+
+    const apiRoutes = aiWidgets.map(w =>
+      `    ├── POST /api/${slug(w.title)}  →  ${snake(w.title)}.py  →  Bedrock ${MODEL_IDS[w.model]||'claude-3-sonnet'}`
+    ).join('\n');
+
+    const documentWidgets = widgets.filter(w => w.type === 'document');
+
+    const lambdaDetails = aiWidgets.map(w => {
+      let detail = `#### ${w.title} Lambda (\`${snake(w.title)}.py\`)
+- Route: POST /api/${slug(w.title)}
+- Model: ${MODEL_IDS[w.model] || 'anthropic.claude-3-sonnet-20240229-v1:0'}`;
+      if (w.type === 'text-generation') {
+        detail += `\n- Input body fields: ${w.refs ? w.refs.split(',').map(r=>'`'+snake(r.trim())+'`').join(', ') : '(from form inputs)'}`;
+        detail += `\n- Prompt template:\n  \`\`\`\n  ${(w.prompt||'[prompt]').replace(/\n/g,'\n  ')}\n  \`\`\``;
+      }
+      if (w.type === 'image-generation') {
+        detail += `\n- Input body fields: ${w.refs ? w.refs.split(',').map(r=>'`'+snake(r.trim())+'`').join(', ') : '(from form inputs)'}`;
+        detail += `\n- Image prompt template:\n  \`\`\`\n  ${(w.imgPrompt||'[image prompt]').replace(/\n/g,'\n  ')}\n  \`\`\``;
+        detail += `\n- Returns: base64-encoded image`;
+      }
+      if (w.type === 'chatbot') {
+        detail += `\n- Input body fields: \`messages\` (array), ${w.refs ? w.refs.split(',').map(r=>'`'+snake(r.trim())+'`').join(', ') : ''}`;
+        detail += `\n- System prompt:\n  \`\`\`\n  ${(w.systemPrompt||'[system prompt]').replace(/\n/g,'\n  ')}\n  \`\`\``;
+        detail += `\n- Uses Bedrock Converse API for multi-turn`;
+      }
+      // Inject file upload spec for any document widget pointing at this Lambda
+      const attachedDocs = documentWidgets.filter(d => d.usedBy && d.usedBy.trim() === w.title.trim());
+      if (attachedDocs.length > 0) {
+        attachedDocs.forEach(d => {
+          const hasImages = d.fileTypes.some(t => t.toLowerCase().includes('image') || t.toLowerCase().includes('jpg') || t.toLowerCase().includes('png') || t.toLowerCase().includes('webp'));
+          const hasDocs   = d.fileTypes.some(t => ['pdf','docx','pptx','csv','json','html'].some(ext => t.toLowerCase().includes(ext)));
+          detail += `\n- File upload: accepts base64-encoded file from frontend field \`file_data\` (string) and \`file_mime\` (MIME type string)`;
+          detail += `\n  - Frontend reads file with FileReader.readAsDataURL(), strips the data:...;base64, prefix, sends raw base64 string`;
+          detail += `\n  - Accepted types: ${d.fileTypes.join(', ')}`;
+          if (hasImages) {
+            detail += `\n  - For image files (image/jpeg, image/png, image/webp, image/gif): build a multimodal content block:`;
+            detail += `\n    \`\`\`python`;
+            detail += `\n    content = [`;
+            detail += `\n        {"type": "image", "source": {"type": "base64", "mediaType": file_mime, "data": file_data}},`;
+            detail += `\n        {"type": "text", "text": prompt}`;
+            detail += `\n    ]`;
+            detail += `\n    \`\`\``;
+          }
+          if (hasDocs) {
+            detail += `\n  - For document files (PDF, DOCX, PPTX, CSV, JSON, HTML): build a document content block:`;
+            detail += `\n    \`\`\`python`;
+            detail += `\n    content = [`;
+            detail += `\n        {"type": "document", "source": {"type": "base64", "mediaType": file_mime, "data": file_data}},`;
+            detail += `\n        {"type": "text", "text": prompt}`;
+            detail += `\n    ]`;
+            detail += `\n    \`\`\``;
+          }
+          if (hasImages && hasDocs) {
+            detail += `\n  - Detect type at runtime: if file_mime starts with "image/" use image block, otherwise use document block`;
+          }
+          detail += `\n  - If file_data is absent or empty, fall back to text-only prompt (file upload is ${d.optional ? 'optional' : 'required'})`;
+        });
+      }
+      detail += `\n- Response: \`{ "result": "..." }\` with CORS headers`;
+      return detail;
+    }).join('\n\n');
+
+    const taskList = [
+      { id:1, title:'Scaffold project structure',
+        desc:'Create folders: `frontend/`, `backend/lambda/`, `infra/`, `.github/workflows/`. Add placeholder README.' },
+      { id:2, title:'Build frontend UI (index.html)',
+        desc:`Create single-page HTML/CSS/JS app with:\n- Input controls: ${inputWidgets.map(w=>'"'+w.title+'"').join(', ')||'(none)'}\n- AI output panels: ${aiWidgets.map(w=>'"'+w.title+'"').join(', ')||'(none)'}\n- Run All button, loading spinners, error states\n- API_BASE constant at top of script (injected at deploy time)` },
+      ...aiWidgets.map((w,i) => ({
+        id: 3+i,
+        title: `Build Lambda: ${w.title}`,
+        desc: `Create \`backend/lambda/${snake(w.title)}.py\`\n- Handler: \`handler(event, context)\`\n- Parse JSON body, build prompt, call \`bedrock.invoke_model()\`\n- Model: \`${MODEL_IDS[w.model]||'anthropic.claude-3-sonnet-20240229-v1:0'}\`\n- Return \`{"result": text}\` with CORS headers`
+      })),
+      { id: 3+aiWidgets.length, title:'Build SAM template (infra/template.yaml)',
+        desc:`Define:\n- ${aiWidgets.length} AWS::Serverless::Function resources\n- 1 AWS::Serverless::Api (prod, CORS *)\n- 1 AWS::S3::Bucket (static website)\n- 1 AWS::IAM::Role (bedrock:InvokeModel only)\n- Outputs: ApiUrl, FrontendBucketName, FrontendUrl` },
+      { id: 4+aiWidgets.length, title:'Build GitHub Actions workflow (.github/workflows/deploy.yml)',
+        desc:'Trigger: push to main + workflow_dispatch\nSteps: checkout → configure-aws-credentials → setup-sam → sam build → sam deploy → get stack outputs → inject API URL into index.html → aws s3 cp\nSecrets: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, SAM_DEPLOY_BUCKET' },
+      { id: 5+aiWidgets.length, title:'End-to-end test',
+        desc:'After deploy: open Frontend URL, fill all inputs, click Run All, verify each AI panel returns a response, verify no CORS errors in browser console' },
+    ];
+
+    const notesSection = extraNotes ? `\n## Extra Notes\n${extraNotes}\n` : '';
+
+    return `# Spec: Slice "${appName}" from PartyRock to AWS
+
+## Overview
+${appDesc}
+
+**Target users:** ${targetUser}
+
+**App flow:**
+${appFlow}
+
+---
+
+## Requirements
+
+### Functional Requirements
+${funcReqs.join('\n')}
+
+### Non-Functional Requirements
+- Lambda timeout: 30 seconds
+- Lambda memory: 256 MB
+- Frontend loads in under 3 seconds (static S3)
+- No login required for end users
+- CORS enabled on all API endpoints
+- Works on Chrome, Firefox, Safari, mobile browsers
+${notesSection}
+---
+
+## Architecture
+
+\`\`\`
+Browser  ──►  S3 Static Website (index.html)
+                      │
+                      ▼
+             API Gateway REST API (prod)
+${apiRoutes || '    └── (add widgets to see routes)'}
+\`\`\`
+
+---
+
+## Widget → Component Mapping
+
+| # | PartyRock Widget | Type | AWS Component |
+|---|---|---|---|
+${widgets.map((w,i)=>`| ${i+1} | ${w.title} | ${TYPE_LABEL[w.type]} | ${['text-generation','image-generation','chatbot'].includes(w.type)?'Lambda + Bedrock + API Gateway':w.type==='document'?'Frontend file input (base64)':'Frontend form control'} |`).join('\n')}
+
+---
+
+## Lambda Function Details
+
+${lambdaDetails || '_(Add AI widgets to see Lambda details)_'}
+
+---
+
+## Infrastructure (SAM template.yaml)
+
+\`\`\`
+Resources:
+  LambdaBedrockRole       AWS::IAM::Role
+                          Policy: bedrock:InvokeModel on used model ARNs
+${aiWidgets.map(w=>`  ${w.title.replace(/\s+/g,'')}Function    AWS::Serverless::Function\n                          Handler: ${snake(w.title)}.handler\n                          Route: POST /api/${slug(w.title)}`).join('\n')}
+  AppApi                  AWS::Serverless::Api  (stage: prod, CORS: *)
+  FrontendBucket          AWS::S3::Bucket       (static website hosting)
+
+Outputs:
+  ApiUrl                  → injected into index.html at deploy time
+  FrontendBucketName      → used by deploy script to upload index.html
+  FrontendUrl             → the live website URL
+\`\`\`
+
+---
+
+## Deployment (GitHub Actions)
+
+**File:** \`.github/workflows/deploy.yml\`
+**Trigger:** push to \`main\` branch, or manual run
+
+**Steps:**
+1. Checkout code
+2. Configure AWS credentials (from GitHub secrets)
+3. Setup SAM CLI
+4. \`sam build\`
+5. \`sam deploy --stack-name ${slug(appName)||'my-app'} --capabilities CAPABILITY_NAMED_IAM\`
+6. Read \`ApiUrl\` from CloudFormation stack outputs
+7. \`sed\` inject API URL into \`index.html\`
+8. \`aws s3 cp index.html s3://{FrontendBucket}/index.html\`
+
+**Required GitHub Secrets:**
+| Secret | Value |
+|---|---|
+| \`AWS_ACCESS_KEY_ID\` | IAM user access key ID |
+| \`AWS_SECRET_ACCESS_KEY\` | IAM user secret access key |
+| \`SAM_DEPLOY_BUCKET\` | S3 bucket name for SAM build artifacts |
+
+========================================
+SCREENSHOTS ATTACHED
+========================================
+
+[Drag your PartyRock widget screenshots into this Kiro chat after pasting this text]`;
+  }
+
+  // ── Live preview: rebuilds on every keystroke ────────────────────────────
+  function rebuildPreview() {
+    const appName    = document.getElementById('appName').value.trim()    || '[Your App Name]';
+    const appDesc    = document.getElementById('appDesc').value.trim()    || '[Describe what your app does]';
+    const appFlow    = document.getElementById('appFlow').value.trim()    || '[Describe the step-by-step flow]';
+    const targetUser = document.getElementById('targetUser').value.trim() || '[Who is this app for?]';
+    const extraNotes = document.getElementById('extraNotes').value.trim();
+    const widgets    = collectWidgets();
+
+    document.getElementById('kiroPromptPreview').textContent =
+      buildVibePrompt(appName, targetUser, appDesc, appFlow, widgets, extraNotes);
+  }
+
+  function copyActive(btn) {
+    // Validate before copying
+    const appName = document.getElementById('appName').value.trim();
+    const appDesc = document.getElementById('appDesc').value.trim();
+    const widgets = document.querySelectorAll('.widget-entry');
+    const missing = [];
+    if (!appName) missing.push('App Name');
+    if (!appDesc) missing.push('App Description');
+    if (widgets.length === 0) missing.push('at least one Widget');
+    if (missing.length > 0) {
+      btn.textContent = '⚠️ Fill in: ' + missing.join(', ');
+      btn.style.background = '#f5a623';
+      setTimeout(() => { btn.textContent = '📋 Copy'; btn.style.background = '#c8f135'; }, 3000);
+      return;
+    }
+    const text = document.getElementById('kiroPromptPreview').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✅ Copied!';
+      btn.style.background = '#4a6a10';
+      const cta = document.getElementById('plannerCTA');
+      if (cta) cta.style.display = 'block';
+      setTimeout(() => { btn.textContent = '📋 Copy'; btn.style.background = '#c8f135'; }, 2500);
+    });
+  }
+</script>
+<style>
+  /* ── App Planner styles ── */
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-size: 13px; color: #c8f135; font-weight: 600; margin-bottom: 6px; }
+  .form-group input[type="text"], .form-group textarea, .form-group select {
+    width: 100%; background: #111; border: 1px solid #333; border-radius: 8px;
+    color: #e0e0e0; padding: 10px 12px; font-size: 14px; font-family: inherit; outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: #c8f135; }
+  .form-group textarea { resize: vertical; }
+  .form-group select { appearance: none; cursor: pointer; }
+  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  @media (max-width: 600px) { .form-row-2,.form-row-3 { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { #page-planner .page-cols { grid-template-columns: 1fr !important; } }
+  .req { color: #f5a623; font-size: 11px; }
+  .field-hint { color: #666; font-size: 11px; font-weight: 400; }
+  .field-section-label { font-size: 11px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin: 16px 0 8px; padding: 4px 8px; background: #1a1a1a; border-radius: 4px; display: inline-block; }
+  /* sandbox steps */
+  .sandbox-step { display:flex; gap:16px; margin-bottom:28px; }
+  .sandbox-step-num { background:#f5a623; color:#0f0f0f; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px; flex-shrink:0; margin-top:2px; }
+  .sandbox-step-body { flex:1; }
+  .sandbox-step-title { color:#fff; font-weight:700; font-size:15px; margin-bottom:10px; }
+  .sandbox-step-body p { margin-bottom:10px; }
+  .sandbox-step-body ol, .sandbox-step-body ul { margin-bottom:10px; }
+  /* progress bar */
+  .progress-bar-wrap { background:#1a1a1a; border-bottom:1px solid #2a2a2a; padding:8px 24px; display:flex; align-items:center; gap:12px; }
+  .progress-bar-track { flex:1; height:4px; background:#2a2a2a; border-radius:2px; overflow:hidden; }
+  .progress-bar-fill { height:100%; background:#c8f135; border-radius:2px; transition:width 0.4s ease; }
+  .progress-label { font-size:11px; color:#666; white-space:nowrap; }
+  /* faq */
+  .faq-item { border-bottom:1px solid #2a2a2a; padding:16px 0; }
+  .faq-q { color:#fff; font-weight:600; font-size:14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .faq-q:hover { color:#c8f135; }
+  .faq-a { color:#aaa; font-size:13px; line-height:1.7; margin-top:10px; display:none; }
+  .faq-a.open { display:block; }
+  .faq-section-title { color:#c8f135; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin:28px 0 8px; }
+  /* step 9 recommended badge */
+  .recommended-badge { display:inline-block; background:#c8f135; color:#0f0f0f; border-radius:4px; padding:2px 8px; font-size:11px; font-weight:800; margin-left:8px; vertical-align:middle; }
+  .checkbox-label { display:flex; align-items:center; gap:5px; font-size:13px; color:#ccc; cursor:pointer; background:#1a1a1a; border:1px solid #2a2a2a; border-radius:6px; padding:5px 10px; }
+  .checkbox-label input { accent-color:#c8f135; width:14px; height:14px; }
+  /* preview tabs */
+  .preview-tabs { display:flex; border-bottom:1px solid #2a2a2a; background:#111; border-radius:10px 10px 0 0; overflow:hidden; }
+  .preview-tab { flex:1; padding:10px 8px; font-size:12px; font-weight:700; text-align:center; cursor:pointer; color:#666; border:none; background:none; transition:all 0.2s; }
+  .preview-tab.active { color:#c8f135; background:#1a2208; border-bottom:2px solid #c8f135; }
+  .preview-tab:hover:not(.active) { color:#aaa; background:#1a1a1a; }
+  .widget-entry { background: #111; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+  .add-widget-btn { width: 100%; background: #1a2208; border: 1px dashed #4a6a10; color: #c8f135; border-radius: 8px; padding: 12px; font-size: 14px; cursor: pointer; transition: background 0.2s; margin-bottom: 24px; }
+  .add-widget-btn:hover { background: #243010; }
+  .section-divider { border: none; border-top: 1px solid #2a2a2a; margin: 32px 0; }
+  .planner-intro { background: #1a2208; border: 1px solid #4a6a10; border-radius: 10px; padding: 16px; margin-bottom: 28px; font-size: 14px; color: #ccc; }
+  .planner-intro strong { color: #c8f135; }
+  /* preview box */
+  .preview-wrap { position: relative; background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 10px; overflow: hidden; margin-top: 8px; }
+  .preview-header { background: #1a2208; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; }
+  .preview-header span { color: #c8f135; font-weight: 700; font-size: 13px; }
+  .copy-big-btn { background: #c8f135; color: #0f0f0f; border: none; border-radius: 6px; padding: 7px 18px; font-size: 13px; font-weight: 800; cursor: pointer; transition: background 0.2s; }
+  .copy-big-btn:hover { background: #d4f84a; }
+  #kiroPromptPreview { display: block; padding: 16px; font-size: 12px; line-height: 1.7; color: #ccc; white-space: pre-wrap; word-break: break-word; max-height: 480px; overflow-y: auto; font-family: 'Courier New', monospace; }
+  .step-num { display: inline-flex; align-items: center; justify-content: center; background: #c8f135; color: #0f0f0f; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; font-weight: 800; margin-right: 6px; flex-shrink: 0; }
+  .how-to-use { background: #111; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px; margin-top: 20px; }
+  .how-to-use .row { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid #1e1e1e; font-size: 13px; color: #ccc; }
+  .how-to-use .row:last-child { border-bottom: none; }
+</style>
+
+<!-- APP PLANNER PAGE -->
+<div id="page-planner" class="page">
+  <div class="step-header">
+    <span class="step-badge" style="font-size:18px">✨</span>
+    <h2>App Planner — Build Your Kiro Prompt</h2>
+  </div>
+
+  <div class="planner-intro">
+    Fill in the details of your PartyRock app below. The vibe prompt on the right updates live as you type — no AI call needed.
+    When you're done, click <strong>Copy</strong> and paste it straight into Kiro chat with your screenshots. Kiro generates everything in one shot.
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start" class="page-cols">
+
+    <!-- LEFT: Form -->
+    <div>
+
+      <h3 style="margin-top:0">1. App Info</h3>
+
+      <div class="form-group">
+        <label>App Name</label>
+        <input type="text" id="appName" placeholder="e.g. Health Tracker" oninput="rebuildPreview()" />
+      </div>
+
+      <div class="form-group">
+        <label>Who is this app for?</label>
+        <input type="text" id="targetUser" placeholder="e.g. people tracking their diet and fitness" oninput="rebuildPreview()" />
+      </div>
+
+      <div class="form-group">
+        <label>What does your app do? (2–4 sentences)</label>
+        <textarea id="appDesc" rows="3" placeholder="e.g. This app helps users track their daily calorie intake. Users describe what they ate and the app uses AI to estimate calories, macros, and give personalized fitness advice." oninput="rebuildPreview()"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>How does a user use it? (step by step)</label>
+        <textarea id="appFlow" rows="3" placeholder="e.g. 1. User types what they ate. 2. User sets weight and fitness goal. 3. User clicks Run. 4. App shows calorie breakdown and health advice." oninput="rebuildPreview()"></textarea>
+      </div>
+
+      <hr class="section-divider" />
+      <h3>2. Widgets</h3>
+      <p style="font-size:12px;color:#888;margin-bottom:12px">Open each widget's ✏️ edit panel in PartyRock and copy the details here.</p>
+
+      <div id="widgetsContainer"></div>
+      <button class="add-widget-btn" onclick="addWidget()">+ Add Widget</button>
+
+      <hr class="section-divider" />
+      <h3>3. Extra Notes <span style="font-weight:400;color:#666;font-size:13px">(optional)</span></h3>
+      <div class="form-group">
+        <label>Anything special Kiro should know?</label>
+        <textarea id="extraNotes" rows="2" placeholder="e.g. The app should have a dark theme. Add a reset button. The chatbot should remember conversation history." oninput="rebuildPreview()"></textarea>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Live preview (tabbed) -->
+    <div style="position:sticky;top:72px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <h3 style="margin:0">Live Preview</h3>
+        <button class="copy-big-btn" onclick="copyActive(this)">📋 Copy</button>
+      </div>
+
+      <div class="preview-wrap">
+        <div class="preview-header">
+          <span>📋 Kiro Vibe Prompt — ready to paste into Kiro chat</span>
+          <button class="copy-big-btn" onclick="copyActive(this)">📋 Copy</button>
+        </div>
+        <div id="pane-vibe" class="preview-pane">
+          <pre id="kiroPromptPreview" style="display:block;padding:16px;font-size:11.5px;line-height:1.7;color:#ccc;white-space:pre-wrap;word-break:break-word;max-height:520px;overflow-y:auto;font-family:'Courier New',monospace">Fill in the form on the left to build your prompt...</pre>
+        </div>
+      </div>
+
+      <div class="how-to-use">
+        <div style="font-size:12px;font-weight:700;color:#c8f135;margin-bottom:8px">HOW TO USE THIS PROMPT</div>
+        <div class="row"><span class="step-num">1</span>Fill in all fields on the left — prompt updates live</div>
+        <div class="row"><span class="step-num">2</span>Click <strong style="color:#fff">Copy</strong> when the prompt looks complete</div>
+        <div class="row"><span class="step-num">3</span>Open Kiro → start a new chat → paste the prompt</div>
+        <div class="row"><span class="step-num">4</span>Drag your PartyRock screenshots into the same message</div>
+        <div class="row"><span class="step-num">5</span>Send — Kiro generates all your app files in one shot</div>
+        <div class="row"><span class="step-num">6</span>Follow <a href="#" onclick="showPage('step2')">Steps 2–8</a> of this tutorial to deploy to AWS</div>
+      </div>
+
+      <div id="plannerCTA" style="display:none;background:#1a2208;border:1px solid #4a6a10;border-radius:10px;padding:16px;margin-top:16px">
+        <div style="color:#c8f135;font-weight:700;font-size:13px;margin-bottom:10px">✅ Prompt copied — what's next?</div>
+        <div style="font-size:13px;color:#ccc;margin-bottom:12px">
+          1. Open Kiro → start a new chat<br>
+          2. Paste the prompt (<code style="background:#111;padding:1px 5px;border-radius:3px">Ctrl+V</code> / <code style="background:#111;padding:1px 5px;border-radius:3px">Cmd+V</code>)<br>
+          3. Drag your PartyRock screenshots into the same message<br>
+          4. Send — Kiro generates all your app files
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <a href="#" class="btn btn-primary" onclick="showPage('step1')" style="font-size:13px;padding:8px 16px">Continue: Step 1 →</a>
+          <a href="#" class="btn btn-outline" onclick="showPage('step2')" style="font-size:13px;padding:8px 16px">Skip to Step 2 (AWS Account)</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="nav-btns" style="margin-top:40px">
+    <a href="#" class="btn btn-outline" onclick="showPage('home')">← Overview</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('step1')">Start Tutorial →</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SANDBOX PAGE — AWS Lab / Restricted Environment
+     ══════════════════════════════════════════════════════════════════════ -->
+<div id="page-sandbox" class="page">
+  <div class="step-header">
+    <span class="step-badge" style="background:#f5a623;font-size:16px">🧪</span>
+    <h2>Deploying in an AWS Lab Sandbox</h2>
+    <span class="time-badge" style="border-color:#7a4a00;color:#f5a623">⏱ ~45 min</span>
+  </div>
+
+  <div style="background:#2a1a08;border:1px solid #f5a623;border-radius:10px;padding:16px;margin-bottom:24px;font-size:14px;color:#ccc">
+    This guide is for <strong style="color:#f5a623">restricted AWS lab environments</strong> — such as
+    AWS Skill Builder labs, Vocareum, AWS Academy, or event/workshop sandboxes.
+    These environments give you temporary AWS credentials with limited permissions.
+    You do <strong style="color:#fff">not</strong> create an AWS account — credentials are provided for you.
+  </div>
+
+  <!-- SECTION: What kind of sandbox do you have? -->
+  <h3 style="margin-top:0">What Kind of Sandbox Do You Have?</h3>
+  <table>
+    <tr><th>Environment</th><th>Where credentials appear</th><th>Session length</th></tr>
+    <tr><td>AWS Skill Builder (Jam / Lab)</td><td>Lab panel — "AWS Details" button</td><td>1–4 hours</td></tr>
+    <tr><td>Vocareum (AWS Academy)</td><td>"AWS Details" or "Account Details" button</td><td>1–4 hours</td></tr>
+    <tr><td>AWS Workshop Studio</td><td>Left panel — "Get AWS CLI credentials"</td><td>Duration of workshop</td></tr>
+    <tr><td>Event Engine (re:Invent etc.)</td><td>Team dashboard — "AWS Console" link</td><td>Duration of event</td></tr>
+    <tr><td>Qwiklabs / Google-hosted AWS labs</td><td>Left panel — "Connection Details"</td><td>Per-lab timer</td></tr>
+  </table>
+
+  <div class="tip" style="margin-top:16px">All of these give you the same three values: <strong style="color:#fff">Access Key ID</strong>, <strong style="color:#fff">Secret Access Key</strong>, and sometimes a <strong style="color:#fff">Session Token</strong>. You will need all three.</div>
+
+  <!-- SECTION: What is restricted -->
+  <h3>What Is Restricted in a Sandbox</h3>
+  <p>Sandbox environments intentionally limit what you can do. Here is what that means for this tutorial:</p>
+  <table>
+    <tr><th>Restriction</th><th>Impact</th><th>Our workaround</th></tr>
+    <tr><td>Cannot create IAM users</td><td>No <code>github-deployer</code> user</td><td>Use the sandbox credentials directly as GitHub secrets</td></tr>
+    <tr><td>Cannot create IAM roles freely</td><td>SAM template may fail on IAM</td><td>Use pre-existing <code>LabRole</code> or pass <code>--role-arn</code> to SAM</td></tr>
+    <tr><td>Session token required</td><td>Standard key+secret won't work alone</td><td>Add <code>AWS_SESSION_TOKEN</code> as a fourth GitHub secret</td></tr>
+    <tr><td>Credentials expire</td><td>Deployment fails after session ends</td><td>Re-run deployment before session expires, or re-enter fresh credentials</td></tr>
+    <tr><td>Bedrock may not be pre-enabled</td><td>Model access request may be blocked</td><td>Check if lab pre-enables Bedrock, or use a model that is already available</td></tr>
+    <tr><td>S3 bucket names may be pre-set</td><td>Cannot choose any bucket name</td><td>Use the lab-provided bucket name or prefix</td></tr>
+    <tr><td>Region may be locked</td><td>Must deploy to a specific region</td><td>Check the lab instructions — usually <code>us-east-1</code></td></tr>
+  </table>
+
+  <!-- SECTION: Step by step -->
+  <h3>Step-by-Step: Deploy From a Sandbox</h3>
+
+  <div class="sandbox-step">
+    <div class="sandbox-step-num">1</div>
+    <div class="sandbox-step-body">
+      <div class="sandbox-step-title">Get Your Sandbox Credentials</div>
+      <p>In your lab environment, find the credentials panel. It is usually a button labeled <strong>AWS Details</strong>, <strong>Account Details</strong>, or <strong>Get CLI credentials</strong>.</p>
+      <p>Copy these three values:</p>
+      <table>
+        <tr><th>Value</th><th>Example format</th></tr>
+        <tr><td>AWS Access Key ID</td><td><code>ASIA...</code> (starts with ASIA, not AKIA)</td></tr>
+        <tr><td>AWS Secret Access Key</td><td>Long random string</td></tr>
+        <tr><td>AWS Session Token</td><td>Very long string — copy the entire thing</td></tr>
+      </table>
+      <div class="warning" style="margin-top:12px">Session tokens are very long — make sure you copy the entire value. Missing even one character will cause authentication to fail.</div>
+    </div>
+  </div>
+
+  <div class="sandbox-step">
+    <div class="sandbox-step-num">2</div>
+    <div class="sandbox-step-body">
+      <div class="sandbox-step-title">Check What Region and Services Are Available</div>
+      <p>In the AWS Console (opened from your lab panel), check:</p>
+      <ol>
+        <li>The region shown in the top right — note it down (e.g. <code>us-east-1</code>)</li>
+        <li>Go to <strong>Amazon Bedrock → Model access</strong> — check if Claude models show <strong>Access granted</strong></li>
+        <li>Go to <strong>S3</strong> — check if you can create buckets, or if one is pre-created for you</li>
+        <li>Go to <strong>IAM → Roles</strong> — look for a role named <code>LabRole</code> or <code>EMR_EC2_DefaultRole</code> — copy its ARN</li>
+      </ol>
+      <div class="screenshot">IAM → Roles page shows a list of roles. Find "LabRole" and click it. The role ARN is shown at the top — looks like <code>arn:aws:iam::123456789012:role/LabRole</code>. Copy it.</div>
+    </div>
+  </div>
+
+  <div class="sandbox-step">
+    <div class="sandbox-step-num">3</div>
+    <div class="sandbox-step-body">
+      <div class="sandbox-step-title">Enable Bedrock Model Access (if not pre-enabled)</div>
+      <p>In the AWS Console → Amazon Bedrock → Model access → Manage model access.</p>
+      <p>If the lab restricts model access requests, look for models already showing <strong>Access granted</strong>. Common pre-enabled models in labs:</p>
+      <ul>
+        <li>Amazon Titan Text Express</li>
+        <li>Claude Instant (older labs)</li>
+        <li>Claude 3 Sonnet or Haiku (newer labs)</li>
+      </ul>
+      <div class="tip">If Claude 3 Sonnet is not available, use <strong>Amazon Titan Text Express</strong> — update the model ID in your Lambda functions to <code>amazon.titan-text-express-v1</code>.</div>
+    </div>
+  </div>
+
+  <div class="sandbox-step">
+    <div class="sandbox-step-num">4</div>
+    <div class="sandbox-step-body">
+      <div class="sandbox-step-title">Create an S3 Bucket for SAM Artifacts</div>
+      <p>In the AWS Console → S3 → Create bucket.</p>
+      <ul>
+        <li>Name: <code>lab-sam-deploy-[your-initials]-[random-4-digits]</code></li>
+        <li>Region: same as your lab region</li>
+        <li>Leave all other settings as default → Create bucket</li>
+      </ul>
+      <div class="tip">If S3 bucket creation is blocked, check if the lab pre-created a bucket. Look in S3 for any existing buckets — use one of those and note its name.</div>
+    </div>
+  </div>
+
+  <div class="sandbox-step">
+    <div class="sandbox-step-num">5</div>
+    <div class="sandbox-step-body">
+      <div class="sandbox-step-title">Update the SAM Template for Sandbox Restrictions</div>
+      <p>Sandbox environments usually block SAM from creating IAM roles automatically. You need to tell SAM to use the existing <code>LabRole</code> instead.</p>
+      <p>In your <code>infra/template.yaml</code>, find the <code>LambdaBedrockRole</code> resource and replace it with a reference to the lab role:</p>
+      <pre><code># REMOVE the AWS::IAM::Role resource block entirely
+# Then update each Lambda function to use the LabRole ARN:
+
+CalorieScannerFunction:
+  Type: AWS::Serverless::Function
+  Properties:
+    Role: arn:aws:iam::YOUR_ACCOUNT_ID:role/LabRole
+    # ... rest of properties</code></pre>
+      <div class="tip">Find your Account ID in the AWS Console top right — click your account name, it shows a 12-digit number like <code>123456789012</code>.</div>
+      <p>Also update the SAM deploy command in <code>.github/workflows/deploy.yml</code> — remove <code>CAPABILITY_NAMED_IAM</code> since you are no longer creating IAM resources:</p>
+      <pre><code>sam deploy \
+  --stack-name my-partyrock-app \
+  --s3-bucket ${{ secrets.SAM_DEPLOY_BUCKET }} \
+  --region ${{ secrets.AWS_REGION }} \
+  --no-confirm-changeset \
+  --no-fail-on-empty-changeset</code></pre>
+    </div>
+  </div>
+
+  <div class="sandbox-step">
+    <div class="sandbox-step-num">6</div>
+    <div class="sandbox-step-body">
+      <div class="sandbox-step-title">Set Up GitHub and Add 4 Secrets (not 3)</div>
+      <p>Follow <a href="#" onclick="showPage('step4')">Step 4</a> to create a GitHub account and repository, and <a href="#" onclick="showPage('step5')">Step 5</a> to upload your files.</p>
+      <p>Then in GitHub → Settings → Secrets and variables → Actions, add <strong>4 secrets</strong> (sandbox needs the session token too):</p>
+      <table>
+        <tr><th>Secret Name (type exactly)</th><th>Value</th></tr>
+        <tr><td><code>AWS_ACCESS_KEY_ID</code></td><td>Access Key ID from your lab panel</td></tr>
+        <tr><td><code>AWS_SECRET_ACCESS_KEY</code></td><td>Secret Access Key from your lab panel</td></tr>
+        <tr><td><code>AWS_SESSION_TOKEN</code></td><td>Session Token from your lab panel — the full long string</td></tr>
+        <tr><td><code>SAM_DEPLOY_BUCKET</code></td><td>S3 bucket name you created in step 4</td></tr>
+      </table>
+      <div class="warning">Session tokens expire when your lab session ends. If you need to redeploy after the session expires, you must update all 3 credential secrets with fresh values from a new lab session.</div>
+    </div>
+  </div>
+
+  <div class="sandbox-step">
+    <div class="sandbox-step-num">7</div>
+    <div class="sandbox-step-body">
+      <div class="sandbox-step-title">Update the GitHub Actions Workflow for Session Token</div>
+      <p>The default <code>deploy.yml</code> does not pass the session token. You need to add it.</p>
+      <p>In your <code>.github/workflows/deploy.yml</code>, find the <strong>Configure AWS credentials</strong> step and add the session token line:</p>
+      <pre><code>- name: Configure AWS credentials
+  uses: aws-actions/configure-aws-credentials@v4
+  with:
+    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}   # ← add this line
+    aws-region: us-east-1</code></pre>
+    </div>
+  </div>
+
+  <div class="sandbox-step">
+    <div class="sandbox-step-num">8</div>
+    <div class="sandbox-step-body">
+      <div class="sandbox-step-title">Run the Deployment</div>
+      <p>Follow <a href="#" onclick="showPage('step7')">Step 7</a> — go to the Actions tab in GitHub, click your workflow, click Run workflow.</p>
+      <p>Watch for these sandbox-specific errors:</p>
+      <table>
+        <tr><th>Error</th><th>Fix</th></tr>
+        <tr><td><code>ExpiredTokenException</code></td><td>Your lab session expired. Start a new lab session and update all 3 credential secrets with fresh values.</td></tr>
+        <tr><td><code>AccessDenied: iam:CreateRole</code></td><td>Remove the IAM role from template.yaml and use LabRole ARN instead (Step 5 above).</td></tr>
+        <tr><td><code>AccessDenied: bedrock:InvokeModel</code></td><td>The LabRole may not have Bedrock permissions. Ask your lab instructor, or check if a different role has Bedrock access.</td></tr>
+        <tr><td><code>BucketAlreadyExists</code></td><td>The S3 bucket name is taken. Add more random characters to the bucket name.</td></tr>
+        <tr><td><code>No changes to deploy</code></td><td>This is fine — your stack is already up to date.</td></tr>
+        <tr><td>Bedrock model not found</td><td>The model is not enabled in this lab. Switch to <code>amazon.titan-text-express-v1</code> in your Lambda functions.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="sandbox-step">
+    <div class="sandbox-step-num">9</div>
+    <div class="sandbox-step-body">
+      <div class="sandbox-step-title">Visit Your Live App</div>
+      <p>Follow <a href="#" onclick="showPage('step8')">Step 8</a> — find the Frontend URL in the GitHub Actions Print URLs step and open it in your browser.</p>
+      <div class="warning">Your app will stop working when the lab session expires because the Lambda functions use temporary credentials. To keep the app running permanently, you need a personal AWS account (follow the main tutorial path).</div>
+    </div>
+  </div>
+
+  <!-- SECTION: Sandbox limitations summary -->
+  <h3>Sandbox Limitations Summary</h3>
+  <table>
+    <tr><th>Feature</th><th>Personal AWS Account</th><th>Lab Sandbox</th></tr>
+    <tr><td>Account creation required</td><td>Yes</td><td>No — provided for you</td></tr>
+    <tr><td>Credit card required</td><td>Yes</td><td>No</td></tr>
+    <tr><td>App stays live permanently</td><td>Yes</td><td>No — expires with session</td></tr>
+    <tr><td>Full IAM control</td><td>Yes</td><td>No — restricted to LabRole</td></tr>
+    <tr><td>Choose any region</td><td>Yes</td><td>No — lab region only</td></tr>
+    <tr><td>Bedrock model choice</td><td>Any model</td><td>Only pre-enabled models</td></tr>
+    <tr><td>Session token needed</td><td>No</td><td>Yes — 4th GitHub secret</td></tr>
+    <tr><td>Good for learning</td><td>Yes</td><td>Yes ✅</td></tr>
+  </table>
+
+  <div class="nav-btns" style="margin-top:40px">
+    <a href="#" class="btn btn-outline" onclick="showPage('home')">← Overview</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('step1')">Switch to Personal Account Path →</a>
+  </div>
+</div>
+
+<!-- STEP 9 PAGE -->
+<div id="page-step9" class="page">
+  <div class="step-header">
+    <span class="step-badge">9</span>
+    <h2>Make It Production-Ready</h2>
+    <span class="time-badge">⏱ 20–45 min</span>
+  </div>
+
+  <p>This step covers important upgrades. CloudFront (HTTPS) is <span class="recommended-badge">RECOMMENDED</span> for everyone. The rest are optional depending on your app.</p>
+
+  <h3>9.1 Add HTTPS with CloudFront <span class="recommended-badge">RECOMMENDED</span></h3>
+  <p>Right now your app URL starts with <code>http://</code> — no padlock. Most browsers show a "Not Secure" warning, and copy buttons only work on HTTPS pages. CloudFront gives you HTTPS for free.</p>
+  <ol>
+    <li>In the AWS Console, search for <strong>CloudFront</strong> → <strong>Create a CloudFront distribution</strong></li>
+    <li>For <strong>Origin domain</strong>, select your frontend S3 bucket (the <code>.s3-website-us-east-1.amazonaws.com</code> endpoint)</li>
+    <li>For <strong>Viewer protocol policy</strong>, select <strong>Redirect HTTP to HTTPS</strong></li>
+    <li>Leave all other settings as default → <strong>Create distribution</strong></li>
+    <li>Wait 5–10 minutes for status to change to <strong>Enabled</strong></li>
+    <li>Copy the <strong>Distribution domain name</strong> (e.g. <code>d1234abcd.cloudfront.net</code>) — this is your new HTTPS URL</li>
+  </ol>
+  <div class="screenshot">The distribution appears in the list with status "Deploying", then "Enabled". The Distribution domain name column shows your new URL.</div>
+
+  <h3>Lock down S3 to CloudFront only</h3>
+  <ol>
+    <li>Go to <strong>S3</strong> → your frontend bucket → <strong>Permissions</strong> tab → <strong>Edit</strong> bucket policy</li>
+    <li>Ask Kiro: <em>"Generate an S3 bucket policy that only allows access from my CloudFront distribution. My bucket name is [name], my account ID is [ID], my distribution ID is [ID]."</em></li>
+    <li>Paste the policy Kiro generates → <strong>Save changes</strong></li>
+  </ol>
+
+  <h3>9.2 Add a Custom Domain (Optional)</h3>
+  <p>Want <code>www.myapp.com</code> instead of a long CloudFront URL? You need to own a domain name first (~$10–12/year).</p>
+  <ol>
+    <li>AWS Console → <strong>Certificate Manager</strong> (must be in us-east-1) → <strong>Request a certificate</strong></li>
+    <li>Enter your domain → <strong>DNS validation</strong> → <strong>Request</strong></li>
+    <li>Click <strong>Create records in Route 53</strong> → wait for status <strong>Issued</strong></li>
+    <li>CloudFront → your distribution → <strong>Edit</strong> → add your domain as Alternate domain name → select your certificate → Save</li>
+    <li>Route 53 → Hosted zones → your domain → <strong>Create record</strong> → type A → Alias → CloudFront distribution → Create</li>
+  </ol>
+
+  <h3>9.3 Add AWS WAF Rate Limiting (Optional)</h3>
+  <p>Blocks bots and prevents abuse. Costs ~$5/month.</p>
+  <ol>
+    <li>AWS Console → <strong>WAF & Shield</strong> → <strong>Create web ACL</strong></li>
+    <li>Resource type: Regional → Region: us-east-1 → Name: <code>my-app-waf</code></li>
+    <li>Add rules → Add managed rule groups → enable <strong>AWSManagedRulesCommonRuleSet</strong></li>
+    <li>Add your own rule → Rate-based → limit: 100 per 5 min → Action: Block</li>
+    <li>Create web ACL → then attach to API Gateway: API Gateway → your API → Stages → prod → WAF tab → select your ACL</li>
+  </ol>
+
+  <h3>9.4 Add Chat Session Persistence (Chatbot Apps Only)</h3>
+  <p>Without this, the AI forgets the conversation every time the user sends a message.</p>
+  <ol>
+    <li>AWS Console → <strong>DynamoDB</strong> → <strong>Create table</strong></li>
+    <li>Table name: <code>my-app-chat-sessions</code> — Partition key: <code>session_id</code> (String) → Create table</li>
+    <li>Open Kiro, share your chatbot Lambda function, ask: <em>"Update this Lambda to store and retrieve conversation history from DynamoDB table my-app-chat-sessions, keyed by session_id. Add a 24-hour TTL."</em></li>
+    <li>IAM → your Lambda role → Add permissions → <code>AmazonDynamoDBFullAccess</code></li>
+    <li>Open Kiro, share <code>index.html</code>, ask: <em>"Generate a unique session_id on page load and include it in every chat API request. Add a Clear Chat button."</em></li>
+    <li>Upload updated files to GitHub → redeploy</li>
+  </ol>
+  <div class="tip">DynamoDB — a database — stores each conversation. "Partition key" is just the unique ID for each conversation. "TTL" means Time To Live — old conversations are automatically deleted after 24 hours.</div>
+
+  <h3>9.5 Large File Uploads (File Upload Apps Only)</h3>
+  <p><strong>Default behaviour:</strong> The generated app reads files in the browser using FileReader, converts to base64, and sends directly in the Lambda request body. This works for files up to ~15MB — Lambda Function URLs support 20MB payloads, and base64 adds ~33% overhead. Most photos, PDFs, DOCX, and CSV files fall well within this limit.</p>
+  <p><strong>Only needed for files larger than ~15MB:</strong></p>
+  <ol>
+    <li>Open Kiro, share your <code>infra/template.yaml</code> and file-handling Lambda</li>
+    <li>Ask: <em>"Add a presigned URL upload endpoint. I need a Lambda that generates a presigned S3 PUT URL, and update the frontend to use it for files larger than 15MB. Store uploads in a new S3 bucket called my-app-uploads."</em></li>
+    <li>Upload all changed files to GitHub → redeploy</li>
+  </ol>
+
+  <div class="nav-btns">
+    <a href="#" class="btn btn-outline" onclick="showPage('step8')">← Step 8</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('step10')">Step 10: Update Your App →</a>
+  </div>
+</div>
+
+<!-- STEP 10 PAGE -->
+<div id="page-step10" class="page">
+  <div class="step-header">
+    <span class="step-badge">10</span>
+    <h2>Update Your App After It's Live</h2>
+    <span class="time-badge">⏱ 5 min</span>
+  </div>
+
+  <p>Every time you save a change to GitHub, your app redeploys automatically. No AWS Console needed.</p>
+
+  <h3>How to Update a Prompt</h3>
+  <ol>
+    <li>Open Kiro, share the Lambda file you want to update (e.g. <code>backend/lambda/calorie_scanner.py</code>)</li>
+    <li>Describe the change: <em>"Update the prompt to also recommend a complementary exercise"</em></li>
+    <li>Kiro edits the file</li>
+    <li>In GitHub, navigate to the file → click the pencil icon → select all → paste the updated content → Commit changes</li>
+    <li>GitHub Actions redeploys automatically — done in 3–5 minutes</li>
+  </ol>
+  <div class="screenshot">After committing, the Actions tab shows a new deployment running automatically within seconds.</div>
+
+  <h3>How to Update the Frontend</h3>
+  <ol>
+    <li>Open Kiro, share <code>frontend/index.html</code></li>
+    <li>Describe the change: <em>"Change the background color to dark blue"</em> or <em>"Make the Run All button larger"</em></li>
+    <li>In GitHub, navigate to <code>frontend/index.html</code> → pencil icon → select all → paste → Commit changes</li>
+  </ol>
+
+  <h3>How to Roll Back a Broken Change</h3>
+  <ol>
+    <li>In GitHub, click on the file you changed → click the <strong>History</strong> (clock) icon</li>
+    <li>Click the commit before your broken change → click <strong>&lt;&gt;</strong> to view the old version</li>
+    <li>Copy the old content → go back to the current file → edit → paste → Commit</li>
+  </ol>
+  <div class="tip">If the deployment itself failed (not just a logic error), CloudFormation automatically rolls back to the last working version. Check CloudFormation → your stack → Status column.</div>
+
+  <h3>How to Delete Your App</h3>
+  <ol>
+    <li>AWS Console → <strong>CloudFormation</strong> → find your stack → check the box → <strong>Delete</strong> → confirm</li>
+    <li>Also manually delete: the SAM artifacts S3 bucket, CloudWatch log groups, and CloudFront distribution (if applicable)</li>
+    <li>Your GitHub repository and code are NOT deleted — you can redeploy anytime</li>
+  </ol>
+
+  <div class="nav-btns">
+    <a href="#" class="btn btn-outline" onclick="showPage('step9')">← Step 9</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('home')">Back to Overview</a>
+  </div>
+</div>
+
+<!-- FAQ PAGE -->
+<div id="page-faq" class="page">
+  <div class="step-header">
+    <span class="step-badge" style="font-size:18px">❓</span>
+    <h2>Frequently Asked Questions</h2>
+  </div>
+
+  <div class="faq-section-title">Getting Started</div>
+
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Do I need to know how to code? <span>+</span></div><div class="faq-a">No. You use Kiro (an AI assistant) to generate all the code, and GitHub's web interface to upload it. No coding required.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How long does this take? <span>+</span></div><div class="faq-a">About 2–3 hours for a complete deployment. The quick path (Steps 0–8) takes about 2 hours. Adding HTTPS and security hardening (Step 9) adds another 30–45 minutes.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How much does it cost? <span>+</span></div><div class="faq-a">For a personal app with low traffic (under 100 requests/day), it costs ~$0 — covered by the AWS free tier. At 1,000 requests/day, expect ~$1–3/month. The main cost is Bedrock (Claude) at roughly $0.003 per AI request.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Why do I need a credit card if it's free? <span>+</span></div><div class="faq-a">AWS requires a credit card to verify your identity and prevent abuse. You will not be charged unless you exceed the free tier limits. Set a billing alarm in Step 8.7 to get an email if any charges appear.</div></div>
+
+  <div class="faq-section-title">Deployment</div>
+
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">My deployment failed. What do I do? <span>+</span></div><div class="faq-a">Click on the failed step in GitHub Actions to see the error message. Check the troubleshooting table in Step 7.4. Copy the error message and paste it into Kiro — it will help diagnose the problem.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">The deployment says "No changes to deploy." Is that an error? <span>+</span></div><div class="faq-a">No — it means your app is already up to date. This is fine.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">My app deployed but the URL shows an error. What do I do? <span>+</span></div><div class="faq-a">1. Check that the API key in GitHub secrets matches the one you set in API Gateway (Step 7.5). 2. Check CloudWatch logs (Step 8.6) for error messages. 3. Make sure Bedrock model access is granted (Step 3.3).</div></div>
+
+  <div class="faq-section-title">The App</div>
+
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">The first request is very slow (10–15 seconds). Is something wrong? <span>+</span></div><div class="faq-a">No — this is called a "cold start." Lambda sleeps when not in use and takes a moment to wake up. Subsequent requests are much faster (1–3 seconds).</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">My AI output shows symbols like **bold** instead of formatted text. <span>+</span></div><div class="faq-a">You need to add markdown rendering. Follow Step 5.8 to add marked.js to your frontend.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">The copy button doesn't work. <span>+</span></div><div class="faq-a">Copy buttons require HTTPS. Add CloudFront (Step 9.1) to get HTTPS, then test again.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Bedrock returned an empty response (no error, just blank). <span>+</span></div><div class="faq-a">Claude sometimes refuses to answer certain types of content due to its safety filters. This is not an error — it is the model declining to respond. Try rephrasing your prompt to be more specific and less ambiguous.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I change what the AI says? <span>+</span></div><div class="faq-a">Edit the prompt in your Lambda function file. See Step 10 for how to update and redeploy.</div></div>
+
+  <div class="faq-section-title">Security & Cost</div>
+
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is my app secure? <span>+</span></div><div class="faq-a">After completing Steps 7.5 (API key) and 9.1 (CloudFront), your app has: API key authentication, HTTPS, input length limits, and scoped IAM permissions. For a personal app, this is solid. For a public app with many users, also add WAF (Step 9.3).</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">I got an unexpected AWS bill. What happened? <span>+</span></div><div class="faq-a">The most common causes: 1. You left a resource running that is not in the free tier. 2. Your app received much more traffic than expected. 3. You have multiple stacks deployed. Go to AWS Console → Billing → Cost Explorer to see which service is charging you.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I stop all charges immediately? <span>+</span></div><div class="faq-a">Delete your CloudFormation stack (Step 10 — Delete Your App). This removes Lambda, API Gateway, and S3. Also disable your API key in API Gateway to stop any in-flight requests.</div></div>
+
+  <div class="faq-section-title">Sandbox / Lab</div>
+
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">My lab session expired and the app stopped working. What do I do? <span>+</span></div><div class="faq-a">Start a new lab session, copy the new credentials (Key ID + Secret + Session Token), update all 3 credential secrets in GitHub, and redeploy.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">My lab doesn't have Claude. What model can I use? <span>+</span></div><div class="faq-a">Check Bedrock → Model access for models showing "Access granted." Amazon Titan Text Express (amazon.titan-text-express-v1) is usually pre-enabled. Update the model ID in your Lambda functions to match.</div></div>
+
+  <div class="faq-section-title">Still Stuck?</div>
+  <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:16px;margin-top:12px;font-size:13px;color:#ccc">
+    <ol style="margin:0;padding-left:20px">
+      <li>Copy the exact error message and paste it into Kiro — describe what step you were on</li>
+      <li>Check the CloudWatch logs for your Lambda function (Step 8.6)</li>
+      <li>Re-read the troubleshooting table in Step 7.4</li>
+      <li>Check the AWS Service Health Dashboard at <a href="https://status.aws.amazon.com" target="_blank">status.aws.amazon.com</a> for outages</li>
+    </ol>
+  </div>
+
+  <div class="nav-btns">
+    <a href="#" class="btn btn-outline" onclick="showPage('home')">← Overview</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('planner')">✨ App Planner →</a>
+  </div>
+</div>
+
+</body>
+</html>
