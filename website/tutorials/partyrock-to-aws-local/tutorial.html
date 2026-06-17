@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Run your PartyRock AI app locally with just an HTML file — no installation needed.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
+  <title>PartyRock → Local App (No Install)</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f0f;color:#e0e0e0;line-height:1.7}
+    a{color:#c8f135}
+    .hdr{background:#1a1a1a;border-bottom:1px solid #2a2a2a;padding:0 24px;position:fixed;top:0;left:0;right:0;z-index:200}
+    .hdr .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;height:50px;gap:32px}
+    .hdr .logo{color:#c8f135;font-weight:700;font-size:16px;text-decoration:none}
+    .hdr .links{display:flex;gap:4px}
+    .hdr .links a{color:#aaa;text-decoration:none;padding:6px 12px;border-radius:6px;font-size:13px}
+    .hdr .links a:hover{color:#fff;background:#2a2a2a}
+    .hdr .links a.active{color:#c8f135}
+    nav{background:#1a1a1a;border-right:1px solid #2a2a2a;padding:16px 0;position:fixed;top:50px;left:0;width:180px;height:calc(100vh - 50px);display:flex;flex-direction:column;gap:2px}
+    nav a{color:#aaa;text-decoration:none;padding:10px 16px;font-size:14px;border-left:3px solid transparent;display:block}
+    nav a:hover,nav a.active{color:#c8f135;background:#1a2208;border-left-color:#c8f135}
+    nav .logo{color:#c8f135;font-weight:700;padding:8px 16px;margin-bottom:12px;border-bottom:1px solid #2a2a2a;border-left:none!important;font-size:14px}
+    body{padding-left:180px;padding-top:50px}
+    @media(max-width:768px){nav{position:relative;width:100%;height:auto;top:0;flex-direction:row;border-right:none;border-bottom:1px solid #2a2a2a;overflow-x:auto}nav a{padding:10px 14px;border-left:none;white-space:nowrap}nav .logo{display:none}body{padding-left:0;padding-top:50px}}
+    .page{display:none;max-width:760px;margin:0 auto;padding:40px 28px 60px}
+    .page.active{display:block}
+    h2{font-size:24px;font-weight:700;color:#fff;margin-bottom:14px}
+    h3{font-size:15px;font-weight:600;color:#c8f135;margin:24px 0 8px}
+    p{color:#ccc;margin-bottom:12px;font-size:14px}
+    ol,ul{padding-left:22px;color:#ccc;margin-bottom:12px;font-size:14px}
+    li{margin-bottom:5px}
+    code{background:#1a1a1a;border:1px solid #333;border-radius:4px;padding:1px 5px;font-size:12px;color:#c8f135;font-family:monospace}
+    pre{background:#111;border:1px solid #2a2a2a;border-radius:8px;padding:12px;overflow-x:auto;margin:12px 0}
+    pre code{background:none;border:none;padding:0;color:#e0e0e0;font-size:12px}
+    table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+    th{background:#1a2208;color:#c8f135;padding:7px 10px;text-align:left}
+    td{padding:7px 10px;border-bottom:1px solid #2a2a2a;color:#ccc}
+    .tip{background:#1a2208;border-left:3px solid #c8f135;border-radius:0 8px 8px 0;padding:10px 12px;margin:12px 0;font-size:13px;color:#ccc}
+    .warning{background:#2a1a08;border-left:3px solid #f5a623;border-radius:0 8px 8px 0;padding:10px 12px;margin:12px 0;font-size:13px;color:#ccc}
+    .btn{padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;cursor:pointer;border:none;display:inline-block}
+    .btn-primary{background:#c8f135;color:#0f0f0f}
+    .btn-outline{background:transparent;color:#c8f135;border:1px solid #c8f135}
+    .nav-btns{display:flex;justify-content:space-between;margin-top:36px;padding-top:16px;border-top:1px solid #2a2a2a}
+    .hero{background:linear-gradient(135deg,#1a2208 0%,#0f0f0f 60%);padding:50px 24px;text-align:center;border-bottom:1px solid #2a2a2a}
+    .hero h1{font-size:clamp(24px,5vw,40px);font-weight:800;color:#fff;margin-bottom:10px}
+    .hero h1 span{color:#c8f135}
+    .hero p{font-size:15px;color:#aaa;max-width:480px;margin:0 auto 20px}
+  </style>
+</head>
+<body>
+<header class="hdr"><div class="inner">
+  <a href="/" class="logo">📚 Elite Academy Docs</a>
+  <div class="links">
+    <a href="/tutorials/partyrock-to-aws/tutorial.html">Deploy Tutorial</a>
+    <a href="/tutorials/partyrock-to-aws-local/tutorial.html" class="active">Local Tutorial</a>
+    <a href="/guides/index.html">Guides</a>
+  </div>
+</div></header>
+
+<nav>
+  <a href="#" class="logo" onclick="showPage('home')">💻 Run Locally</a>
+  <a href="#" onclick="showPage('home')" id="nav-home" class="active">Overview</a>
+  <a href="#" onclick="showPage('planner')" id="nav-planner" style="color:#c8f135">✨ App Planner</a>
+  <a href="#" onclick="showPage('step1')" id="nav-step1">1. Generate</a>
+  <a href="#" onclick="showPage('step2')" id="nav-step2">2. Run</a>
+</nav>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <h1>Run <span>PartyRock</span> Locally</h1>
+    <p>No install. No backend. Just an HTML file calling Bedrock with an API key.</p>
+    <a href="#" class="btn btn-primary" onclick="showPage('step1')">Start →</a>
+  </div>
+  <div style="max-width:520px;margin:28px auto 0">
+    <h3 style="margin-top:0">How It Works</h3>
+    <pre><code>index.html (your computer)
+    │  fetch() + Bearer API key
+    ▼
+Amazon Bedrock Converse API (Claude Haiku 4.5)
+    │
+    ▼
+AI Response → displayed in browser</code></pre>
+
+    <h3>Prerequisites</h3>
+    <ul>
+      <li>Your <strong>Bedrock API Key</strong> (Bearer token from your instructor/admin)</li>
+      <li>A web browser (Chrome or Firefox)</li>
+    </ul>
+
+    <h3>Steps</h3>
+    <table>
+      <tr><th>#</th><th>Step</th><th>Time</th></tr>
+      <tr><td>✨</td><td><a href="#" onclick="showPage('planner')" style="color:#c8f135">App Planner — generate your Kiro prompt</a></td><td>5 min</td></tr>
+      <tr><td>1</td><td>Generate index.html with Kiro</td><td>10 min</td></tr>
+      <tr><td>2</td><td>Open in browser</td><td>1 min</td></tr>
+    </table>
+
+    <div class="tip">💡 No Python, no Node, no terminal commands. Just a browser and a text editor. The API key connects directly to Bedrock.</div>
+
+    <div style="background:#1a2208;border:1px solid #4a6a10;border-radius:10px;padding:16px;margin-top:16px;cursor:pointer" onclick="showPage('planner')">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="font-size:24px">✨</div>
+        <div>
+          <div style="color:#c8f135;font-weight:700;font-size:14px">Start Here — App Planner</div>
+          <div style="color:#aaa;font-size:12px">Fill in your PartyRock widget details → get a ready-to-paste Kiro prompt for local development.</div>
+        </div>
+        <div style="color:#c8f135;font-size:18px;margin-left:auto">›</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- APP PLANNER -->
+<div id="page-planner" class="page">
+  <h2>✨ App Planner — PartyRock Slicing</h2>
+  <p>Fill in your PartyRock app details below to generate a ready-to-paste Kiro prompt for local development.</p>
+
+  <div class="tip">💡 Open each widget's ✏️ edit panel in PartyRock and copy the details here. The prompt builds itself as you type.</div>
+
+  <h3>App Info</h3>
+  <div style="display:grid;gap:12px;margin-bottom:20px">
+    <div><label style="font-size:12px;color:#c8f135;display:block;margin-bottom:4px">App Name</label><input type="text" id="pAppName" placeholder="e.g. Health Tracker" style="width:100%;background:#111;border:1px solid #333;border-radius:6px;color:#e0e0e0;padding:8px 10px;font-size:13px" oninput="buildPrompt()"></div>
+    <div><label style="font-size:12px;color:#c8f135;display:block;margin-bottom:4px">What does your app do?</label><textarea id="pAppDesc" rows="2" placeholder="e.g. Analyzes food calories and gives health advice" style="width:100%;background:#111;border:1px solid #333;border-radius:6px;color:#e0e0e0;padding:8px 10px;font-size:13px;resize:vertical" oninput="buildPrompt()"></textarea></div>
+  </div>
+
+  <h3>API Endpoint</h3>
+  <div style="display:grid;gap:12px;margin-bottom:20px">
+    <div><label style="font-size:12px;color:#c8f135;display:block;margin-bottom:4px">Bedrock API Key (Bearer token)</label><input type="text" id="pApiKey" placeholder="e.g. ABSKQmVkcm9ja0FQSUtleS0..." style="width:100%;background:#111;border:1px solid #333;border-radius:6px;color:#e0e0e0;padding:8px 10px;font-size:13px;font-family:monospace" oninput="buildPrompt()"></div>
+    <div class="tip" style="margin:0">Endpoint: <code>https://bedrock-runtime.ap-southeast-5.amazonaws.com/model/global.anthropic.claude-haiku-4-5-20251001-v1:0/converse</code><br>Model: Claude Haiku 4.5 only</div>
+  </div>
+
+  <h3>Widgets (from PartyRock edit panels)</h3>
+  <div id="plannerWidgets"></div>
+  <button onclick="addPlannerWidget()" style="width:100%;background:#1a2208;border:1px dashed #4a6a10;color:#c8f135;border-radius:6px;padding:10px;font-size:13px;cursor:pointer;margin-bottom:20px">+ Add Widget</button>
+
+  <h3>Extra Notes (optional)</h3>
+  <textarea id="pNotes" rows="2" placeholder="e.g. Dark theme, add reset button, show streaming text word-by-word" style="width:100%;background:#111;border:1px solid #333;border-radius:6px;color:#e0e0e0;padding:8px 10px;font-size:13px;resize:vertical" oninput="buildPrompt()"></textarea>
+
+  <h3 style="margin-top:28px">Generated Kiro Prompt</h3>
+  <div style="position:relative">
+    <button onclick="copyPrompt(this)" style="position:absolute;top:8px;right:8px;background:#c8f135;color:#0f0f0f;border:none;border-radius:4px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer">📋 Copy</button>
+    <pre style="max-height:400px;overflow-y:auto"><code id="promptOutput" style="font-size:11px">Fill in the fields above...</code></pre>
+  </div>
+
+  <div class="tip" style="margin-top:16px">
+    <strong>How to use:</strong> Copy the prompt → open Kiro → paste → drag your PartyRock screenshots into the same message → send. Kiro generates your index.html.
+  </div>
+
+  <div class="nav-btns">
+    <a href="#" class="btn btn-outline" onclick="showPage('home')">← Overview</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('step1')">Next: Generate →</a>
+  </div>
+</div>
+
+<!-- STEP 1: GENERATE -->
+<div id="page-step1" class="page">
+  <h2>Step 1 — Generate index.html</h2>
+  <p>Your app calls Bedrock directly using an API key. No Lambda or API Gateway needed.</p>
+
+  <h3>Your API Details</h3>
+  <table>
+    <tr><th>Setting</th><th>Value</th></tr>
+    <tr><td>Endpoint</td><td><code>https://bedrock-runtime.ap-southeast-5.amazonaws.com/model/global.anthropic.claude-haiku-4-5-20251001-v1:0/converse</code></td></tr>
+    <tr><td>Auth Header</td><td><code>Authorization: Bearer YOUR_API_KEY</code></td></tr>
+    <tr><td>Model</td><td><code>global.anthropic.claude-haiku-4-5-20251001-v1:0</code> (Claude Haiku 4.5 only)</td></tr>
+  </table>
+
+  <h3>Paste This Into Kiro</h3>
+  <pre><code>Build me a single index.html that calls Amazon Bedrock directly.
+
+APP: [Your App Name]
+DESCRIPTION: [What it does]
+
+API:
+- Endpoint: https://bedrock-runtime.ap-southeast-5.amazonaws.com/model/global.anthropic.claude-haiku-4-5-20251001-v1:0/converse
+- Auth: Authorization: Bearer [YOUR_API_KEY]
+- Content-Type: application/json
+- Body format (Bedrock Converse API):
+  {
+    "messages": [{"role": "user", "content": [{"text": "..."}]}],
+    "system": [{"text": "system prompt here"}],
+    "inferenceConfig": {"maxTokens": 2048, "temperature": 0.7}
+  }
+
+WIDGETS:
+- [List your input widgets: name, type, placeholder]
+- [List your AI output widgets: name, system prompt, which inputs they use]
+
+REQUIREMENTS:
+1. Single index.html — no build tools, no server needed
+2. All CSS and JS inline
+3. Each AI widget calls the Bedrock endpoint with its own system prompt
+4. Build the user message by combining input widget values
+5. "Run All" button fires all AI calls simultaneously
+6. Loading spinners per output, error messages if call fails
+7. Mobile-responsive, dark theme
+8. Markdown rendering via marked.js CDN
+9. Copy button on each output, Reset button
+10. Works by double-clicking the file (file:// protocol)
+
+IMPORTANT:
+- Only model available: global.anthropic.claude-haiku-4-5-20251001-v1:0
+- Use the Converse API format (not InvokeModel)
+- API key goes in Authorization: Bearer header
+
+NO server-side code. Everything runs in the browser.</code></pre>
+
+  <p><strong>Drag your PartyRock screenshots</strong> into the same Kiro message → send.</p>
+
+  <h3>Save</h3>
+  <p>Save the generated <code>index.html</code> anywhere on your computer. That's the only file you need.</p>
+
+  <div class="nav-btns">
+    <a href="#" class="btn btn-outline" onclick="showPage('home')">← Overview</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('step2')">Next: Run →</a>
+  </div>
+</div>
+<!-- STEP 2: RUN -->
+<div id="page-step2" class="page">
+  <h2>Step 2 — Run</h2>
+  <p>Double-click <code>index.html</code> to open it in your browser. That's it.</p>
+
+  <div class="tip">💡 On macOS: right-click → Open With → Chrome/Firefox. On Windows: just double-click.</div>
+
+  <p>Fill in the inputs → click <strong>Run All</strong> → AI responds.</p>
+
+  <h3>If Streaming Doesn't Work on file://</h3>
+  <p>Some browsers block streaming fetch on <code>file://</code> protocol. Quick fix — use any tiny server:</p>
+  <pre><code># Pick one (all do the same thing):
+npx serve .                      # if you have Node
+python3 -m http.server 5000      # if you have Python
+php -S localhost:5000             # if you have PHP</code></pre>
+  <p>Then open <code>http://localhost:5000</code></p>
+
+  <h3>Troubleshooting</h3>
+  <table>
+    <tr><th>Problem</th><th>Fix</th></tr>
+    <tr><td>CORS error</td><td>Bedrock API may block file:// origin. Use a local server: <code>npx serve .</code></td></tr>
+    <tr><td>401 Unauthorized</td><td>Wrong API key — check the Bearer token in index.html</td></tr>
+    <tr><td>403 / AccessDenied</td><td>API key doesn't have permission for this model</td></tr>
+    <tr><td>Model not found</td><td>Only <code>global.anthropic.claude-haiku-4-5-20251001-v1:0</code> is available</td></tr>
+    <tr><td>Empty response</td><td>Open DevTools (F12) → Network tab → click the failed request → read error</td></tr>
+  </table>
+
+  <h3>Making Changes</h3>
+  <p>Open <code>index.html</code> in any text editor → edit → save → refresh browser.</p>
+  <p>Or share the file with Kiro and ask: <em>"Change the background to dark blue"</em> / <em>"Add a reset button"</em></p>
+
+  <h3>Sharing</h3>
+  <table>
+    <tr><th>Method</th><th>How</th></tr>
+    <tr><td>Send the file</td><td>Email or message the index.html to someone — they open it and it works</td></tr>
+    <tr><td>Same WiFi</td><td><code>npx serve .</code> → share your IP:port</td></tr>
+    <tr><td>Temporary public</td><td><code>ngrok http 5000</code></td></tr>
+    <tr><td>Permanent</td><td>Upload to S3 (already done if you followed the main tutorial)</td></tr>
+  </table>
+
+  <div style="background:#1a2208;border:1px solid #4a6a10;border-radius:12px;padding:20px;text-align:center;margin-top:28px;">
+    <div style="font-size:32px;margin-bottom:6px">🎉</div>
+    <h2 style="color:#c8f135;margin-bottom:4px;font-size:18px">Done!</h2>
+    <p style="color:#aaa;font-size:13px;margin:0">One HTML file. No installation. Edit → refresh → iterate.</p>
+  </div>
+
+  <div class="nav-btns">
+    <a href="#" class="btn btn-outline" onclick="showPage('step1')">← Generate</a>
+    <a href="#" class="btn btn-primary" onclick="showPage('home')">Overview</a>
+  </div>
+</div>
+
+<script>
+let plannerWidgetCount = 0;
+
+function addPlannerWidget() {
+  plannerWidgetCount++;
+  const id = plannerWidgetCount;
+  const container = document.getElementById('plannerWidgets');
+  const div = document.createElement('div');
+  div.id = 'pw-' + id;
+  div.style.cssText = 'background:#111;border:1px solid #2a2a2a;border-radius:8px;padding:12px;margin-bottom:10px';
+  div.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="color:#c8f135;font-size:12px;font-weight:700">Widget #${id}</span>
+      <button onclick="this.parentElement.parentElement.remove();buildPrompt()" style="background:none;border:1px solid #444;color:#888;border-radius:4px;padding:1px 6px;cursor:pointer;font-size:11px">✕</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <input type="text" class="pw-name" placeholder="Widget name" style="background:#0a0a0a;border:1px solid #333;border-radius:4px;color:#e0e0e0;padding:6px 8px;font-size:12px" oninput="buildPrompt()">
+      <select class="pw-type" style="background:#0a0a0a;border:1px solid #333;border-radius:4px;color:#e0e0e0;padding:6px 8px;font-size:12px" onchange="buildPrompt()">
+        <option value="text-input">📝 Text Input</option>
+        <option value="dropdown">📋 Dropdown</option>
+        <option value="slider">🔢 Slider</option>
+        <option value="ai-output">✨ AI Output</option>
+        <option value="image-output">🖼️ Image Output</option>
+        <option value="chatbot">💬 Chatbot</option>
+        <option value="file-upload">📄 File Upload</option>
+        <option value="static-text">ℹ️ Static Text</option>
+      </select>
+    </div>
+    <textarea class="pw-details" rows="2" placeholder="Prompt, options, references, etc." style="width:100%;background:#0a0a0a;border:1px solid #333;border-radius:4px;color:#e0e0e0;padding:6px 8px;font-size:12px;resize:vertical" oninput="buildPrompt()"></textarea>
+  `;
+  container.appendChild(div);
+  buildPrompt();
+}
+
+function buildPrompt() {
+  const name = document.getElementById('pAppName').value.trim() || '[Your App Name]';
+  const desc = document.getElementById('pAppDesc').value.trim() || '[What it does]';
+  const apiKey = document.getElementById('pApiKey').value.trim() || '[YOUR_API_KEY]';
+  const notes = document.getElementById('pNotes').value.trim();
+
+  const widgets = [];
+  document.querySelectorAll('[id^="pw-"]').forEach(el => {
+    const wName = el.querySelector('.pw-name').value.trim() || 'Widget';
+    const wType = el.querySelector('.pw-type').value;
+    const wDetails = el.querySelector('.pw-details').value.trim();
+    widgets.push(`- ${wName} (type: ${wType})${wDetails ? '\n  ' + wDetails.replace(/\n/g, '\n  ') : ''}`);
+  });
+
+  const prompt = `Build me a single index.html that calls Amazon Bedrock directly.
+
+APP: ${name}
+DESCRIPTION: ${desc}
+
+API:
+- Endpoint: https://bedrock-runtime.ap-southeast-5.amazonaws.com/model/global.anthropic.claude-haiku-4-5-20251001-v1:0/converse
+- Auth: Authorization: Bearer ${apiKey}
+- Content-Type: application/json
+- Body format (Bedrock Converse API):
+  {
+    "messages": [{"role": "user", "content": [{"text": "..."}]}],
+    "system": [{"text": "system prompt here"}],
+    "inferenceConfig": {"maxTokens": 2048, "temperature": 0.7}
+  }
+
+WIDGETS:
+${widgets.length ? widgets.join('\n') : '- [Add widgets above]'}
+
+REQUIREMENTS:
+1. Single index.html — no build tools, no server needed
+2. All CSS and JS inline
+3. Each AI widget calls the Bedrock Converse endpoint with its own system prompt
+4. Build the user message by combining relevant input widget values
+5. "Run All" button fires all AI calls simultaneously
+6. Loading spinners per output, error messages if call fails
+7. Mobile-responsive, dark theme
+8. Markdown rendering via marked.js CDN
+9. Copy button on each AI output, Reset button to clear all
+10. Works by double-clicking the file (file:// protocol)
+
+IMPORTANT:
+- Only model: global.anthropic.claude-haiku-4-5-20251001-v1:0
+- Use Converse API format (not InvokeModel)
+- API key in Authorization: Bearer header
+- NO server-side code — everything in the browser
+${notes ? '\nEXTRA NOTES:\n' + notes : ''}
+[Drag your PartyRock widget screenshots into this Kiro message]`;
+
+  document.getElementById('promptOutput').textContent = prompt;
+}
+
+function copyPrompt(btn) {
+  const text = document.getElementById('promptOutput').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => { btn.textContent = '📋 Copy'; }, 2000);
+  });
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
+  const page=document.getElementById('page-'+id);
+  if(page){page.classList.add('active');window.scrollTo(0,0)}
+  const nav=document.getElementById('nav-'+id);
+  if(nav)nav.classList.add('active');
+  if(history.replaceState)history.replaceState(null,'','#'+id);
+}
+window.addEventListener('hashchange',()=>{const h=location.hash.replace('#','');if(h)showPage(h)});
+window.addEventListener('DOMContentLoaded',()=>{const h=location.hash.replace('#','');if(h)showPage(h)});
+</script>
+</body>
+</html>

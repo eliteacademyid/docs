@@ -49,8 +49,8 @@ S3 Bucket (static website — index.html)
       ▼
 Lambda Function URLs (streaming, one per AI widget)
       │
-      ├── text-generation widgets  ──►  Flask Lambda  ──►  Bedrock (Claude Sonnet 4.5)
-      ├── chatbot widgets          ──►  Flask Lambda  ──►  Bedrock (Claude Sonnet 4.5)
+      ├── text-generation widgets  ──►  Flask Lambda  ──►  Bedrock (Claude 3 Haiku (older alternative))
+      ├── chatbot widgets          ──►  Flask Lambda  ──►  Bedrock (Claude 3 Haiku (older alternative))
       └── image-generation widgets ──►  Lambda        ──►  Bedrock (Nova Canvas)
 
 Supporting services:
@@ -83,7 +83,7 @@ See `02b-sandbox-environment.md` for the sandbox-specific steps.
 
 | Service | What it does | Plain English |
 |---|---|---|
-| Amazon Bedrock | Runs the AI (Claude Sonnet 4.5) | The brain |
+| Amazon Bedrock | Runs the AI (Claude 3 Haiku (older alternative)) | The brain |
 | AWS Lambda | Runs your code (Flask, streaming) | The worker |
 | Lambda Function URLs | Connects website to Lambda | The door |
 | Amazon S3 | Hosts your website files | The shelf |

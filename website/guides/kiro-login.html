@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="How to sign in to Kiro IDE using your Elite Academy account portal via IAM Identity Center SSO.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <title>Kiro Login via Elite Academy Portal</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #e0e0e0; line-height: 1.7; }
+    a { color: #c8f135; }
+
+    nav { background: #1a1a1a; border-bottom: 1px solid #2a2a2a; padding: 0 24px; position: sticky; top: 0; z-index: 100; }
+    nav .inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; height: 60px; gap: 32px; }
+    nav .logo { color: #c8f135; font-weight: 700; font-size: 18px; text-decoration: none; }
+    nav .links { display: flex; gap: 4px; }
+    nav .links a { color: #aaa; text-decoration: none; padding: 8px 14px; border-radius: 6px; font-size: 14px; transition: color 0.2s, background 0.2s; }
+    nav .links a:hover { color: #fff; background: #2a2a2a; }
+    nav .links a.active { color: #c8f135; }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    h1 { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    h2 { font-size: 24px; font-weight: 700; color: #fff; margin: 40px 0 12px; padding-top: 24px; border-top: 1px solid #2a2a2a; }
+    h3 { font-size: 18px; font-weight: 600; color: #c8f135; margin: 28px 0 12px; }
+    p { color: #ccc; margin-bottom: 16px; }
+    ul, ol { padding-left: 24px; color: #ccc; margin-bottom: 16px; }
+    li { margin-bottom: 8px; }
+    strong { color: #fff; }
+
+    .subtitle { color: #aaa; font-size: 16px; margin-bottom: 32px; }
+
+    code { background: #1a1a1a; border: 1px solid #333; border-radius: 4px; padding: 2px 6px; font-size: 13px; color: #c8f135; font-family: monospace; }
+    pre { background: #111; border: 1px solid #2a2a2a; border-radius: 8px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    pre code { background: none; border: none; padding: 0; color: #e0e0e0; font-size: 13px; }
+
+    .tip { background: #1a2208; border-left: 3px solid #c8f135; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0; font-size: 14px; color: #ccc; }
+    .tip::before { content: "💡 Tip: "; color: #c8f135; font-weight: 600; }
+    .warning { background: #2a1a08; border-left: 3px solid #f5a623; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0; font-size: 14px; color: #ccc; }
+    .warning::before { content: "⚠️ Important: "; color: #f5a623; font-weight: 600; }
+
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    th { background: #1a2208; color: #c8f135; padding: 10px 12px; text-align: left; }
+    td { padding: 10px 12px; border-bottom: 1px solid #2a2a2a; color: #ccc; }
+    tr:hover td { background: #1a1a1a; }
+
+    .step-badge { display: inline-block; background: #c8f135; color: #0f0f0f; border-radius: 50%; width: 32px; height: 32px; line-height: 32px; text-align: center; font-weight: 800; font-size: 14px; margin-right: 10px; }
+
+    .login-box { background: #111; border: 1px dashed #444; border-radius: 8px; padding: 20px; margin: 16px 0; font-family: monospace; font-size: 13px; color: #888; text-align: center; line-height: 2; }
+    .login-box .highlight { color: #c8f135; font-weight: 700; }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 24px 0; }
+    .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px; }
+    .card .icon { font-size: 24px; margin-bottom: 8px; }
+    .card h4 { font-size: 14px; color: #fff; margin-bottom: 4px; }
+    .card p { font-size: 12px; color: #888; margin: 0; }
+
+    .ref-table { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 20px; margin: 16px 0; }
+    .ref-table table { margin: 0; }
+
+    @media (max-width: 600px) {
+      .container { padding: 32px 16px 60px; }
+      h1 { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <a href="/" class="logo">📚 Elite Academy Docs</a>
+    <div class="links">
+      <a href="/tutorials/partyrock-to-aws/tutorial.html">Tutorials</a>
+      <a href="/guides/index.html" class="active">Guides</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <h1>Kiro Login via Elite Academy Portal</h1>
+  <p class="subtitle">How to sign in to Kiro IDE using your Elite Academy account portal (IAM Identity Center SSO).</p>
+
+  <!-- Prerequisites -->
+  <h2>Prerequisites</h2>
+  <ul>
+    <li>You are a registered member of an Elite Academy program (CendekiAwan, workshops, etc.)</li>
+    <li>Your email has been added to the Kiro enterprise subscription by your administrator</li>
+    <li>You have set your password via the password reset email from IAM Identity Center</li>
+  </ul>
+
+  <!-- Step 1 -->
+  <h2><span class="step-badge">1</span> Download Kiro</h2>
+  <p>Download Kiro IDE from: <a href="https://kiro.dev/downloads/" target="_blank"><strong>https://kiro.dev/downloads/</strong></a></p>
+  <p>Available for:</p>
+  <ul>
+    <li>macOS (Apple Silicon / Intel)</li>
+    <li>Windows</li>
+    <li>Linux</li>
+  </ul>
+  <p>Install and open Kiro.</p>
+
+  <!-- Step 2 -->
+  <h2><span class="step-badge">2</span> Sign In with Organizational Identity</h2>
+  <p>When Kiro opens for the first time, you'll see a sign-in screen.</p>
+
+  <ol>
+    <li>Click <strong>"Sign in with organizational identity"</strong> (NOT "Sign in with Builder ID" or social login)</li>
+  </ol>
+
+  <div class="login-box">
+    Welcome to Kiro<br><br>
+    [ Sign in with Builder ID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]<br>
+    [ Sign in with social login &nbsp;&nbsp;&nbsp;&nbsp; ]<br><br>
+    ──────── OR ────────<br><br>
+    [ <span class="highlight">Sign in with organizational identity</span> ] ← ✅ Click this
+  </div>
+
+  <ol start="2">
+    <li>Enter the <strong>Start URL</strong>:</li>
+  </ol>
+  <pre><code>https://eliteacademy.awsapps.com/start</code></pre>
+
+  <ol start="3">
+    <li>Enter the <strong>Region</strong>:</li>
+  </ol>
+  <pre><code>ap-southeast-1</code></pre>
+
+  <ol start="4">
+    <li>Click <strong>"Continue"</strong></li>
+  </ol>
+
+  <!-- Step 3 -->
+  <h2><span class="step-badge">3</span> Authenticate in Browser</h2>
+  <p>A browser window will open automatically.</p>
+  <ol>
+    <li>Sign in with your registered email:
+      <ul>
+        <li><strong>Username:</strong> your registered email address (e.g. <code>yourname@institution.edu</code>)</li>
+        <li><strong>Password:</strong> the password you set from the reset email</li>
+      </ul>
+    </li>
+    <li>You may be asked to <strong>Allow</strong> Kiro to access your account — click <strong>Allow</strong></li>
+    <li>After successful authentication, you'll see a confirmation page. You can close the browser and return to Kiro.</li>
+  </ol>
+
+  <!-- Step 4 -->
+  <h2><span class="step-badge">4</span> Verify Your Subscription</h2>
+  <p>Once signed in, verify your plan is active:</p>
+  <ol>
+    <li>In Kiro, click on your profile icon (bottom-left)</li>
+    <li>You should see:
+      <ul>
+        <li><strong>Plan:</strong> Kiro Pro (1,000 credits/month)</li>
+        <li><strong>Organization:</strong> Elite Academy</li>
+      </ul>
+    </li>
+  </ol>
+  <div class="tip">If you see "Free" instead, sign out and sign in again using the organizational identity method.</div>
+
+  <!-- Troubleshooting -->
+  <h2>Troubleshooting</h2>
+  <table>
+    <tr><th>Issue</th><th>Solution</th></tr>
+    <tr><td>"Start URL not found"</td><td>Make sure you entered <code>https://eliteacademy.awsapps.com/start</code> exactly</td></tr>
+    <tr><td>"User not found"</td><td>Contact your admin — your email may not be registered yet</td></tr>
+    <tr><td>"Invalid password"</td><td>Use the password reset link from your email, or ask admin to resend</td></tr>
+    <tr><td>Still on Free plan after sign-in</td><td>Sign out completely → close Kiro → reopen → sign in with organizational identity</td></tr>
+    <tr><td>"Subscription pending"</td><td>Your subscription is being provisioned — wait a few minutes and restart Kiro</td></tr>
+    <tr><td>Browser doesn't open</td><td>Copy the URL shown in Kiro and paste it in your browser manually</td></tr>
+  </table>
+
+  <!-- Important Notes -->
+  <h2>Important Notes</h2>
+  <div class="warning">Do NOT sign in with Builder ID or social login — this will create a separate individual account and you won't get the enterprise subscription.</div>
+  <div class="warning">If you previously had a personal Kiro account, sign out of it first, then sign in with organizational identity.</div>
+  <div class="warning">Credits are shared — your Kiro Pro plan gives you 1,000 credits/month. Use them wisely for your project.</div>
+
+  <!-- Quick Reference -->
+  <h2>Quick Reference</h2>
+  <div class="ref-table">
+    <table>
+      <tr><th>Setting</th><th>Value</th></tr>
+      <tr><td>Start URL</td><td><code>https://eliteacademy.awsapps.com/start</code></td></tr>
+      <tr><td>Region</td><td><code>ap-southeast-1</code></td></tr>
+      <tr><td>Your username</td><td>Your registered email address</td></tr>
+      <tr><td>Plan</td><td>Kiro Pro (1,000 credits/month)</td></tr>
+      <tr><td>Organization</td><td>Elite Academy</td></tr>
+    </table>
+  </div>
+
+  <!-- What Can You Do -->
+  <h2>What Can You Do with Kiro?</h2>
+  <div class="cards">
+    <div class="card"><div class="icon">🤖</div><h4>AI Coding</h4><p>Claude Sonnet, Auto mode for intelligent assistance</p></div>
+    <div class="card"><div class="icon">📋</div><h4>Specs</h4><p>Structured development with requirements → design → tasks</p></div>
+    <div class="card"><div class="icon">🔧</div><h4>MCP Tools</h4><p>AWS integration via Model Context Protocol</p></div>
+    <div class="card"><div class="icon">💡</div><h4>Code Suggestions</h4><p>Intelligent completions and refactoring</p></div>
+    <div class="card"><div class="icon">🏗️</div><h4>Build Faster</h4><p>Ship your project with AI assistance</p></div>
+    <div class="card"><div class="icon">🪝</div><h4>Hooks</h4><p>Automate workflows triggered by IDE events</p></div>
+  </div>
+
+  <!-- Need Help -->
+  <h2>Need Help?</h2>
+  <table>
+    <tr><th>Type</th><th>Contact</th></tr>
+    <tr><td>Technical issues</td><td>Contact your program's technical coach</td></tr>
+    <tr><td>Password reset</td><td>Ask your admin to resend from IAM Identity Center</td></tr>
+    <tr><td>Kiro bugs</td><td><a href="https://github.com/kirodotdev/Kiro/issues" target="_blank">github.com/kirodotdev/Kiro/issues</a></td></tr>
+    <tr><td>Community</td><td><a href="https://discord.gg/kirodotdev" target="_blank">discord.gg/kirodotdev</a></td></tr>
+  </table>
+
+</div>
+
+</body>
+</html>

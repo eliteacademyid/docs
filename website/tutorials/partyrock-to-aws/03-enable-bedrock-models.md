@@ -26,8 +26,17 @@ This takes about 5 minutes and is free to request.
 
 ## 3.2 Make Sure You Are in the Right Region
 
-Your app will run in **US East (N. Virginia)**.
-Check the region selector in the top right corner of the AWS Console.
+Your sandbox is restricted to specific regions. Choose one of the allowed regions below:
+Available regions for your sandbox:
+
+| Region | Location | Recommended |
+|--------|----------|-------------|
+| **ap-southeast-1** | Singapore | ✅ Recommended (closest) |
+| ap-southeast-3 | Jakarta | Good alternative |
+| us-east-1 | N. Virginia | Available |
+| ap-southeast-5 | Malaysia | Available |
+
+> ⚠️ Other regions are blocked by sandbox policy. If you select a different region, your API calls will fail.
 
 > 📸 **Screenshot:** Top right of the console shows a region name like "N. Virginia" or "us-east-1".
 > Click it and select **US East (N. Virginia)**.
@@ -38,26 +47,48 @@ Check the region selector in the top right corner of the AWS Console.
 
 1. In the left sidebar, click **Model access**
 2. Click **Manage model access** (top right of the table)
-3. Find the **Anthropic** section, check the box next to **Claude Sonnet 4** (Claude Sonnet 4.5)
-4. Scroll down and click **Save changes**
+3. Find the **Anthropic** section, check the box next to **Claude Haiku 4.5** (fast, cost-efficient, and allowed in sandbox)
+4. Optionally also enable **Claude 3 Haiku (older alternative)** (latest Haiku — better quality, still cost-efficient)
+5. Scroll down and click **Save changes**
 
    > 📸 **Screenshot:** A list of model providers. Under "Anthropic" you see checkboxes
-   > for different Claude models. Check "Claude Sonnet 4" or "Claude Sonnet 4.5".
+   > for different Claude models. Check "Claude Haiku 4.5" or "Claude 3 Haiku (older alternative)".
 
-5. Refresh the page every few minutes until the status shows **Access granted** ✅
+   > ⚠️ **Sandbox restriction:** Opus and Sonnet models are blocked in sandbox accounts
+   > to control costs. Only **Haiku** models are available. If you try to enable Sonnet/Opus,
+   > your app will receive an Access Denied error at runtime.
 
-> 💡 The model your app uses is `us.anthropic.claude-sonnet-4-5-20250929-v1:0` — a
-> cross-region inference profile. The `us.` prefix is required. Kiro generates this
-> model ID automatically — you just need to make sure access is granted here.
+6. Refresh the page every few minutes until the status shows **Access granted** ✅
+
+> 💡 The model your app uses is `anthropic.claude-haiku-4-5-20251001-v1:0` or
+> `anthropic.claude-3-5-haiku-20241022-v1:0`. Kiro may generate a different model ID —
+> make sure it matches a Haiku model.
 
 ---
 
 ## 3.4 Verify Access is Granted
 
 1. Go back to **Model access** in the left sidebar
-2. Find Claude 3 Sonnet — the **Access status** column should show a green checkmark
+2. Find Claude Haiku 4.5 — the **Access status** column should show a green checkmark
 
    > 📸 **Screenshot:** The model row shows a green checkmark in the "Access status" column.
+
+---
+
+## 3.4b Try the Model in Bedrock Playground
+
+Before building your app, test the model to make sure it works for your use case.
+
+1. In the left sidebar, click **Playgrounds** → **Chat**
+2. In the model selector (top), choose **Claude Haiku 4.5**
+3. Type a prompt related to your app idea and click **Run**
+4. Verify the response is useful for your project
+
+   > 📸 **Screenshot:** The chat playground shows your prompt and the model's response.
+
+> 💡 If the model asks you to **submit a use case** before access is granted, fill in
+> the form with a brief description of your project (e.g., "Student hackathon project —
+> building an AI chatbot for environmental awareness"). Approval is usually instant.
 
 ---
 
@@ -94,15 +125,15 @@ restrict access to just the specific model your app actually uses.
      "Effect": "Allow",
      "Action": ["bedrock:InvokeModel", "bedrock:InvokeModelWithResponseStream"],
      "Resource": [
-       "arn:aws:bedrock:*::foundation-model/us.anthropic.claude-sonnet-4-5-20250929-v1:0",
-       "arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-sonnet-4-5-20250929-v1:0"
+       "arn:aws:bedrock:*::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0",
+       "arn:aws:bedrock:*::foundation-model/anthropic.claude-3-5-haiku-20241022-v1:0"
      ]
    }
    ```
 
    > 💡 Two actions are needed: `InvokeModel` for image generation and
-   > `InvokeModelWithResponseStream` for text/chatbot streaming. The cross-region
-   > inference profile requires both the foundation-model ARN and the inference-profile ARN.
+   > `InvokeModelWithResponseStream` for text/chatbot streaming. Both Haiku model
+   > ARNs are included so your app works with either version.
 
    > ⚠️ If your app uses image generation, also add:
    > `"arn:aws:bedrock:*::foundation-model/amazon.nova-canvas-v1:0"`
@@ -166,7 +197,7 @@ instead of hunting through logs.
 
 Before moving on, you should have:
 - [ ] Opened Amazon Bedrock in the AWS Console
-- [ ] Confirmed you are in the **us-east-1** region
-- [ ] Claude Sonnet 4 (Claude Sonnet 4.5) shows **Access granted** status
-- [ ] Lambda IAM role updated to allow `bedrock:InvokeModel` and `bedrock:InvokeModelWithResponseStream` on the specific model ARNs
+- [ ] Confirmed you are in an allowed region (ap-southeast-1, ap-southeast-3, us-east-1, or ap-southeast-5)
+- [ ] Claude Haiku 4.5 or Claude 3 Haiku (older alternative) shows **Access granted** status
+- [ ] Lambda IAM role updated to allow `bedrock:InvokeModel` and `bedrock:InvokeModelWithResponseStream` on the Haiku model ARNs
 - [ ] CloudWatch dashboard created with Errors and Invocations widgets

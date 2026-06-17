@@ -81,7 +81,7 @@ If Claude 3 Sonnet is not pre-enabled, look for these alternatives:
 |---|---|
 | Amazon Titan Text Express | `amazon.titan-text-express-v1` |
 | Claude Instant | `anthropic.claude-instant-v1` |
-| Claude 3 Haiku | `anthropic.claude-3-haiku-20240307-v1:0` |
+| Claude Haiku 4.5 | `anthropic.claude-haiku-4-5-20251001-v1:0` |
 
 Update the `modelId` in your Lambda functions to match what is available.
 

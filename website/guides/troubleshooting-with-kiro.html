@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="How to use Kiro IDE to diagnose and fix code errors, deployment failures, and AWS issues.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <title>Troubleshooting with Kiro - Elite Academy Docs</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #e0e0e0; line-height: 1.7; }
+    a { color: #c8f135; }
+
+    nav { background: #1a1a1a; border-bottom: 1px solid #2a2a2a; padding: 0 24px; position: sticky; top: 0; z-index: 100; }
+    nav .inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; height: 60px; gap: 32px; }
+    nav .logo { color: #c8f135; font-weight: 700; font-size: 18px; text-decoration: none; }
+    nav .links { display: flex; gap: 4px; }
+    nav .links a { color: #aaa; text-decoration: none; padding: 8px 14px; border-radius: 6px; font-size: 14px; transition: color 0.2s, background 0.2s; }
+    nav .links a:hover { color: #fff; background: #2a2a2a; }
+    nav .links a.active { color: #c8f135; }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    h1 { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    h2 { font-size: 24px; font-weight: 700; color: #fff; margin: 40px 0 12px; padding-top: 24px; border-top: 1px solid #2a2a2a; }
+    h3 { font-size: 18px; font-weight: 600; color: #c8f135; margin: 28px 0 12px; }
+    p { color: #ccc; margin-bottom: 16px; }
+    ul, ol { padding-left: 24px; color: #ccc; margin-bottom: 16px; }
+    li { margin-bottom: 8px; }
+    strong { color: #fff; }
+
+    .subtitle { color: #aaa; font-size: 16px; margin-bottom: 32px; }
+
+    code { background: #1a1a1a; border: 1px solid #333; border-radius: 4px; padding: 2px 6px; font-size: 13px; color: #c8f135; font-family: monospace; }
+    pre { background: #111; border: 1px solid #2a2a2a; border-radius: 8px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    pre code { background: none; border: none; padding: 0; color: #e0e0e0; font-size: 13px; }
+
+    .tip { background: #1a2208; border-left: 3px solid #c8f135; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0; font-size: 14px; color: #ccc; }
+    .tip::before { content: "💡 Tip: "; color: #c8f135; font-weight: 600; }
+    .warning { background: #2a1a08; border-left: 3px solid #f5a623; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0; font-size: 14px; color: #ccc; }
+    .warning::before { content: "⚠️ Important: "; color: #f5a623; font-weight: 600; }
+
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    th { background: #1a2208; color: #c8f135; padding: 10px 12px; text-align: left; }
+    td { padding: 10px 12px; border-bottom: 1px solid #2a2a2a; color: #ccc; }
+    tr:hover td { background: #1a1a1a; }
+
+    .prompt-box { background: #111; border: 1px solid #4a6a10; border-radius: 8px; padding: 16px; margin: 16px 0; }
+    .prompt-box .label { color: #c8f135; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .prompt-box pre { margin: 0; background: none; border: none; padding: 0; }
+    .prompt-box pre code { color: #ccc; font-size: 13px; white-space: pre-wrap; }
+
+    .scenario { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 20px; margin: 20px 0; }
+    .scenario-title { color: #fff; font-weight: 700; font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .scenario-title .icon { font-size: 20px; }
+
+    .step-badge { display: inline-block; background: #c8f135; color: #0f0f0f; border-radius: 50%; width: 28px; height: 28px; line-height: 28px; text-align: center; font-weight: 800; font-size: 13px; margin-right: 8px; }
+
+    @media (max-width: 600px) {
+      .container { padding: 32px 16px 60px; }
+      h1 { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <a href="/" class="logo">📚 Elite Academy Docs</a>
+    <div class="links">
+      <a href="/tutorials/partyrock-to-aws/tutorial.html">Tutorials</a>
+      <a href="/guides/index.html" class="active">Guides</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <h1>Troubleshooting with Kiro</h1>
+  <p class="subtitle">How to use Kiro IDE to diagnose and fix code errors, deployment failures, and AWS issues — without needing to understand the error yourself.</p>
+
+  <!-- Overview -->
+  <h2>The Golden Rule</h2>
+  <p>When something breaks, <strong>copy the error and paste it into Kiro</strong>. That's it. Kiro reads the error, understands the context of your project, and tells you exactly what to fix.</p>
+  <p>You don't need to understand the error message. You just need to give Kiro enough context:</p>
+  <ol>
+    <li><strong>The error message</strong> — copy the full text</li>
+    <li><strong>Where it happened</strong> — which file, which step, which service</li>
+    <li><strong>What you were trying to do</strong> — one sentence is enough</li>
+  </ol>
+
+  <!-- Code Errors -->
+  <h2>Fixing Code Errors</h2>
+
+  <div class="scenario">
+    <div class="scenario-title"><span class="icon">🐍</span> Python / Lambda Error</div>
+    <p>Your Lambda function throws an error like <code>ImportError</code>, <code>KeyError</code>, <code>TypeError</code>, or returns a 500 response.</p>
+    <h3>What to do:</h3>
+    <ol>
+      <li>Open the failing file in Kiro (e.g. <code>backend/lambda/app.py</code>)</li>
+      <li>Paste the error into Kiro chat:</li>
+    </ol>
+    <div class="prompt-box">
+      <div class="label">Paste into Kiro chat</div>
+      <pre><code>This Lambda function is throwing an error. Here's the error from CloudWatch logs:
+
+[paste the full error traceback here]
+
+Fix it.</code></pre>
+    </div>
+    <div class="tip">Include the full traceback — not just the last line. Kiro uses the full stack trace to pinpoint the exact issue.</div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title"><span class="icon">🌐</span> Frontend JavaScript Error</div>
+    <p>Your app shows a blank page, buttons don't work, or the browser console shows errors.</p>
+    <h3>What to do:</h3>
+    <ol>
+      <li>Open browser DevTools (F12 or Cmd+Option+I) → Console tab</li>
+      <li>Copy the red error messages</li>
+      <li>Open <code>frontend/index.html</code> in Kiro and paste:</li>
+    </ol>
+    <div class="prompt-box">
+      <div class="label">Paste into Kiro chat</div>
+      <pre><code>My frontend is broken. Browser console shows this error:
+
+[paste error here]
+
+The file is open. Fix it.</code></pre>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title"><span class="icon">🔗</span> CORS Error</div>
+    <p>Browser console shows: <code>Access to fetch at '...' has been blocked by CORS policy</code></p>
+    <h3>What to do:</h3>
+    <div class="prompt-box">
+      <div class="label">Paste into Kiro chat</div>
+      <pre><code>I'm getting a CORS error when my frontend calls the Lambda function URL. 
+
+Error: Access to fetch at 'https://xxx.lambda-url.ap-southeast-1.on.aws/' 
+from origin 'http://my-bucket.s3-website...' has been blocked by CORS policy.
+
+My Lambda is a Flask app using Lambda Web Adapter with response streaming. 
+Fix the CORS headers in my Lambda function.</code></pre>
+    </div>
+    <div class="tip">CORS errors are almost always fixed in the backend (Lambda), not the frontend. Kiro knows this and will update the right file.</div>
+  </div>
+
+  <!-- Deployment Errors -->
+  <h2>Fixing Deployment Errors</h2>
+
+  <div class="scenario">
+    <div class="scenario-title"><span class="icon">🚀</span> GitHub Actions Failed</div>
+    <p>Your deployment shows a red ❌ in the GitHub Actions tab.</p>
+    <h3>What to do:</h3>
+    <ol>
+      <li>In GitHub → Actions → click the failed run → click the failed step</li>
+      <li>Copy the error output (the red text)</li>
+      <li>Paste into Kiro:</li>
+    </ol>
+    <div class="prompt-box">
+      <div class="label">Paste into Kiro chat</div>
+      <pre><code>My GitHub Actions deployment failed at the [step name] step. Here's the error:
+
+[paste the full error output]
+
+What's wrong and how do I fix it?</code></pre>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title"><span class="icon">☁️</span> SAM / CloudFormation Error</div>
+    <p>Deployment fails with errors like <code>CREATE_FAILED</code>, <code>ROLLBACK_COMPLETE</code>, or resource-specific errors.</p>
+    <h3>What to do:</h3>
+    <div class="prompt-box">
+      <div class="label">Paste into Kiro chat</div>
+      <pre><code>My SAM deploy failed with this CloudFormation error:
+
+[paste error]
+
+My template.yaml is open. Fix it.</code></pre>
+    </div>
+    <h3>Common CloudFormation errors:</h3>
+    <table>
+      <tr><th>Error</th><th>Likely cause</th></tr>
+      <tr><td><code>Resource already exists</code></td><td>A previous failed deploy left resources behind. Delete the stack first.</td></tr>
+      <tr><td><code>ROLLBACK_COMPLETE</code></td><td>Stack is stuck. Delete it in CloudFormation console, then redeploy.</td></tr>
+      <tr><td><code>Insufficient permissions</code></td><td>IAM role missing a policy. Tell Kiro which permission is denied.</td></tr>
+      <tr><td><code>Template format error</code></td><td>YAML indentation issue. Kiro can fix this instantly.</td></tr>
+      <tr><td><code>S3 bucket already exists</code></td><td>Bucket names are global. Change the name in template.yaml.</td></tr>
+    </table>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title"><span class="icon">🔑</span> AWS Credentials Error</div>
+    <p>Errors like <code>ExpiredTokenException</code>, <code>InvalidClientTokenId</code>, or <code>Access Denied</code>.</p>
+    <h3>What to do:</h3>
+    <table>
+      <tr><th>Error</th><th>Fix</th></tr>
+      <tr><td><code>ExpiredTokenException</code></td><td>Your session token expired. Get fresh credentials from the <a href="/guides/aws-sandbox.html">sandbox portal</a> and update GitHub secrets.</td></tr>
+      <tr><td><code>InvalidClientTokenId</code></td><td>Access key is wrong. Double-check the <code>AWS_ACCESS_KEY_ID</code> secret — no extra spaces.</td></tr>
+      <tr><td><code>Access Denied</code></td><td>Your IAM role doesn't have the required permission. Tell Kiro which action was denied.</td></tr>
+      <tr><td><code>Credentials could not be loaded</code></td><td>GitHub secrets are not set or named incorrectly. Check Settings → Secrets.</td></tr>
+    </table>
+    <div class="warning">Credential errors are NOT code bugs — Kiro can explain them but you need to update secrets manually in GitHub.</div>
+  </div>
+
+  <!-- Bedrock Errors -->
+  <h2>Fixing Bedrock / AI Errors</h2>
+
+  <div class="scenario">
+    <div class="scenario-title"><span class="icon">🤖</span> Bedrock Model Error</div>
+    <p>Your AI feature returns an error instead of a response.</p>
+    <h3>Common errors:</h3>
+    <table>
+      <tr><th>Error</th><th>Fix</th></tr>
+      <tr><td><code>AccessDeniedException</code></td><td>Model not enabled. Go to Bedrock → Model access → enable the model.</td></tr>
+      <tr><td><code>ModelNotReadyException</code></td><td>Model access is still pending. Wait a few minutes and retry.</td></tr>
+      <tr><td><code>ValidationException</code></td><td>Bad request format. Paste the full error into Kiro — it'll fix the API call.</td></tr>
+      <tr><td><code>ThrottlingException</code></td><td>Too many requests. Add retry logic — ask Kiro to add exponential backoff.</td></tr>
+      <tr><td><code>ModelTimeoutException</code></td><td>Request took too long. Reduce prompt length or increase Lambda timeout.</td></tr>
+      <tr><td>Empty response (no error)</td><td>Claude's safety filter declined. Rephrase the prompt to be more specific.</td></tr>
+    </table>
+    <div class="prompt-box">
+      <div class="label">Paste into Kiro chat</div>
+      <pre><code>My Bedrock call is failing with this error:
+
+[paste error]
+
+My Lambda function file is open. Fix the Bedrock API call.</code></pre>
+    </div>
+  </div>
+
+  <!-- General Workflow -->
+  <h2>General Troubleshooting Workflow</h2>
+  <p>Follow this process for any error:</p>
+  <ol>
+    <li><span class="step-badge">1</span> <strong>Get the error</strong> — copy the full error message from wherever it appears (GitHub Actions, browser console, CloudWatch logs, terminal)</li>
+    <li><span class="step-badge">2</span> <strong>Open the relevant file</strong> — open the file that's causing the issue in Kiro (Lambda function, template.yaml, index.html, deploy.yml)</li>
+    <li><span class="step-badge">3</span> <strong>Paste and ask</strong> — paste the error into Kiro chat with one sentence of context</li>
+    <li><span class="step-badge">4</span> <strong>Apply the fix</strong> — Kiro edits the file directly. Review the change.</li>
+    <li><span class="step-badge">5</span> <strong>Redeploy</strong> — commit the fix to GitHub and let Actions redeploy</li>
+  </ol>
+
+  <div class="tip">If Kiro's first fix doesn't work, paste the NEW error back into chat. Kiro learns from each attempt and narrows down the issue.</div>
+
+  <!-- Where to Find Errors -->
+  <h2>Where to Find Error Messages</h2>
+  <table>
+    <tr><th>Problem</th><th>Where to look</th></tr>
+    <tr><td>Deployment failed</td><td>GitHub → Actions → click failed run → click failed step → read red text</td></tr>
+    <tr><td>App shows error in browser</td><td>Browser DevTools (F12) → Console tab → red messages</td></tr>
+    <tr><td>API returns error</td><td>Browser DevTools → Network tab → click the failed request → Response tab</td></tr>
+    <tr><td>Lambda function error</td><td>AWS Console → CloudWatch → Log groups → find your function → latest log stream</td></tr>
+    <tr><td>CloudFormation error</td><td>AWS Console → CloudFormation → your stack → Events tab → look for FAILED</td></tr>
+    <tr><td>Bedrock error</td><td>CloudWatch logs for your Lambda function (Bedrock errors appear there)</td></tr>
+  </table>
+
+  <!-- Pro Tips -->
+  <h2>Pro Tips</h2>
+  <ul>
+    <li><strong>Share the file + error together</strong> — Kiro is most effective when it can see both the code and the error at the same time</li>
+    <li><strong>Use #Problems</strong> — type <code>#Problems</code> in Kiro chat to share all current file diagnostics</li>
+    <li><strong>Use #Terminal</strong> — type <code>#Terminal</code> to share your terminal output with Kiro</li>
+    <li><strong>Don't guess</strong> — if you're not sure what's wrong, just paste the error. Don't try to explain it yourself.</li>
+    <li><strong>One error at a time</strong> — fix the first error, redeploy, then tackle the next one</li>
+    <li><strong>Ask for explanation</strong> — add "explain what went wrong" if you want to learn, not just fix</li>
+  </ul>
+
+  <!-- Example Prompts -->
+  <h2>Ready-to-Use Prompts</h2>
+  <p>Copy any of these and replace the bracketed parts:</p>
+
+  <div class="prompt-box">
+    <div class="label">Generic error fix</div>
+    <pre><code>I'm getting this error: [paste error]. The relevant file is open. Fix it.</code></pre>
+  </div>
+
+  <div class="prompt-box">
+    <div class="label">Deployment failure</div>
+    <pre><code>My GitHub Actions deploy failed at [step name]. Error: [paste]. What's wrong?</code></pre>
+  </div>
+
+  <div class="prompt-box">
+    <div class="label">Runtime error</div>
+    <pre><code>My Lambda function crashes with: [paste traceback]. Fix the bug.</code></pre>
+  </div>
+
+  <div class="prompt-box">
+    <div class="label">Ask for explanation</div>
+    <pre><code>Explain this error in simple terms and fix it: [paste error]</code></pre>
+  </div>
+
+  <div class="prompt-box">
+    <div class="label">Multiple errors</div>
+    <pre><code>I have several errors after deploying. Here's the first one: [paste]. 
+Fix this one first, then I'll share the next.</code></pre>
+  </div>
+
+</div>
+
+</body>
+</html>

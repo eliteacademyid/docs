@@ -111,7 +111,7 @@ th{background:#111;color:#fff;padding:6px 8px;text-align:left}td{padding:6px 8px
 <h3>Objective 1 — Components of a Generative AI Application + FM Customization Options</h3>
 <table>
   <tr><th>Component</th><th>What it does</th><th>Where you see it</th></tr>
-  <tr><td>Foundation Model (FM)</td><td>The AI brain — Claude Sonnet 4.5 via Bedrock</td><td>Step 4 — you enable it; Step 2 — Kiro calls it</td></tr>
+  <tr><td>Foundation Model (FM)</td><td>The AI brain — Claude 3 Haiku (older alternative) via Bedrock</td><td>Step 4 — you enable it; Step 2 — Kiro calls it</td></tr>
   <tr><td>Prompt</td><td>The instruction sent to the FM</td><td>Step 1 — copied from PartyRock; Step 2 — inside Lambda</td></tr>
   <tr><td>Inference parameters</td><td>Temperature, Top P, max_tokens — control the response</td><td>Step 1 — PartyRock Advanced tab; Step 2 — in the API call</td></tr>
   <tr><td>Orchestration layer</td><td>Lambda — receives input, builds prompt, calls Bedrock</td><td>Step 2 — Kiro generates this</td></tr>
@@ -156,7 +156,7 @@ th{background:#111;color:#fff;padding:6px 8px;text-align:left}td{padding:6px 8px
 <p>Think of a foundation model like a very capable brain you can rent. You send it a question or instruction. It sends back a response. You pay for what you use. You don't manage any servers.</p>
 <table>
   <tr><th>Provider</th><th>Models available via Bedrock</th></tr>
-  <tr><td>Anthropic</td><td>Claude Sonnet 4.5 (used in this guide), Claude 3 Haiku, Claude 3 Sonnet</td></tr>
+  <tr><td>Anthropic</td><td>Claude 3 Haiku (older alternative) (used in this guide), Claude Haiku 4.5, Claude 3 Sonnet</td></tr>
   <tr><td>Amazon</td><td>Titan Text, Nova Canvas (images)</td></tr>
   <tr><td>Meta</td><td>Llama 3</td></tr>
   <tr><td>Stability AI</td><td>Stable Diffusion XL (images)</td></tr>
@@ -447,7 +447,7 @@ th{background:#111;color:#fff;padding:6px 8px;text-align:left}td{padding:6px 8px
 <ol>
   <li>Search for <strong>Bedrock</strong> → confirm region is <strong>US East (N. Virginia) us-east-1</strong></li>
   <li>Left sidebar → <strong>Model access</strong> → <strong>Manage model access</strong></li>
-  <li>Under <strong>Anthropic</strong>, check <strong>Claude Sonnet 4</strong> (Claude Sonnet 4.5) → Save changes</li>
+  <li>Under <strong>Anthropic</strong>, check <strong>Claude Haiku 4.5</strong> (Claude 3 Haiku (older alternative)) → Save changes</li>
   <li>Refresh until status shows <strong>Access granted ✅</strong></li>
 </ol>
 <div class="tip">This is the same Claude model your PartyRock app uses. The model ID is <code>us.anthropic.claude-sonnet-4-5-20250929-v1:0</code> — a cross-region inference profile. The <code>us.</code> prefix is required and is already included in the code Kiro generates.</div>
@@ -456,7 +456,7 @@ th{background:#111;color:#fff;padding:6px 8px;text-align:left}td{padding:6px 8px
 
 <ul class="checklist">
   <li>In us-east-1 region</li>
-  <li>Claude Sonnet 4 (Claude Sonnet 4.5) shows "Access granted"</li>
+  <li>Claude Haiku 4.5 (Claude 3 Haiku (older alternative)) shows "Access granted"</li>
 </ul>
 <div class="pb"></div>
 
@@ -560,7 +560,7 @@ th{background:#111;color:#fff;padding:6px 8px;text-align:left}td{padding:6px 8px
   <tr><td>1</td><td>Browser</td><td>Sends a POST request to API Gateway with your input values in the body</td></tr>
   <tr><td>2</td><td>API Gateway</td><td>Receives the request and triggers your Lambda function</td></tr>
   <tr><td>3</td><td>Lambda</td><td>Runs your Python code — builds the prompt by injecting input values, calls <code>bedrock.invoke_model_with_response_stream()</code></td></tr>
-  <tr><td>4</td><td>Amazon Bedrock</td><td>Receives the API call, routes it to Claude Sonnet 4.5</td></tr>
+  <tr><td>4</td><td>Amazon Bedrock</td><td>Receives the API call, routes it to Claude 3 Haiku (older alternative)</td></tr>
   <tr><td>5</td><td>Claude (inference)</td><td>Processes your prompt and generates a response — this is the AI step</td></tr>
   <tr><td>6</td><td>Bedrock → Lambda</td><td>Returns the response JSON to Lambda</td></tr>
   <tr><td>7</td><td>Lambda → API Gateway</td><td>Extracts the text, returns it with CORS headers</td></tr>
@@ -629,7 +629,7 @@ th{background:#111;color:#fff;padding:6px 8px;text-align:left}td{padding:6px 8px
 <h3>Checkpoint 2 — Bedrock Concepts in Your App</h3>
 <table>
   <tr><th>Concept</th><th>Where you saw it</th></tr>
-  <tr><td>Foundation model</td><td>Claude Sonnet 4.5 — accessed via Bedrock cross-region inference profile, no installation needed</td></tr>
+  <tr><td>Foundation model</td><td>Claude 3 Haiku (older alternative) — accessed via Bedrock cross-region inference profile, no installation needed</td></tr>
   <tr><td>Inference</td><td>Every Run All click triggers Bedrock inference in your Lambda</td></tr>
   <tr><td>Tokens</td><td>Each request uses ~500–800 tokens ≈ $0.001–0.003 per click</td></tr>
   <tr><td>API-based access</td><td>No GPU, no server, no model installation — just <code>invoke_model_with_response_stream()</code></td></tr>

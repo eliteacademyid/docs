@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="How to request and access a temporary AWS sandbox account via the Elite Academy Innovation Sandbox portal.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <title>Access AWS Sandbox - Elite Academy Docs</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #e0e0e0; line-height: 1.7; }
+    a { color: #c8f135; }
+
+    nav { background: #1a1a1a; border-bottom: 1px solid #2a2a2a; padding: 0 24px; position: sticky; top: 0; z-index: 100; }
+    nav .inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; height: 60px; gap: 32px; }
+    nav .logo { color: #c8f135; font-weight: 700; font-size: 18px; text-decoration: none; }
+    nav .links { display: flex; gap: 4px; }
+    nav .links a { color: #aaa; text-decoration: none; padding: 8px 14px; border-radius: 6px; font-size: 14px; transition: color 0.2s, background 0.2s; }
+    nav .links a:hover { color: #fff; background: #2a2a2a; }
+    nav .links a.active { color: #c8f135; }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    h1 { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    h2 { font-size: 24px; font-weight: 700; color: #fff; margin: 40px 0 12px; padding-top: 24px; border-top: 1px solid #2a2a2a; }
+    h3 { font-size: 18px; font-weight: 600; color: #c8f135; margin: 28px 0 12px; }
+    p { color: #ccc; margin-bottom: 16px; }
+    ul, ol { padding-left: 24px; color: #ccc; margin-bottom: 16px; }
+    li { margin-bottom: 8px; }
+    strong { color: #fff; }
+
+    .subtitle { color: #aaa; font-size: 16px; margin-bottom: 32px; }
+
+    code { background: #1a1a1a; border: 1px solid #333; border-radius: 4px; padding: 2px 6px; font-size: 13px; color: #c8f135; font-family: monospace; }
+    pre { background: #111; border: 1px solid #2a2a2a; border-radius: 8px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    pre code { background: none; border: none; padding: 0; color: #e0e0e0; font-size: 13px; }
+
+    .tip { background: #1a2208; border-left: 3px solid #c8f135; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0; font-size: 14px; color: #ccc; }
+    .tip::before { content: "💡 Tip: "; color: #c8f135; font-weight: 600; }
+    .warning { background: #2a1a08; border-left: 3px solid #f5a623; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0; font-size: 14px; color: #ccc; }
+    .warning::before { content: "⚠️ Important: "; color: #f5a623; font-weight: 600; }
+
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    th { background: #1a2208; color: #c8f135; padding: 10px 12px; text-align: left; }
+    td { padding: 10px 12px; border-bottom: 1px solid #2a2a2a; color: #ccc; }
+    tr:hover td { background: #1a1a1a; }
+
+    .step-badge { display: inline-block; background: #c8f135; color: #0f0f0f; border-radius: 50%; width: 32px; height: 32px; line-height: 32px; text-align: center; font-weight: 800; font-size: 14px; margin-right: 10px; }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 24px 0; }
+    .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px; }
+    .card .icon { font-size: 24px; margin-bottom: 8px; }
+    .card h4 { font-size: 14px; color: #fff; margin-bottom: 4px; }
+    .card p { font-size: 12px; color: #888; margin: 0; }
+
+    .ref-table { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 20px; margin: 16px 0; }
+    .ref-table table { margin: 0; }
+
+    .screenshot { background: #111; border: 1px dashed #444; border-radius: 8px; padding: 16px; margin: 16px 0; font-size: 13px; color: #888; }
+    .screenshot::before { content: "📸 Screenshot: "; color: #c8f135; font-weight: 600; }
+
+    @media (max-width: 600px) {
+      .container { padding: 32px 16px 60px; }
+      h1 { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <a href="/" class="logo">📚 Elite Academy Docs</a>
+    <div class="links">
+      <a href="/tutorials/partyrock-to-aws/tutorial.html">Tutorials</a>
+      <a href="/guides/index.html" class="active">Guides</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <h1>Access Your AWS Sandbox Account</h1>
+  <p class="subtitle">How to request and access a temporary AWS sandbox account via the Elite Academy Innovation Sandbox portal.</p>
+
+  <!-- What is ISB -->
+  <h2>What is the AWS Sandbox?</h2>
+  <p>The Elite Academy AWS Sandbox is powered by <strong>Innovation Sandbox on AWS (ISB)</strong> — an AWS Solution that provides managed, temporary AWS accounts. You get a real AWS account with budget limits and a time-based lease. When your lease expires, the account is automatically cleaned up.</p>
+
+  <div class="cards">
+    <div class="card"><div class="icon">🔑</div><h4>SSO Login</h4><p>Access via IAM Identity Center — no static keys needed</p></div>
+    <div class="card"><div class="icon">⏱️</div><h4>Time-Limited</h4><p>Account auto-expires after configured duration</p></div>
+    <div class="card"><div class="icon">💰</div><h4>Budget Controls</h4><p>Spend limits enforced with alerts</p></div>
+    <div class="card"><div class="icon">🔄</div><h4>Auto Cleanup</h4><p>All resources removed when lease ends</p></div>
+    <div class="card"><div class="icon">🛡️</div><h4>Guardrails</h4><p>SCPs prevent risky or expensive actions</p></div>
+    <div class="card"><div class="icon">🌏</div><h4>Region: ap-southeast-1</h4><p>Singapore region for low latency</p></div>
+  </div>
+
+  <!-- Prerequisites -->
+  <h2>Prerequisites</h2>
+  <ul>
+    <li>You are a registered participant in an Elite Academy program</li>
+    <li>Your email has been added to IAM Identity Center by your administrator</li>
+    <li>You have set your password via the password reset email</li>
+  </ul>
+
+  <!-- Step 1 -->
+  <h2><span class="step-badge">1</span> Open the Sandbox Portal</h2>
+  <p>Go to the Innovation Sandbox portal:</p>
+  <pre><code>https://aws-sandbox.eliteacademy.id</code></pre>
+  <p>Sign in with your IAM Identity Center credentials (same email and password as Kiro login).</p>
+  <div class="screenshot">The login page shows the IAM Identity Center sign-in form. Enter your registered email and password.</div>
+
+  <!-- Step 2 -->
+  <h2><span class="step-badge">2</span> Check for Assigned Leases</h2>
+  <p>Your administrator may have already assigned a lease to you. After logging in, check the dashboard:</p>
+  <ol>
+    <li>Look for an <strong>"Active Leases"</strong> or <strong>"My Leases"</strong> section on the dashboard</li>
+    <li>If you see an active lease with status <strong>"Active"</strong>, you already have access — skip to Step 4</li>
+    <li>If no lease is assigned, proceed to Step 3 to request one</li>
+  </ol>
+  <div class="tip">Assigned leases are pre-configured by your administrator with the correct budget, duration, and permissions for your program. You don't need to do anything — just click "Access Account" to start using it.</div>
+
+  <h3>Lease Status Meanings</h3>
+  <table>
+    <tr><th>Status</th><th>Meaning</th><th>Action</th></tr>
+    <tr><td><strong style="color:#c8f135">Active</strong></td><td>Account is ready to use</td><td>Click "Access Account"</td></tr>
+    <tr><td><strong style="color:#f5a623">Pending</strong></td><td>Waiting for admin approval</td><td>Wait for notification</td></tr>
+    <tr><td><strong style="color:#888">Frozen</strong></td><td>Budget or time limit reached — read-only</td><td>Contact admin for extension</td></tr>
+    <tr><td><strong style="color:#555">Expired</strong></td><td>Lease ended, account being cleaned up</td><td>Request a new lease</td></tr>
+  </table>
+
+  <!-- Step 3 -->
+  <h2><span class="step-badge">3</span> Request a New Lease (If Needed)</h2>
+  <p>If you don't have an assigned lease, request one:</p>
+  <ol>
+    <li>Click <strong>"Request Lease"</strong> or <strong>"New Lease"</strong></li>
+    <li>Select a <strong>lease template</strong> (your admin may have pre-configured options like "Bedrock Lab" or "General Sandbox")</li>
+    <li>Review the budget limit and duration</li>
+    <li>Accept the terms of use</li>
+    <li>Click <strong>"Submit"</strong></li>
+  </ol>
+  <div class="tip">If your lease requires approval, you'll need to wait for an administrator to approve it. You'll receive a notification when it's ready.</div>
+
+  <!-- Step 4 -->
+  <h2><span class="step-badge">4</span> Access Your AWS Account</h2>
+  <p>Once your lease is approved and active:</p>
+
+  <h3>Option A: AWS Console (Browser)</h3>
+  <ol>
+    <li>In the sandbox portal, find your active lease</li>
+    <li>Click <strong>"Access Account"</strong></li>
+    <li>This opens the AWS Console via SSO — you're logged in automatically</li>
+  </ol>
+
+  <h3>Option B: CLI Credentials (Programmatic Access)</h3>
+  <ol>
+    <li>In the sandbox portal, click your active lease</li>
+    <li>Look for <strong>"CLI Credentials"</strong> or <strong>"Programmatic Access"</strong></li>
+    <li>Copy the three values:</li>
+  </ol>
+  <pre><code>export AWS_ACCESS_KEY_ID="ASIA..."
+export AWS_SECRET_ACCESS_KEY="..."
+export AWS_SESSION_TOKEN="..."</code></pre>
+  <div class="warning">These credentials are temporary. They expire when your lease ends or when the SSO session times out. If you get <code>ExpiredTokenException</code>, get fresh credentials from the portal.</div>
+
+  <h3>Option C: AWS SSO Portal (Direct)</h3>
+  <p>You can also access your sandbox account directly via the SSO portal:</p>
+  <pre><code>https://eliteacademy.awsapps.com/start</code></pre>
+  <ol>
+    <li>Sign in with your email and password</li>
+    <li>You'll see your assigned AWS account(s)</li>
+    <li>Click the account → choose <strong>"Management console"</strong> or <strong>"Command line or programmatic access"</strong></li>
+  </ol>
+
+  <!-- Step 5 -->
+  <h2><span class="step-badge">5</span> Verify Your Access</h2>
+  <p>Once in the AWS Console:</p>
+  <ol>
+    <li>Check the <strong>region</strong> in the top right — it should say <strong>Singapore (ap-southeast-1)</strong></li>
+    <li>Try opening a service like <strong>S3</strong> or <strong>Lambda</strong> to confirm access works</li>
+    <li>If you need Bedrock, go to <strong>Amazon Bedrock → Model access</strong> and check which models are enabled</li>
+  </ol>
+  <div class="tip">If Bedrock models aren't enabled, ask your administrator — they may need to enable model access via a blueprint or SCP update.</div>
+
+  <!-- What you can do -->
+  <h2>What You Can Do in the Sandbox</h2>
+  <table>
+    <tr><th>Allowed</th><th>Restricted</th></tr>
+    <tr><td>Create Lambda functions</td><td>Create IAM users (use existing roles)</td></tr>
+    <tr><td>Create S3 buckets</td><td>Modify organization settings</td></tr>
+    <tr><td>Use Amazon Bedrock (if enabled)</td><td>Launch expensive instances (p4d, etc.)</td></tr>
+    <tr><td>Create API Gateway APIs</td><td>Create VPN/Direct Connect</td></tr>
+    <tr><td>Deploy CloudFormation stacks</td><td>Exceed budget limit</td></tr>
+    <tr><td>Use DynamoDB, SQS, SNS</td><td>Access other accounts</td></tr>
+  </table>
+
+  <!-- Monitoring -->
+  <h2>Monitor Your Lease</h2>
+  <p>In the sandbox portal, your lease shows:</p>
+  <ul>
+    <li><strong>Time remaining</strong> — how long until your lease expires</li>
+    <li><strong>Budget used</strong> — current spend vs. your limit</li>
+    <li><strong>Account status</strong> — Active, Frozen, or Expired</li>
+  </ul>
+  <div class="warning">When your budget reaches the threshold or your lease time expires, your account will be frozen. You'll lose access and all resources will be cleaned up automatically.</div>
+
+  <!-- Using with GitHub Actions -->
+  <h2>Using Sandbox Credentials with GitHub Actions</h2>
+  <p>If you're deploying via GitHub Actions (e.g., the PartyRock tutorial), add these as GitHub secrets:</p>
+  <table>
+    <tr><th>Secret Name</th><th>Value</th></tr>
+    <tr><td><code>AWS_ACCESS_KEY_ID</code></td><td>From CLI credentials (starts with <code>ASIA</code>)</td></tr>
+    <tr><td><code>AWS_SECRET_ACCESS_KEY</code></td><td>From CLI credentials</td></tr>
+    <tr><td><code>AWS_SESSION_TOKEN</code></td><td>From CLI credentials (very long string)</td></tr>
+    <tr><td><code>SAM_DEPLOY_BUCKET</code></td><td>Create one in S3, or use a pre-existing bucket</td></tr>
+  </table>
+  <div class="warning">Sandbox credentials expire. When you get a new session, you must update all 3 credential secrets in GitHub with fresh values.</div>
+
+  <!-- Troubleshooting -->
+  <h2>Troubleshooting</h2>
+  <table>
+    <tr><th>Issue</th><th>Solution</th></tr>
+    <tr><td>"Access Denied" in console</td><td>Your lease may have expired or been frozen. Check the sandbox portal.</td></tr>
+    <tr><td><code>ExpiredTokenException</code></td><td>Get fresh CLI credentials from the sandbox portal.</td></tr>
+    <tr><td>Can't create IAM roles</td><td>SCPs restrict this. Use the pre-existing execution role provided by the sandbox.</td></tr>
+    <tr><td>Bedrock models not available</td><td>Ask your admin to enable model access for the sandbox OU.</td></tr>
+    <tr><td>"Budget exceeded"</td><td>Your spend hit the limit. Ask admin to increase or wait for a new lease.</td></tr>
+    <tr><td>Account shows "Frozen"</td><td>Budget or time limit reached. You can view but not modify resources.</td></tr>
+    <tr><td>Can't access certain regions</td><td>SCPs may restrict regions. Use <code>ap-southeast-1</code> (Singapore).</td></tr>
+  </table>
+
+  <!-- Quick Reference -->
+  <h2>Quick Reference</h2>
+  <div class="ref-table">
+    <table>
+      <tr><th>Setting</th><th>Value</th></tr>
+      <tr><td>Sandbox Portal</td><td><a href="https://aws-sandbox.eliteacademy.id" target="_blank">aws-sandbox.eliteacademy.id</a></td></tr>
+      <tr><td>SSO Portal</td><td><a href="https://eliteacademy.awsapps.com/start" target="_blank">eliteacademy.awsapps.com/start</a></td></tr>
+      <tr><td>Region</td><td><code>ap-southeast-1</code> (Singapore)</td></tr>
+      <tr><td>Your username</td><td>Your registered email address</td></tr>
+      <tr><td>Credentials type</td><td>Temporary (session token required)</td></tr>
+    </table>
+  </div>
+
+  <!-- Need Help -->
+  <h2>Need Help?</h2>
+  <table>
+    <tr><th>Type</th><th>Contact</th></tr>
+    <tr><td>Lease approval / budget increase</td><td>Contact your program administrator</td></tr>
+    <tr><td>Password reset</td><td>Ask admin to resend from IAM Identity Center</td></tr>
+    <tr><td>Technical issues</td><td>Contact your program's technical coach</td></tr>
+  </table>
+
+</div>
+
+</body>
+</html>

@@ -81,7 +81,7 @@ Open each widget's ✏️ edit panel in PartyRock and copy the details here.
 **Edit AI Output** (from PartyRock's "Edit AI Output" panel)
 - Prompt tab: "What should AI generate?" — copy exactly, use [Widget Name] for references
 - Which widgets does this reference?
-- AI model tab: model selector (Claude Sonnet 4.6 default)
+- AI model tab: model selector (Claude Haiku 4.5 default)
 - Temperature (0 = Factual → 1 = Creative)
 - Top P (0 = Factual → 1 = Creative)
 - Web search toggle

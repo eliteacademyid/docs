@@ -106,7 +106,7 @@ Widget #2
   Prompt:           Analyze the calories in: [Food Description]
                     Provide total calories, macros, and a health rating.
   References:       Food Description
-  Model:            Claude Sonnet 4.6
+  Model:            Claude Haiku 4.5
 
 Widget #3
   Edit panel title: Edit Slider
@@ -132,7 +132,7 @@ Widget #6
   Prompt:           Based on [Food Description] and weight [Current Weight]
                     with activity [Activity Level] and goal [Fitness Goal]...
   References:       Food Description, Current Weight, Activity Level, Fitness Goal
-  Model:            Claude Sonnet 4.6
+  Model:            Claude Haiku 4.5
 
 Widget #7
   Edit panel title: Edit File Upload
@@ -145,7 +145,7 @@ Widget #8
   Widget name:      Image Calorie Scanner
   Prompt:           Analyze the food visible in this image...
   References:       Food Image
-  Model:            Claude Sonnet 4.6
+  Model:            Claude Haiku 4.5
 ```
 
 ---

@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Step-by-step tutorial to turn a PartyRock no-code AI app into a real deployed web application on AWS.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
   <title>PartyRock → Real App Tutorial</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,11 +33,34 @@
       a { color: #333; text-decoration: underline; }
     }
 
-    /* NAV */
-    nav { background: #1a1a1a; border-bottom: 1px solid #2a2a2a; padding: 0 24px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; gap: 0; overflow-x: auto; }
-    nav a { color: #aaa; text-decoration: none; padding: 16px 14px; font-size: 13px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s; }
-    nav a:hover, nav a.active { color: #c8f135; border-bottom-color: #c8f135; }
-    nav .logo { color: #c8f135; font-weight: 700; font-size: 15px; margin-right: 16px; border-bottom: none !important; }
+    /* GLOBAL HEADER */
+    .global-header { background: #1a1a1a; border-bottom: 1px solid #2a2a2a; padding: 0 24px; position: fixed; top: 0; left: 0; right: 0; z-index: 200; }
+    .global-header .inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; height: 50px; gap: 32px; }
+    .global-header .logo { color: #c8f135; font-weight: 700; font-size: 16px; text-decoration: none; }
+    .global-header .links { display: flex; gap: 4px; }
+    .global-header .links a { color: #aaa; text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 13px; transition: color 0.2s, background 0.2s; }
+    .global-header .links a:hover { color: #fff; background: #2a2a2a; }
+    .global-header .links a.active { color: #c8f135; }
+
+    /* NAV - Left Sidebar */
+    nav { background: #1a1a1a; border-right: 1px solid #2a2a2a; padding: 16px 0; position: fixed; top: 50px; left: 0; z-index: 100; display: flex; flex-direction: column; gap: 2px; overflow-y: auto; width: 220px; height: calc(100vh - 50px); }
+    nav a { color: #aaa; text-decoration: none; padding: 8px 16px; font-size: 13px; white-space: nowrap; border-left: 3px solid transparent; transition: color 0.2s, background 0.2s; display: block; }
+    nav a:hover, nav a.active { color: #c8f135; background: #1a2208; border-left-color: #c8f135; }
+    nav .logo { color: #c8f135; font-weight: 700; font-size: 15px; margin: 0 0 12px; padding: 8px 16px; border-left: none !important; border-bottom: 1px solid #2a2a2a; }
+    nav .nav-section { color: #555; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 12px 16px 4px; }
+
+    /* Main content offset */
+    body { padding-left: 220px; padding-top: 50px; }
+
+    @media (max-width: 900px) {
+      .global-header { position: sticky; }
+      nav { position: relative; width: 100%; height: auto; top: 0; flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid #2a2a2a; overflow-x: auto; overflow-y: hidden; }
+      nav a { padding: 10px 12px; border-left: none; border-bottom: 2px solid transparent; }
+      nav a:hover, nav a.active { border-left-color: transparent; border-bottom-color: #c8f135; }
+      nav .logo { margin: 0; border-bottom: none; }
+      nav .nav-section { display: none; }
+      body { padding-left: 0; padding-top: 0; }
+    }
 
     /* HERO */
     .hero { background: linear-gradient(135deg, #1a2208 0%, #0f0f0f 60%); padding: 80px 24px; text-align: center; border-bottom: 1px solid #2a2a2a; }
@@ -48,7 +73,7 @@
     .btn-outline { background: transparent; color: #c8f135; border: 1px solid #c8f135; }
 
     /* LAYOUT */
-    .page { display: none; max-width: 800px; margin: 0 auto; padding: 48px 24px 80px; }
+    .page { display: none; max-width: 860px; margin: 0 auto; padding: 48px 32px 80px; }
     .page.active { display: block; }
 
     /* STEPS */
@@ -112,9 +137,20 @@
 </head>
 <body>
 
+<header class="global-header">
+  <div class="inner">
+    <a href="/" class="logo">📚 Elite Academy Docs</a>
+    <div class="links">
+      <a href="/tutorials/partyrock-to-aws/tutorial.html" class="active">Tutorials</a>
+      <a href="/guides/index.html">Guides</a>
+    </div>
+  </div>
+</header>
+
 <nav>
-  <a href="#" class="logo" onclick="showPage('home')">🥗 PartyRock → AWS</a>
+  <a href="#" class="logo" onclick="showPage('home')">📚 PartyRock → AWS</a>
   <a href="#" onclick="showPage('home')" id="nav-home" class="active">Overview</a>
+  <span class="nav-section">Tutorial Steps</span>
   <a href="#" onclick="showPage('step1')" id="nav-step1">1. Read Widgets</a>
   <a href="#" onclick="showPage('step2')" id="nav-step2">2. AWS Account</a>
   <a href="#" onclick="showPage('step3')" id="nav-step3">3. Bedrock</a>
@@ -125,9 +161,10 @@
   <a href="#" onclick="showPage('step8')" id="nav-step8">8. Test</a>
   <a href="#" onclick="showPage('step9')" id="nav-step9">9. HTTPS</a>
   <a href="#" onclick="showPage('step10')" id="nav-step10">10. Update</a>
+  <span class="nav-section">Extras</span>
   <a href="#" onclick="showPage('faq')" id="nav-faq">❓ FAQ</a>
-  <a href="#" onclick="showPage('sandbox')" id="nav-sandbox" style="color:#f5a623;font-weight:700">🧪 Sandbox</a>
-  <a href="#" onclick="showPage('planner')" id="nav-planner" style="color:#c8f135;font-weight:700">✨ Planner</a>
+  <a href="#" onclick="showPage('sandbox')" id="nav-sandbox" style="color:#f5a623">🧪 Sandbox</a>
+  <a href="#" onclick="showPage('planner')" id="nav-planner" style="color:#c8f135">✨ Planner</a>
 </nav>
 
 <!-- PROGRESS BAR -->
@@ -324,8 +361,8 @@
   <ol>
     <li>Search for <strong>S3</strong> in the AWS Console and click it</li>
     <li>Click <strong>Create bucket</strong></li>
-    <li>Bucket name: <code>yourname-sam-deploy-2024</code> (must be globally unique)</li>
-    <li>Region: <strong>US East (N. Virginia) us-east-1</strong></li>
+    <li>Bucket name: <code>yourname-sam-deploy-2026</code> (must be globally unique)</li>
+    <li>Region: <strong>Asia Pacific (Singapore) ap-southeast-1</strong></li>
     <li>Leave all other settings as default → <strong>Create bucket</strong></li>
     <li>Save the bucket name — you'll need it later</li>
   </ol>
@@ -358,28 +395,43 @@
   <h3>Open Amazon Bedrock</h3>
   <ol>
     <li>In the AWS Console search bar, type <strong>Bedrock</strong> and click it</li>
-    <li>Check the region in the top right — it must say <strong>N. Virginia (us-east-1)</strong></li>
+    <li>Check the region in the top right — choose one of: <strong>Singapore (ap-southeast-1)</strong>, Jakarta (ap-southeast-3), N. Virginia (us-east-1), or Malaysia (ap-southeast-5)</li>
   </ol>
-  <div class="screenshot">Top right of the console shows a region name. Click it and select "US East (N. Virginia)".</div>
+  <div class="screenshot">Top right of the console shows a region name. Click it and select "Asia Pacific (Singapore)".</div>
 
   <h3>Request Model Access</h3>
   <ol>
     <li>In the left sidebar, click <strong>Model access</strong></li>
     <li>Click <strong>Manage model access</strong> (top right of the table)</li>
     <li>Find the <strong>Anthropic</strong> section</li>
-    <li>Check the box next to <strong>Claude Sonnet 4</strong> (Claude Sonnet 4.5)</li>
+    <li>Check the box next to <strong>Claude Haiku 4.5</strong> (allowed in sandbox) (latest — best quality and performance)</li>
+    <li>Optionally also enable <strong>Claude 3 Haiku (older alternative)</strong> (slightly cheaper alternative)</li>
     <li>Scroll down and click <strong>Save changes</strong></li>
   </ol>
-  <div class="screenshot">A list of model providers. Under "Anthropic" you see checkboxes for different Claude models. Check "Claude Sonnet 4" or "Claude Sonnet 4.5".</div>
+  <div class="screenshot">A list of model providers. Under "Anthropic" you see checkboxes for different Claude models. Check "Claude Haiku 4.5" (the latest).</div>
+
+  <div class="tip">Claude Haiku 4.5 (model ID: <code>anthropic.claude-haiku-4-5-20251001-v1:0</code>) is the recommended default — launched Feb 2026, 1M token context window. Claude 3 Haiku (older alternative) is a good alternative if you want slightly lower cost.</div>
 
   <h3>Wait for Approval</h3>
-  <p>Refresh the Model access page every few minutes. When the status shows a green checkmark and says <strong>Access granted</strong>, you're ready.</p>
-  <div class="screenshot">The model row shows a green checkmark icon in the "Access status" column next to Claude Sonnet 4.5.</div>
+  <p>Refresh the Model access page every few minutes. When the status shows a green checkmark and says <strong>Access granted</strong>, you're ready. Most requests are approved instantly.</p>
+  <div class="screenshot">The model row shows a green checkmark icon in the "Access status" column next to Claude Haiku 4.5.</div>
+
+  <div class="step-section" style="margin-top:2rem;padding:1.5rem;border:1px solid #30363d;border-radius:8px;background:#161b22">
+    <h3 style="color:#58a6ff">Try the Model in Bedrock Playground</h3>
+    <p>Before building your app, test the model to make sure it works for your use case.</p>
+    <ol>
+      <li>In the left sidebar, click <strong>Playgrounds</strong> → <strong>Chat</strong></li>
+      <li>In the model selector (top), choose <strong>Claude Haiku 4.5</strong></li>
+      <li>Type a prompt related to your app idea and click <strong>Run</strong></li>
+      <li>Verify the response is useful for your project</li>
+    </ol>
+    <div class="tip" style="margin-top:1rem;padding:0.75rem;background:#1a3a1a;border-radius:6px">💡 If the model asks you to <strong>submit a use case</strong> before access is granted, fill in the form with a brief description of your project (e.g., "Student hackathon project — building an AI chatbot for environmental awareness"). Approval is usually instant.</div>
+  </div>
 
   <h3>✅ Checkpoint</h3>
   <ul class="checklist">
-    <li>Opened Amazon Bedrock in us-east-1 region</li>
-    <li>Claude Sonnet 4 (Claude Sonnet 4.5) shows "Access granted" status</li>
+    <li>Opened Amazon Bedrock in ap-southeast-1 region</li>
+    <li>Claude Haiku 4.5 shows "Access granted" status</li>
   </ul>
 
   <div class="nav-btns">
@@ -673,6 +725,8 @@
     if (page) { page.classList.add('active'); window.scrollTo(0,0); }
     const nav = document.getElementById('nav-' + id);
     if (nav) nav.classList.add('active');
+    // update URL hash for bookmarking
+    if (history.replaceState) { history.replaceState(null, '', '#' + id); }
     // progress bar
     const stepMap = { home:0, step1:1, step2:2, step3:3, step4:4, step5:5, step6:6, step7:7, step8:8, step9:9, step10:10 };
     const bar = document.getElementById('progressBar');
@@ -691,6 +745,16 @@
       bar.style.display = 'none';
     }
   }
+
+  // Load page from URL hash on page load and back/forward navigation
+  window.addEventListener('hashchange', function() {
+    const hash = location.hash.replace('#', '');
+    if (hash) showPage(hash);
+  });
+  window.addEventListener('DOMContentLoaded', function() {
+    const hash = location.hash.replace('#', '');
+    if (hash) showPage(hash);
+  });
 
   function toggleFaq(el) {
     const answer = el.nextElementSibling;
@@ -841,10 +905,9 @@
         <div class="form-group">
           <label>Which AI model should generate the output? <span class="field-hint">— check the AI model tab in PartyRock</span></label>
           <select class="w-model" onchange="rebuildPreview()">
-            <option value="claude-sonnet-4">Claude Sonnet 4.5 (latest default)</option>
-            <option value="claude-3-sonnet">Claude 3 Sonnet (legacy)</option>
-            <option value="claude-3-haiku">Claude 3 Haiku</option>
-            <option value="claude-instant">Claude Instant</option>
+            <option value="claude-sonnet-4-6">Claude Haiku 4.5 (recommended)</option>
+            <option value="claude-sonnet-4-5">Claude 3 Haiku (older alternative)</option>
+            <option value="claude-3-haiku">Claude Haiku 4.5 (fast, cheaper)</option>
             <option value="titan-text">Amazon Titan Text</option>
             <option value="llama3">Meta Llama 3</option>
           </select>
@@ -940,10 +1003,9 @@
         <div class="form-group">
           <label>Which AI model should power the chatbot?</label>
           <select class="w-model" onchange="rebuildPreview()">
-            <option value="claude-sonnet-4">Claude Sonnet 4.5 (latest default)</option>
-            <option value="claude-3-sonnet">Claude 3 Sonnet (legacy)</option>
-            <option value="claude-3-haiku">Claude 3 Haiku</option>
-            <option value="claude-instant">Claude Instant</option>
+            <option value="claude-sonnet-4-6">Claude Haiku 4.5 (recommended)</option>
+            <option value="claude-sonnet-4-5">Claude 3 Haiku (older alternative)</option>
+            <option value="claude-3-haiku">Claude Haiku 4.5 (fast, cheaper)</option>
           </select>
         </div>
         <div class="form-row-2">
@@ -1074,7 +1136,7 @@
       if (type === 'text-generation') {
         w.prompt      = val(entry, '.w-prompt');
         w.refs        = val(entry, '.w-refs');
-        w.model       = entry.querySelector('.w-model') ? entry.querySelector('.w-model').value : 'claude-sonnet-4';
+        w.model       = entry.querySelector('.w-model') ? entry.querySelector('.w-model').value : 'claude-sonnet-4-6';
         w.temperature = val(entry, '.w-temperature');
         w.topP        = val(entry, '.w-topp');
         w.webSearch   = entry.querySelector('.w-web-search') ? entry.querySelector('.w-web-search').checked : false;
@@ -1094,7 +1156,7 @@
         w.refs         = val(entry, '.w-refs');
         w.chatHint     = val(entry, '.w-chat-hint');
         w.opener       = val(entry, '.w-chat-opener');
-        w.model        = entry.querySelector('.w-model') ? entry.querySelector('.w-model').value : 'claude-sonnet-4';
+        w.model        = entry.querySelector('.w-model') ? entry.querySelector('.w-model').value : 'claude-sonnet-4-6';
         w.temperature  = val(entry, '.w-temperature');
         w.topP         = val(entry, '.w-topp');
       }
@@ -1117,12 +1179,12 @@
   }
 
   const MODEL_IDS = {
-    'claude-sonnet-4':  'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
-    'claude-3-sonnet':  'anthropic.claude-3-sonnet-20240229-v1:0',
-    'claude-3-haiku':   'anthropic.claude-3-haiku-20240307-v1:0',
-    'claude-instant':   'anthropic.claude-instant-v1',
-    'titan-text':       'amazon.titan-text-express-v1',
-    'llama3':           'meta.llama3-8b-instruct-v1:0',
+    'claude-sonnet-4':    'global.anthropic.claude-sonnet-4-20250514-v1:0',
+    'claude-sonnet-4-6':  'global.anthropic.claude-haiku-4-5-20251001-v1:0-20260217-v1:0',
+    'claude-sonnet-4-5':  'global.anthropic.claude-sonnet-4-5-20250929-v1:0',
+    'claude-3-haiku':     'global.anthropic.claude-haiku-4-5-20251001-v1:0',
+    'titan-text':         'amazon.titan-text-express-v1',
+    'llama3':             'meta.llama3-8b-instruct-v1:0',
   };
   const IMG_MODEL_IDS = {
     'nova-canvas':  'amazon.nova-canvas-v1:0',
@@ -1222,8 +1284,9 @@
     ].join('\n');
 
     const iamModelArns = [
-      `        arn:aws:bedrock:*::foundation-model/us.anthropic.claude-sonnet-4-5-20250929-v1:0`,
-      `        arn:aws:bedrock:*:\${AccountId}:inference-profile/us.anthropic.claude-sonnet-4-5-20250929-v1:0`,
+      `        arn:aws:bedrock:ap-southeast-1:\${AccountId}:inference-profile/global.anthropic.claude-haiku-4-5-20251001-v1:0-20260217-v1:0`,
+      `        arn:aws:bedrock:ap-southeast-1::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0-20260217-v1:0`,
+      `        arn:aws:bedrock:::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0-20260217-v1:0`,
       hasImage ? `        arn:aws:bedrock:*::foundation-model/amazon.nova-canvas-v1:0` : null,
     ].filter(Boolean).join('\n');
 
@@ -1302,7 +1365,7 @@
     ].filter(Boolean).join('\n');
 
     const bedrockModelsToEnable = [
-      `  - us.anthropic.claude-sonnet-4-5-20250929-v1:0  (Claude Sonnet 4.5 — cross-region inference profile)`,
+      `  - global.anthropic.claude-haiku-4-5-20251001-v1:0-20260217-v1:0  (Claude Haiku 4.5 — global cross-region inference profile)`,
       hasImage ? `  - amazon.nova-canvas-v1:0  (Nova Canvas — for image generation)` : null,
     ].filter(Boolean).join('\n');
 
@@ -1385,8 +1448,8 @@ ${hasImage ? `   - Image widget (${imageAiWidgets.map(w=>w.title).join(', ')}):
      - Standard Lambda handler (app.handler), no Flask
      - Calls amazon.nova-canvas-v1:0 via invoke_model, returns base64 JSON
      - requirements.txt: boto3>=1.34.0` : ''}
-   - Bedrock model for all text: us.anthropic.claude-sonnet-4-5-20250929-v1:0
-     (cross-region inference profile — the us. prefix is required)
+   - Bedrock model for all text: global.anthropic.claude-haiku-4-5-20251001-v1:0-20260217-v1:0
+     (global cross-region inference profile — the global. prefix routes worldwide)
 ${hasImage ? `   - Bedrock model for image: amazon.nova-canvas-v1:0` : ''}
 
 3. Infrastructure — AWS SAM template (infra/template.yaml)
@@ -1426,7 +1489,7 @@ ${cfOutputs}
        --stack-name ${slug(appName)||'my-app'}
        --s3-bucket \${{ secrets.SAM_DEPLOY_BUCKET }}
        --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
-       --region us-east-1
+       --region ap-southeast-1
        --no-confirm-changeset
        --no-fail-on-empty-changeset
    - Read all outputs from CloudFormation describe-stacks using a helper function:
@@ -1440,10 +1503,10 @@ ${sedInjects || '     (no URL injection needed)'}
 5. Pre-deployment checklist (tell the user):
    - Enable Bedrock model access for:
 ${bedrockModelsToEnable}
-     in us-east-1 via AWS Console → Bedrock → Model Access
+     in ap-southeast-1 via AWS Console → Bedrock → Model Access
      (first-time accounts must submit a use-case form)
-   - The us. inference profile routes across us-east-1/us-east-2/us-west-2,
-     so IAM must use * for region, not us-east-1 only
+   - The global. inference profile routes worldwide for maximum throughput,
+     so IAM must use * for region
 
 ========================================
 SCREENSHOTS ATTACHED
@@ -1453,7 +1516,7 @@ SCREENSHOTS ATTACHED
   }
 
   // ── Live preview: rebuilds on every keystroke ────────────────────────────
-  function rebuildPreview() {
+  function buildSpecPrompt() {
     const funcReqs = [];
     widgets.forEach(w => {
       if (w.type === 'text-input')
@@ -1879,7 +1942,7 @@ SCREENSHOTS ATTACHED
 
   <div style="background:#2a1a08;border:1px solid #f5a623;border-radius:10px;padding:16px;margin-bottom:24px;font-size:14px;color:#ccc">
     This guide is for <strong style="color:#f5a623">restricted AWS lab environments</strong> — such as
-    AWS Skill Builder labs, Vocareum, AWS Academy, or event/workshop sandboxes.
+    Innovation Sandbox on AWS (ISB), AWS Skill Builder labs, Vocareum, AWS Academy, or event/workshop sandboxes.
     These environments give you temporary AWS credentials with limited permissions.
     You do <strong style="color:#fff">not</strong> create an AWS account — credentials are provided for you.
   </div>
@@ -1888,12 +1951,52 @@ SCREENSHOTS ATTACHED
   <h3 style="margin-top:0">What Kind of Sandbox Do You Have?</h3>
   <table>
     <tr><th>Environment</th><th>Where credentials appear</th><th>Session length</th></tr>
+    <tr><td><strong style="color:#f5a623">Innovation Sandbox on AWS (ISB)</strong></td><td>ISB Web UI → Lease details → "Access Account" (SSO) or CLI credentials</td><td>Configured by admin (hours–days)</td></tr>
     <tr><td>AWS Skill Builder (Jam / Lab)</td><td>Lab panel — "AWS Details" button</td><td>1–4 hours</td></tr>
     <tr><td>Vocareum (AWS Academy)</td><td>"AWS Details" or "Account Details" button</td><td>1–4 hours</td></tr>
     <tr><td>AWS Workshop Studio</td><td>Left panel — "Get AWS CLI credentials"</td><td>Duration of workshop</td></tr>
     <tr><td>Event Engine (re:Invent etc.)</td><td>Team dashboard — "AWS Console" link</td><td>Duration of event</td></tr>
     <tr><td>Qwiklabs / Google-hosted AWS labs</td><td>Left panel — "Connection Details"</td><td>Per-lab timer</td></tr>
   </table>
+
+  <!-- SECTION: Innovation Sandbox on AWS (ISB) -->
+  <h3>Using Innovation Sandbox on AWS (ISB)</h3>
+  <div style="background:#1a2208;border:1px solid #4a6a10;border-radius:10px;padding:16px;margin-bottom:20px;font-size:14px;color:#ccc">
+    <strong style="color:#c8f135">Innovation Sandbox on AWS</strong> is an AWS Solution that provides managed, temporary sandbox accounts through IAM Identity Center. Your administrator provisions accounts with budget limits and time-based leases. When your lease expires, the account is automatically cleaned up and recycled.
+  </div>
+
+  <h3>How ISB Works</h3>
+  <div class="cards" style="margin-bottom:24px">
+    <div class="card"><div class="icon">🔑</div><h4>SSO Login</h4><p>Access via IAM Identity Center — no static keys needed</p></div>
+    <div class="card"><div class="icon">⏱️</div><h4>Time-Limited Lease</h4><p>Account auto-expires after configured duration</p></div>
+    <div class="card"><div class="icon">💰</div><h4>Budget Controls</h4><p>Spend limits enforced — you get alerts before hitting the cap</p></div>
+    <div class="card"><div class="icon">🔄</div><h4>Auto Cleanup</h4><p>AWS Nuke removes all resources when lease ends</p></div>
+  </div>
+
+  <h3>Getting Your ISB Sandbox Credentials</h3>
+  <ol>
+    <li>Log in to the <strong>Innovation Sandbox Web UI</strong> at <a href="https://aws-sandbox.eliteacademy.id" target="_blank">aws-sandbox.eliteacademy.id</a></li>
+    <li>Request a new lease or use an existing active lease</li>
+    <li>Once approved, click <strong>"Access Account"</strong> to open the AWS Console via SSO</li>
+    <li>For CLI/programmatic access: click your lease → <strong>"Get CLI Credentials"</strong></li>
+    <li>Copy the three values: <code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>, <code>AWS_SESSION_TOKEN</code></li>
+  </ol>
+  <div class="screenshot">The ISB web UI shows your active lease with account ID, remaining budget, and time left. Click "Access Account" for console access or use the CLI credentials section for programmatic access.</div>
+
+  <div class="warning">ISB credentials are temporary (session tokens). They expire when your lease ends or when the SSO session times out. If deployment fails with <code>ExpiredTokenException</code>, get fresh credentials from the ISB UI.</div>
+
+  <h3>ISB-Specific Considerations</h3>
+  <table>
+    <tr><th>Feature</th><th>ISB Behavior</th><th>Impact on This Tutorial</th></tr>
+    <tr><td>IAM Roles</td><td>SCPs may restrict role creation</td><td>Use the ISB-provided execution role instead of creating <code>github-deployer</code></td></tr>
+    <tr><td>Bedrock Access</td><td>May need admin to enable via blueprint</td><td>Ask your ISB admin to enable Bedrock model access in the sandbox OU SCP</td></tr>
+    <tr><td>Region</td><td>May be restricted by SCP</td><td>Deploy in the region allowed by your ISB configuration</td></tr>
+    <tr><td>Budget</td><td>Lease has a spend limit</td><td>Bedrock costs ~$0.003/request — unlikely to hit budget limits for this tutorial</td></tr>
+    <tr><td>Cleanup</td><td>All resources deleted when lease expires</td><td>Your app will stop working after lease ends — export code to GitHub first</td></tr>
+    <tr><td>Blueprints</td><td>Admin can pre-deploy infrastructure</td><td>If a Bedrock blueprint exists, your Lambda role may already have permissions</td></tr>
+  </table>
+
+  <div class="tip">Ask your ISB administrator if they have a <strong>Bedrock blueprint</strong> registered. If so, your sandbox account may already have the correct IAM roles and Bedrock model access pre-configured — you can skip Steps 2 and 3 of the main tutorial.</div>
 
   <div class="tip" style="margin-top:16px">All of these give you the same three values: <strong style="color:#fff">Access Key ID</strong>, <strong style="color:#fff">Secret Access Key</strong>, and sometimes a <strong style="color:#fff">Session Token</strong>. You will need all three.</div>
 
@@ -1908,7 +2011,7 @@ SCREENSHOTS ATTACHED
     <tr><td>Credentials expire</td><td>Deployment fails after session ends</td><td>Re-run deployment before session expires, or re-enter fresh credentials</td></tr>
     <tr><td>Bedrock may not be pre-enabled</td><td>Model access request may be blocked</td><td>Check if lab pre-enables Bedrock, or use a model that is already available</td></tr>
     <tr><td>S3 bucket names may be pre-set</td><td>Cannot choose any bucket name</td><td>Use the lab-provided bucket name or prefix</td></tr>
-    <tr><td>Region may be locked</td><td>Must deploy to a specific region</td><td>Check the lab instructions — usually <code>us-east-1</code></td></tr>
+    <tr><td>Region may be locked</td><td>Must deploy to a specific region</td><td>Check the lab instructions — usually <code>ap-southeast-1</code></td></tr>
   </table>
 
   <!-- SECTION: Step by step -->
@@ -1936,7 +2039,7 @@ SCREENSHOTS ATTACHED
       <div class="sandbox-step-title">Check What Region and Services Are Available</div>
       <p>In the AWS Console (opened from your lab panel), check:</p>
       <ol>
-        <li>The region shown in the top right — note it down (e.g. <code>us-east-1</code>)</li>
+        <li>The region shown in the top right — note it down (e.g. <code>ap-southeast-1</code>)</li>
         <li>Go to <strong>Amazon Bedrock → Model access</strong> — check if Claude models show <strong>Access granted</strong></li>
         <li>Go to <strong>S3</strong> — check if you can create buckets, or if one is pre-created for you</li>
         <li>Go to <strong>IAM → Roles</strong> — look for a role named <code>LabRole</code> or <code>EMR_EC2_DefaultRole</code> — copy its ARN</li>
@@ -2028,7 +2131,7 @@ CalorieScannerFunction:
     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}   # ← add this line
-    aws-region: us-east-1</code></pre>
+    aws-region: ap-southeast-1</code></pre>
     </div>
   </div>
 
@@ -2093,7 +2196,7 @@ CalorieScannerFunction:
   <p>Right now your app URL starts with <code>http://</code> — no padlock. Most browsers show a "Not Secure" warning, and copy buttons only work on HTTPS pages. CloudFront gives you HTTPS for free.</p>
   <ol>
     <li>In the AWS Console, search for <strong>CloudFront</strong> → <strong>Create a CloudFront distribution</strong></li>
-    <li>For <strong>Origin domain</strong>, select your frontend S3 bucket (the <code>.s3-website-us-east-1.amazonaws.com</code> endpoint)</li>
+    <li>For <strong>Origin domain</strong>, select your frontend S3 bucket (the <code>.s3-website-ap-southeast-1.amazonaws.com</code> endpoint)</li>
     <li>For <strong>Viewer protocol policy</strong>, select <strong>Redirect HTTP to HTTPS</strong></li>
     <li>Leave all other settings as default → <strong>Create distribution</strong></li>
     <li>Wait 5–10 minutes for status to change to <strong>Enabled</strong></li>
@@ -2111,7 +2214,7 @@ CalorieScannerFunction:
   <h3>9.2 Add a Custom Domain (Optional)</h3>
   <p>Want <code>www.myapp.com</code> instead of a long CloudFront URL? You need to own a domain name first (~$10–12/year).</p>
   <ol>
-    <li>AWS Console → <strong>Certificate Manager</strong> (must be in us-east-1) → <strong>Request a certificate</strong></li>
+    <li>AWS Console → <strong>Certificate Manager</strong> (must be in us-east-1 for CloudFront) → <strong>Request a certificate</strong></li>
     <li>Enter your domain → <strong>DNS validation</strong> → <strong>Request</strong></li>
     <li>Click <strong>Create records in Route 53</strong> → wait for status <strong>Issued</strong></li>
     <li>CloudFront → your distribution → <strong>Edit</strong> → add your domain as Alternate domain name → select your certificate → Save</li>
@@ -2122,7 +2225,7 @@ CalorieScannerFunction:
   <p>Blocks bots and prevents abuse. Costs ~$5/month.</p>
   <ol>
     <li>AWS Console → <strong>WAF & Shield</strong> → <strong>Create web ACL</strong></li>
-    <li>Resource type: Regional → Region: us-east-1 → Name: <code>my-app-waf</code></li>
+    <li>Resource type: Regional → Region: ap-southeast-1 → Name: <code>my-app-waf</code></li>
     <li>Add rules → Add managed rule groups → enable <strong>AWSManagedRulesCommonRuleSet</strong></li>
     <li>Add your own rule → Rate-based → limit: 100 per 5 min → Action: Block</li>
     <li>Create web ACL → then attach to API Gateway: API Gateway → your API → Stages → prod → WAF tab → select your ACL</li>
